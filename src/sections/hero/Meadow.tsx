@@ -1,12 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-  type CSSProperties,
-} from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { LAYERS } from './art'
 import { createMeadowRenderer, type MeadowRenderer } from './meadowRenderer'
@@ -17,6 +9,7 @@ import {
   textureClip,
   type LayerId,
   type Size,
+  type Source,
 } from './placement'
 
 interface MeadowDebug {
@@ -53,18 +46,21 @@ const QUICK_LOAD_MS = 120
 
 /**
  * The hero's painted meadow as static, stacked <img> layers.
- * The sky loads first; flowers load after it and fade in ("bloom").
+ * The sky loads first; flowers load after it and fade in ("bloom"). Every image is
+ * preloaded off-DOM and swapped in only once decoded.
  * See docs/superpowers/specs/2026-11-21-hero-design.md §4–5.
  */
 export function Meadow({ size }: { size: Size }) {
   const reducedMotion = useReducedMotion()
   const images = useRef(new Map<LayerId, HTMLImageElement>())
-  // when each layer|src was requested
-  const requestedAt = useRef(new Map<string, number>())
-  // src that has finished loading, per layer
-  const [loaded, setLoaded] = useState<Partial<Record<LayerId, string>>>({})
-  // layers that arrived (almost) immediately, e.g. from cache: no fade
-  const [instant, setInstant] = useState<Partial<Record<LayerId, boolean>>>({})
+  // layer|src pairs currently being preloaded
+  const pending = useRef(new Set<string>())
+  // The last fully loaded source per layer: what each <img> shows.
+  const [shown, setShown] = useState<Partial<Record<LayerId, Source>>>({})
+  // Flower layers whose first appearance blooms in.
+  const [blooming, setBlooming] = useState<Partial<Record<LayerId, boolean>>>(
+    {},
+  )
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [renderer, setRenderer] = useState<MeadowRenderer | null>(null)
   const [canvasShown, setCanvasShown] = useState(false)
@@ -72,79 +68,85 @@ export function Meadow({ size }: { size: Size }) {
   const [webglFailed, setWebglFailed] = useState(false)
 
   const dpr = window.devicePixelRatio || 1
-  const placed = useMemo(
+  const targets = useMemo(
     () =>
-      LAYERS.map((layer) => {
-        const source = chooseSource(size, dpr, layer)
-        const rect = sourceRect(artRect(size, layer.anchor), source)
-        return { layer, source, rect, clip: textureClip(layer.clip, source) }
-      }),
+      LAYERS.map((layer) => ({
+        layer,
+        target: chooseSource(size, dpr, layer),
+      })),
     [size, dpr],
   )
+  // The sky must have appeared once before any flower starts loading.
+  const skyReady = shown.sky !== undefined
 
-  const skyLoaded = loaded.sky === placed[0].source.variant.src
-  // Flowers get their src only once the sky has loaded.
-  const requested = useMemo(
-    () =>
-      placed.map(({ layer, source }) =>
-        layer.id === 'sky' || skyLoaded ? source.variant.src : undefined,
-      ),
-    [placed, skyLoaded],
-  )
-
-  const markLoaded = useCallback(
-    (id: LayerId, src: string) => {
-      const key = `${id}|${src}`
-      const at = requestedAt.current.get(key)
-      if (at === undefined) return
-      requestedAt.current.delete(key)
-      const now = performance.now()
-      const quick = now - at < QUICK_LOAD_MS
-      if (quick) setInstant((prev) => ({ ...prev, [id]: true }))
-      setLoaded((prev) => (prev[id] === src ? prev : { ...prev, [id]: src }))
-      if (import.meta.env.DEV) {
-        const event = window.__meadowDebug?.events.findLast((e) => e.id === id)
-        if (event) {
-          event.loadedAt = now
-          event.faded = id !== 'sky' && !quick && !reducedMotion
-        }
-      }
-    },
-    [reducedMotion],
-  )
-
-  // Record when each src is requested; an image that is already complete (cached) loads now.
-  useLayoutEffect(() => {
-    placed.forEach(({ layer }, i) => {
-      const src = requested[i]
-      const img = images.current.get(layer.id)
+  // Preload each layer's target off-DOM. The <img> swaps only once it has decoded,
+  // so a resize or rotation never shows a missing or stretched layer.
+  useEffect(() => {
+    for (const { layer, target } of targets) {
+      const src = target.variant.src
+      if (shown[layer.id]?.variant.src === src) continue
+      if (layer.id !== 'sky' && !skyReady) continue
       const key = `${layer.id}|${src}`
-      if (
-        !src ||
-        !img ||
-        loaded[layer.id] === src ||
-        requestedAt.current.has(key)
-      )
-        return
-      requestedAt.current.set(key, performance.now())
+      if (pending.current.has(key)) continue
+      pending.current.add(key)
+      const first = shown[layer.id] === undefined
+      const startedAt = performance.now()
+      const event: MeadowDebug['events'][number] = {
+        id: layer.id,
+        srcSetAt: startedAt,
+        faded: false,
+      }
       if (import.meta.env.DEV) {
         window.__meadowDebug ??= { events: [] }
-        window.__meadowDebug.events.push({
-          id: layer.id,
-          srcSetAt: performance.now(),
-          faded: false,
-        })
+        window.__meadowDebug.events.push(event)
       }
-      if (img.complete && img.naturalWidth > 0) markLoaded(layer.id, src)
-    })
-  }, [placed, requested, loaded, markLoaded])
+      const preload = new Image()
+      preload.decoding = 'async'
+      if (layer.id === 'sky') preload.fetchPriority = 'high'
+      preload.src = src
+      preload.decode().then(
+        () => {
+          pending.current.delete(key)
+          // Only a flower's first appearance blooms, and not when it came from cache.
+          const bloom =
+            first &&
+            layer.id !== 'sky' &&
+            !reducedMotion &&
+            performance.now() - startedAt >= QUICK_LOAD_MS
+          if (import.meta.env.DEV) {
+            event.loadedAt = performance.now()
+            event.faded = bloom
+          }
+          if (bloom) setBlooming((prev) => ({ ...prev, [layer.id]: true }))
+          setShown((prev) => ({ ...prev, [layer.id]: target }))
+        },
+        () => pending.current.delete(key),
+      )
+    }
+  }, [targets, shown, skyReady, reducedMotion])
+
+  // Each layer is drawn from the source it actually shows, placed for the current size.
+  const placed = useMemo(
+    () =>
+      targets.map(({ layer, target }) => {
+        const source = shown[layer.id]
+        return {
+          layer,
+          target,
+          source,
+          rect: source ? sourceRect(artRect(size, layer.anchor), source) : null,
+          clip: source ? textureClip(layer.clip, source) : ([0, 1] as const),
+        }
+      }),
+    [targets, shown, size],
+  )
 
   const allLoaded = placed.every(
-    ({ layer, source }) => loaded[layer.id] === source.variant.src,
+    ({ source, target }) => source?.variant.src === target.variant.src,
   )
   const animate = allLoaded && !reducedMotion && !webglFailed
   // Any source change rebuilds the renderer, so old textures never meet new rectangles.
-  const sourceKey = placed.map(({ source }) => source.variant.src).join('|')
+  const sourceKey = targets.map(({ target }) => target.variant.src).join('|')
 
   // The WebGL renderer exists only while every layer has loaded and motion is allowed.
   // It starts when the browser is idle, so it never competes with the first paint.
@@ -182,9 +184,10 @@ export function Meadow({ size }: { size: Size }) {
     if (!renderer) return
     const layers = placed.flatMap(({ layer, source, rect, clip }) => {
       const image = images.current.get(layer.id)
-      if (!image) return []
+      if (!image || !source || !rect) return []
       const span = source.x1 - source.x0
-      return [{ image, bend: layer.bend, rect, span, texClip: clip }]
+      const texClip: [number, number] = [clip[0], clip[1]]
+      return [{ image, bend: layer.bend, rect, span, texClip }]
     })
     renderer.setLayers(layers, size)
   }, [renderer, placed, size])
@@ -212,17 +215,16 @@ export function Meadow({ size }: { size: Size }) {
 
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-      {placed.map(({ layer, source, rect, clip }, i) => {
-        const src = requested[i]
-        const isLoaded = loaded[layer.id] === source.variant.src
-        const fade = layer.id !== 'sky' && !instant[layer.id] && !reducedMotion
+      {placed.map(({ layer, source, rect, clip }) => {
         const style: CSSProperties = {
-          left: rect.x,
-          top: rect.y,
-          width: rect.width,
-          height: rect.height,
-          opacity: layer.id === 'sky' || isLoaded ? 1 : 0,
-          transition: fade ? FADE : undefined,
+          ...(rect && {
+            left: rect.x,
+            top: rect.y,
+            width: rect.width,
+            height: rect.height,
+          }),
+          opacity: source ? 1 : 0,
+          transition: blooming[layer.id] ? FADE : undefined,
           clipPath:
             clip[0] > 0 || clip[1] < 1
               ? `inset(0 ${(1 - clip[1]) * 100}% 0 ${clip[0] * 100}%)`
@@ -236,12 +238,10 @@ export function Meadow({ size }: { size: Size }) {
               else images.current.delete(layer.id)
             }}
             data-layer={layer.id}
-            src={src}
+            src={source?.variant.src}
             alt=""
             draggable={false}
             decoding="async"
-            fetchPriority={layer.id === 'sky' ? 'high' : 'low'}
-            onLoad={() => src && markLoaded(layer.id, src)}
             className="absolute max-w-none select-none"
             style={style}
           />
