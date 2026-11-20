@@ -1,0 +1,163 @@
+import {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from 'react'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { LAYERS } from './art'
+import {
+  artRect,
+  chooseSource,
+  sourceRect,
+  textureClip,
+  type LayerId,
+  type Size,
+} from './placement'
+
+interface MeadowDebug {
+  events: {
+    id: LayerId
+    srcSetAt: number
+    loadedAt?: number
+    faded: boolean
+  }[]
+  canvasMountedAt?: number
+  time?: () => number
+}
+
+declare global {
+  interface Window {
+    __meadowDebug?: MeadowDebug
+  }
+}
+
+const FADE = 'opacity 550ms ease-out'
+// A layer that arrives this soon after being requested (cache) appears without fading.
+const QUICK_LOAD_MS = 120
+
+/**
+ * The hero's painted meadow as static, stacked <img> layers.
+ * The sky loads first; flowers load after it and fade in ("bloom").
+ * See docs/superpowers/specs/2026-11-21-hero-design.md §4–5.
+ */
+export function Meadow({ size }: { size: Size }) {
+  const reducedMotion = useReducedMotion()
+  const images = useRef(new Map<LayerId, HTMLImageElement>())
+  // when each layer|src was requested
+  const requestedAt = useRef(new Map<string, number>())
+  // src that has finished loading, per layer
+  const [loaded, setLoaded] = useState<Partial<Record<LayerId, string>>>({})
+  // layers that arrived (almost) immediately, e.g. from cache: no fade
+  const [instant, setInstant] = useState<Partial<Record<LayerId, boolean>>>({})
+
+  const dpr = window.devicePixelRatio || 1
+  const placed = useMemo(
+    () =>
+      LAYERS.map((layer) => {
+        const source = chooseSource(size, dpr, layer)
+        const rect = sourceRect(artRect(size, layer.anchor), source)
+        return { layer, source, rect, clip: textureClip(layer.clip, source) }
+      }),
+    [size, dpr],
+  )
+
+  const skyLoaded = loaded.sky === placed[0].source.variant.src
+  // Flowers get their src only once the sky has loaded.
+  const requested = useMemo(
+    () =>
+      placed.map(({ layer, source }) =>
+        layer.id === 'sky' || skyLoaded ? source.variant.src : undefined,
+      ),
+    [placed, skyLoaded],
+  )
+
+  const markLoaded = useCallback(
+    (id: LayerId, src: string) => {
+      const key = `${id}|${src}`
+      const at = requestedAt.current.get(key)
+      if (at === undefined) return
+      requestedAt.current.delete(key)
+      const now = performance.now()
+      const quick = now - at < QUICK_LOAD_MS
+      if (quick) setInstant((prev) => ({ ...prev, [id]: true }))
+      setLoaded((prev) => (prev[id] === src ? prev : { ...prev, [id]: src }))
+      if (import.meta.env.DEV) {
+        const event = window.__meadowDebug?.events.findLast((e) => e.id === id)
+        if (event) {
+          event.loadedAt = now
+          event.faded = id !== 'sky' && !quick && !reducedMotion
+        }
+      }
+    },
+    [reducedMotion],
+  )
+
+  // Record when each src is requested; an image that is already complete (cached) loads now.
+  useLayoutEffect(() => {
+    placed.forEach(({ layer }, i) => {
+      const src = requested[i]
+      const img = images.current.get(layer.id)
+      const key = `${layer.id}|${src}`
+      if (
+        !src ||
+        !img ||
+        loaded[layer.id] === src ||
+        requestedAt.current.has(key)
+      )
+        return
+      requestedAt.current.set(key, performance.now())
+      if (import.meta.env.DEV) {
+        window.__meadowDebug ??= { events: [] }
+        window.__meadowDebug.events.push({
+          id: layer.id,
+          srcSetAt: performance.now(),
+          faded: false,
+        })
+      }
+      if (img.complete && img.naturalWidth > 0) markLoaded(layer.id, src)
+    })
+  }, [placed, requested, loaded, markLoaded])
+
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+      {placed.map(({ layer, source, rect, clip }, i) => {
+        const src = requested[i]
+        const isLoaded = loaded[layer.id] === source.variant.src
+        const fade = layer.id !== 'sky' && !instant[layer.id] && !reducedMotion
+        const style: CSSProperties = {
+          left: rect.x,
+          top: rect.y,
+          width: rect.width,
+          height: rect.height,
+          opacity: layer.id === 'sky' || isLoaded ? 1 : 0,
+          transition: fade ? FADE : undefined,
+          clipPath:
+            clip[0] > 0 || clip[1] < 1
+              ? `inset(0 ${(1 - clip[1]) * 100}% 0 ${clip[0] * 100}%)`
+              : undefined,
+        }
+        return (
+          <img
+            key={layer.id}
+            ref={(img) => {
+              if (img) images.current.set(layer.id, img)
+              else images.current.delete(layer.id)
+            }}
+            data-layer={layer.id}
+            src={src}
+            alt=""
+            draggable={false}
+            decoding="async"
+            fetchPriority={layer.id === 'sky' ? 'high' : 'low'}
+            onLoad={() => src && markLoaded(layer.id, src)}
+            className="absolute max-w-none select-none"
+            style={style}
+          />
+        )
+      })}
+    </div>
+  )
+}

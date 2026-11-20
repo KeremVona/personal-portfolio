@@ -5,6 +5,7 @@ import {
   chooseSource,
   isNarrow,
   sourceRect,
+  textureClip,
   visibleSpan,
   type Anchor,
   type CropDef,
@@ -181,5 +182,24 @@ describe('sourceRect', () => {
       ),
       { x: -180, y: 0, width: 750, height: 844 },
     )
+  })
+})
+
+describe('textureClip', () => {
+  const full = { variant: V(1920), x0: 0, x1: 1 }
+  it('passes the clip through for a full layer', () => {
+    expect(textureClip([0, 0.5], full)).toEqual([0, 0.5])
+    expect(textureClip([0.5, 1], full)).toEqual([0.5, 1])
+  })
+  it('maps the clip into a crop and clamps to the image', () => {
+    expect(textureClip([0, 0.5], { variant: V(864), x0: 0, x1: 0.45 })).toEqual(
+      [0, 1],
+    )
+    expect(textureClip([0.5, 1], { variant: V(864), x0: 0.55, x1: 1 })).toEqual(
+      [0, 1],
+    )
+    const [a, b] = textureClip([0.5, 1], { variant: V(864), x0: 0.4, x1: 0.8 })
+    expect(a).toBeCloseTo(0.25, 6)
+    expect(b).toBe(1)
   })
 })

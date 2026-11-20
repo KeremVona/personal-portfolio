@@ -121,3 +121,14 @@ export function sourceRect(rect: Rect, source: Source): Rect {
     height: rect.height,
   }
 }
+
+/** A layer's clip expressed in its source image's own 0–1 coordinates, clamped to the image. */
+export function textureClip(
+  clip: readonly [number, number],
+  source: Source,
+): [number, number] {
+  const span = source.x1 - source.x0
+  const a = (clip[0] - source.x0) / span
+  const b = (clip[1] - source.x0) / span
+  return [Math.max(0, a), Math.min(1, b)]
+}
