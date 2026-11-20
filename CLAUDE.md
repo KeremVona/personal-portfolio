@@ -1,0 +1,78 @@
+# Kerem Can Bas: personal portfolio
+
+A single-page portfolio for Kerem, a final-year Software Engineering student (graduating June 2027) aiming for **full-stack web roles**.
+
+**Look:** a clean, botanical "Meadow" style. A painted meadow hero has a subtle WebGL wind sway, and the rest of the page sits on cream.
+
+**Read these before doing anything:**
+
+1. `docs/PROGRESS.md`: what's done, what's next, and the open/deferred items.
+2. `docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md`: the binding foundation (goals, stack, tokens, quality bar, hosting).
+3. `docs/superpowers/specs/2026-11-21-hero-design.md`: the hero and nav design (built).
+4. Any newer spec in `docs/superpowers/specs/`. Each section gets its own spec before it is built.
+
+## How we work (Kerem's preferences)
+
+- **Section by section:** Hero ✅ → About → Projects → Experience → Footer. A blog is out of scope for now.
+- **Each section follows the same loop:**
+  1. Brainstorm, with mockups in the browser so Kerem can react to real visuals.
+  2. Agree the design.
+  3. Write a short section spec in `docs/superpowers/specs/`.
+  4. Write a plan in `docs/superpowers/plans/`.
+  5. Build it with checks; Kerem chose to run plans inline in the session ("Native").
+  6. A final review by a fresh reviewer on Opus.
+  7. Merge to `main`.
+- **Plan before code.** Nothing gets built until Kerem approves the design. Show options visually when the choice is visual.
+- **Copy is a placeholder.** Kerem rewrites all text at the end, so don't polish wording; focus on layout and behaviour.
+- **Explain in plain words, and give a recommendation** rather than a neutral list of options.
+- **Commits stay local** unless Kerem asks to push. Commit messages end with a `Co-Authored-By` line for the model that wrote them.
+
+## Stack and commands
+
+The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via `@tailwindcss/vite`, with no PostCSS and no `tailwind.config`** · Oxlint · Prettier (with `prettier-plugin-tailwindcss`) · Vitest · vite-imagetools · `motion` is planned for scroll reveals but not yet installed.
+
+| Command                                                       | What it does                                                                  |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `npm run dev`                                                 | Start the dev server (http://localhost:5173)                                  |
+| `npm run build`                                               | Type-check and build to `dist/`                                               |
+| `npm run preview`                                             | Serve the production build (http://localhost:4173)                            |
+| `npm test`                                                    | Run Vitest (pure logic only)                                                  |
+| `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                                 |
+| `npm run art:hero`                                            | Regenerate the hero art (needs the private `reference/hero/*.png`; see below) |
+
+**The gate before every commit:** `npm test && npm run typecheck && npm run lint && npm run format:check && npm run build`
+
+## Where things live
+
+```
+src/index.css           Tailwind import + Meadow tokens in @theme (colours, fonts, radius, shadow)
+src/content/            Typed site content (profile, links, experience, projects, SECTIONS)
+src/components/         Nav (fixed, hide/show, phone menu), navState (pure + tests), Section, SkipLink
+src/hooks/              useNavState, useElementSize, useReducedMotion
+src/sections/Hero.tsx   Hero copy and layout
+src/sections/hero/      placement.ts (pure, tested), art.ts (layer data), Meadow.tsx (static layers + canvas),
+                        meadowRenderer.ts + windShader.ts (WebGL1 wind sway)
+src/assets/hero/        Committed WebP masters and phone crops (made by scripts/prepare-hero-art.mjs)
+public/                 Résumé PDF (published as is, phone number included, by Kerem's choice), og-image.jpg, favicon, robots.txt
+docs/superpowers/       Specs (decisions) and plans (how each piece was built)
+```
+
+## Things that will bite you
+
+- **`reference/` is git-ignored and is not in the repo.** It holds the raw art and the private style references. Kerem copies it between machines by hand if needed. Only `npm run art:hero` requires it; the built art is already committed.
+- **Tailwind v4 `translate-*` utilities set the CSS `translate` property, not `transform`.** Transition `translate` and read `getComputedStyle(el).translate`.
+- **vite-imagetools ships no TypeScript types.** `src/imagetools.d.ts` declares the `?…&as=metadata` imports.
+- **The linter is Oxlint, not ESLint.** The Vite template ships Oxlint, and typescript-eslint doesn't support TS 7.
+- **Windows:** `.gitattributes` forces LF, so Prettier stays happy with `core.autocrlf=true`.
+- **The hero art/motion rules are agreed with Kerem.** These need his say-so to change:
+  - the wind shader numbers and bend strengths ("very subtle, never overdone"),
+  - the sky-first, flowers-fade-in load order,
+  - the phone crops.
+- **Browser testing in the Claude desktop app:** when the Browser pane is hidden, animation frames are throttled to about 1–3 fps. Wait longer, or measure canvas pixels rather than relying on screenshots.
+- **Subagents on Claude Fable 5.2 failed** because the account needs usage credits. Use Opus for reviewer subagents unless Kerem says otherwise.
+
+## Hosting
+
+- GitHub Pages on a custom domain. The domain isn't bought yet.
+- The deploy workflow (`.github/workflows/deploy.yml`) runs **only when started by hand** until launch.
+- The launch checklist is in `README.md`. The site URL comes from `VITE_SITE_URL` (in `.env` locally, and from the repo variable `SITE_URL` in CI).
