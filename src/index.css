@@ -1,1 +1,41 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/inter-tight';
+
+/* Meadow design tokens: see docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md §4.1 */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    'Inter Tight Variable', 'Inter Variable', ui-sans-serif, system-ui,
+    sans-serif;
+
+  --color-ink: #1c2a1e;
+  --color-ink-soft: #2f3d30;
+  --color-cream: #fbf7ee;
+  --color-meadow: #9fbf73;
+  --color-meadow-deep: #3d5a2a;
+  --color-meadow-tint: #eef3e6;
+  --color-sky: #a9c6dc;
+  --color-poppy: #e0603a; /* decoration only, never text */
+  --color-cornflower: #4a6fa5;
+
+  --radius-card: 14px;
+  --shadow-card: 0 6px 24px rgb(30 50 30 / 0.12);
+}
+
+@layer base {
+  html {
+    @apply bg-cream font-sans text-ink antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cornflower);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
