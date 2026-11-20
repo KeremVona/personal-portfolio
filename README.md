@@ -1,32 +1,47 @@
-# React + TypeScript + Vite
+# Kerem Can Bas — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+The personal portfolio site of Kerem Can Bas, a full-stack engineer. It's a single static page (Hero, About, Projects, Experience, Footer) with a botanical "Meadow" look and subtle motion.
 
-Currently, two official plugins are available:
+Design decisions live in [`docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md`](docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Scripts
 
-## React Compiler
+| Command                | What it does                                  |
+| ---------------------- | --------------------------------------------- |
+| `npm run dev`          | Start the dev server                          |
+| `npm run build`        | Type-check and build to `dist/`               |
+| `npm run preview`      | Serve the production build locally            |
+| `npm run lint`         | Lint with Oxlint                              |
+| `npm run typecheck`    | Type-check only                               |
+| `npm run format`       | Format with Prettier (sorts Tailwind classes) |
+| `npm run format:check` | Check formatting without writing              |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Where things live
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```
+src/
+  index.css     Tailwind import, Meadow design tokens (@theme), fonts, base styles
+  content/      Typed site content: profile, links, experience, projects, nav sections
+  components/   Shared UI (Section, Nav, SkipLink …)
+  sections/     One component per page section
+public/         Résumé PDF, favicon
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+To update a job, project or link, edit the matching file in `src/content/`. The layout code stays untouched.
+
+`VITE_SITE_URL` (in `.env` locally, from the repo variable `SITE_URL` in CI) sets the canonical and Open Graph URLs.
+
+## Launch checklist
+
+Deploys run only when started by hand until launch.
+
+1. Buy the domain.
+2. Create the GitHub repo and push this project.
+3. Settings → Pages → Source: **GitHub Actions**.
+4. Settings → Secrets and variables → Actions → Variables: set `SITE_URL=https://<domain>` (no trailing slash).
+5. Add `public/CNAME` containing just the domain.
+6. Add the DNS records from GitHub's [custom domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).
+7. Actions → Deploy → **Run workflow**.
+8. Settings → Pages: enable **Enforce HTTPS** once the certificate is issued.
+9. In `.github/workflows/deploy.yml`, add `push: branches: [main]` under `on:`.
+10. Update the portfolio link on the résumé.
