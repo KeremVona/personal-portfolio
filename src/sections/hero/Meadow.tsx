@@ -1,5 +1,6 @@
 import {
   useCallback,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -8,6 +9,7 @@ import {
 } from 'react'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { LAYERS } from './art'
+import { createMeadowRenderer, type MeadowRenderer } from './meadowRenderer'
 import {
   artRect,
   chooseSource,
@@ -35,6 +37,7 @@ declare global {
 }
 
 const FADE = 'opacity 550ms ease-out'
+const CANVAS_FADE = 'opacity 400ms ease-out'
 // A layer that arrives this soon after being requested (cache) appears without fading.
 const QUICK_LOAD_MS = 120
 
@@ -52,6 +55,11 @@ export function Meadow({ size }: { size: Size }) {
   const [loaded, setLoaded] = useState<Partial<Record<LayerId, string>>>({})
   // layers that arrived (almost) immediately, e.g. from cache: no fade
   const [instant, setInstant] = useState<Partial<Record<LayerId, boolean>>>({})
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [renderer, setRenderer] = useState<MeadowRenderer | null>(null)
+  const [canvasShown, setCanvasShown] = useState(false)
+  // WebGL missing, failed to build, or lost: stay static for this visit
+  const [webglFailed, setWebglFailed] = useState(false)
 
   const dpr = window.devicePixelRatio || 1
   const placed = useMemo(
@@ -121,6 +129,71 @@ export function Meadow({ size }: { size: Size }) {
     })
   }, [placed, requested, loaded, markLoaded])
 
+  const allLoaded = placed.every(
+    ({ layer, source }) => loaded[layer.id] === source.variant.src,
+  )
+  const animate = allLoaded && !reducedMotion && !webglFailed
+  // Any source change rebuilds the renderer, so old textures never meet new rectangles.
+  const sourceKey = placed.map(({ source }) => source.variant.src).join('|')
+
+  // The WebGL renderer exists only while every layer has loaded and motion is allowed.
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!animate || !canvas) return
+    const created = createMeadowRenderer(
+      canvas,
+      () => setCanvasShown(true),
+      () => setWebglFailed(true),
+    )
+    if (!created) {
+      setWebglFailed(true)
+      return
+    }
+    setRenderer(created)
+    if (import.meta.env.DEV && window.__meadowDebug) {
+      window.__meadowDebug.canvasMountedAt = performance.now()
+      window.__meadowDebug.time = created.time
+    }
+    return () => {
+      created.destroy()
+      setRenderer(null)
+      setCanvasShown(false)
+    }
+  }, [animate, sourceKey])
+
+  // Feed the loaded images and their rectangles to the renderer.
+  useEffect(() => {
+    if (!renderer) return
+    const layers = placed.flatMap(({ layer, source, rect, clip }) => {
+      const image = images.current.get(layer.id)
+      if (!image) return []
+      const span = source.x1 - source.x0
+      return [{ image, bend: layer.bend, rect, span, texClip: clip }]
+    })
+    renderer.setLayers(layers, size)
+  }, [renderer, placed, size])
+
+  // Animate only while the hero is on screen and the tab is visible.
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!renderer || !canvas) return
+    let onScreen = true
+    const update = () =>
+      onScreen && !document.hidden ? renderer.start() : renderer.stop()
+    const observer = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting
+      update()
+    })
+    observer.observe(canvas)
+    document.addEventListener('visibilitychange', update)
+    update()
+    return () => {
+      observer.disconnect()
+      document.removeEventListener('visibilitychange', update)
+      renderer.stop()
+    }
+  }, [renderer])
+
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0">
       {placed.map(({ layer, source, rect, clip }, i) => {
@@ -158,6 +231,13 @@ export function Meadow({ size }: { size: Size }) {
           />
         )
       })}
+      {animate && (
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 h-full w-full"
+          style={{ opacity: canvasShown ? 1 : 0, transition: CANVAS_FADE }}
+        />
+      )}
     </div>
   )
 }
