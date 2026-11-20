@@ -1,5 +1,5 @@
 import { MAX_DPR, type Rect, type Size } from './placement'
-import { FRAGMENT_SHADER, VERTEX_SHADER } from './windShader'
+import { FRAGMENT_SHADER, VERTEX_SHADER, windPhases } from './windShader'
 
 export interface DrawLayer {
   image: HTMLImageElement
@@ -54,7 +54,7 @@ export function createMeadowRenderer(
   gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0)
 
   const u = {
-    t: gl.getUniformLocation(program, 't'),
+    phase: gl.getUniformLocation(program, 'phase'),
     bend: gl.getUniformLocation(program, 'bend'),
     span: gl.getUniformLocation(program, 'span'),
     rect: gl.getUniformLocation(program, 'rect'),
@@ -116,7 +116,7 @@ export function createMeadowRenderer(
     gl.viewport(0, 0, canvas.width, canvas.height)
     gl.clearColor(0, 0, 0, 1)
     gl.clear(gl.COLOR_BUFFER_BIT)
-    gl.uniform1f(u.t, clock)
+    gl.uniform3f(u.phase, ...windPhases(clock))
     for (const layer of layers) {
       const texture = textures.get(layer.image)
       if (!texture) continue
