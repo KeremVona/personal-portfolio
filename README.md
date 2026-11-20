@@ -37,11 +37,12 @@ Deploys run only when started by hand until launch.
 
 1. Buy the domain.
 2. Create the GitHub repo and push this project.
-3. Settings → Pages → Source: **GitHub Actions**.
-4. Settings → Secrets and variables → Actions → Variables: set `SITE_URL=https://<domain>` (no trailing slash).
-5. Add `public/CNAME` containing just the domain.
+3. Repo Settings → Pages → Source: **GitHub Actions**.
+4. Repo Settings → Secrets and variables → Actions → Variables: set `SITE_URL=https://<domain>` (no trailing slash).
+5. Recommended: verify the domain in your **account** Settings → Pages → Add a domain. This prevents domain takeover.
 6. Add the DNS records from GitHub's [custom domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).
-7. Actions → Deploy → **Run workflow**.
-8. Settings → Pages: enable **Enforce HTTPS** once the certificate is issued.
-9. In `.github/workflows/deploy.yml`, add `push: branches: [main]` under `on:`.
-10. Update the portfolio link on the résumé.
+7. Repo Settings → Pages → **Custom domain**: enter the domain and Save. Deploys from a workflow ignore a `CNAME` file, so this setting is the one that counts. Without it the site would publish under `<user>.github.io/<repo>/`, where the root-relative asset paths break.
+8. Actions → Deploy → **Run workflow**.
+9. Repo Settings → Pages: enable **Enforce HTTPS** once the certificate is issued.
+10. In `.github/workflows/deploy.yml`, add `push: branches: [main]` under `on:`.
+11. Update the portfolio link on the résumé.

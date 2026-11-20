@@ -150,7 +150,7 @@ public/       résumé PDF, favicon, Open Graph image
   - The site lives in a **new repo**. Because the domain serves it at the root, Vite's `base` is `/`.
   - **The domain name is not chosen yet.** Kerem buys it before launch.
   - Until then, the site URL is one constant (e.g. `SITE_URL` in `src/content/links.ts` or a Vite env variable). The canonical URL and the absolute Open Graph URLs read from that constant.
-  - At cutover, add `public/CNAME`, point DNS at GitHub Pages, and enable "Enforce HTTPS".
+  - At cutover, set the domain in the repo's Settings → Pages → Custom domain. GitHub ignores a `CNAME` file for deploys from a workflow. Then point DNS at GitHub Pages and enable "Enforce HTTPS". Optionally verify the domain on the account first, to prevent takeover.
   - The old `portfolio-2` site is left alone. The résumé link is updated once the new domain is live.
 - **Résumé download (decided by Kerem):** the PDF is published as is, phone number included. It is copied from `reference/resume.pdf` into `public/` and kept up to date there.
 - **Nothing goes live until the site is ready (Claude's call).**
