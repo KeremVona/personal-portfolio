@@ -13,8 +13,15 @@ const WASH_NARROW: CSSProperties = {
     'linear-gradient(rgb(251 247 238 / 0.75), rgb(251 247 238 / 0.45) 45%, rgb(251 247 238 / 0) 65%)',
 }
 
+// The hero is full width and max(100svh, 600px) tall (see the section's class),
+// so the first render can request the right images before layout is measured.
+const guessHeroSize = () => ({
+  width: document.documentElement.clientWidth,
+  height: Math.max(window.innerHeight, 600),
+})
+
 export function Hero() {
-  const [ref, size] = useElementSize<HTMLElement>()
+  const [ref, size] = useElementSize<HTMLElement>(guessHeroSize)
   const narrow = size ? isNarrow(size) : false
 
   return (

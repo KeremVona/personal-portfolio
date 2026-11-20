@@ -69,18 +69,23 @@ export function createMeadowRenderer(
     HTMLImageElement,
     { src: string; tex: WebGLTexture }
   >()
-  let layers: (DrawLayer & { tex: WebGLTexture })[] = []
+  let layers: DrawLayer[] = []
   let size: Size = { width: 1, height: 1 }
+  let ready = false
+  let generation = 0
   let running = false
   let frame = 0
   let clock = 0
   let last = 0
   let firstFrameSent = false
   let lost = false
+  let destroyed = false
 
-  const textureFor = (image: HTMLImageElement): WebGLTexture => {
+  const hasTexture = (image: HTMLImageElement) =>
+    textures.get(image)?.src === image.currentSrc
+
+  const upload = (image: HTMLImageElement) => {
     const cached = textures.get(image)
-    if (cached && cached.src === image.currentSrc) return cached.tex
     if (cached) gl.deleteTexture(cached.tex)
     const tex = gl.createTexture()
     gl.bindTexture(gl.TEXTURE_2D, tex)
@@ -90,17 +95,32 @@ export function createMeadowRenderer(
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
     textures.set(image, { src: image.currentSrc, tex })
-    return tex
+  }
+
+  // Decode each image asynchronously, then upload one texture per frame,
+  // so no single task blocks input for long on slow phones.
+  const prepare = async (gen: number) => {
+    for (const { image } of layers) {
+      if (hasTexture(image)) continue
+      await image.decode().catch(() => undefined)
+      await nextFrame()
+      if (destroyed || lost || gen !== generation) return
+      upload(image)
+    }
+    ready = true
+    draw()
   }
 
   const draw = () => {
-    if (lost) return
+    if (lost || !ready) return
     gl.viewport(0, 0, canvas.width, canvas.height)
     gl.clearColor(0, 0, 0, 1)
     gl.clear(gl.COLOR_BUFFER_BIT)
     gl.uniform1f(u.t, clock)
     for (const layer of layers) {
-      gl.bindTexture(gl.TEXTURE_2D, layer.tex)
+      const texture = textures.get(layer.image)
+      if (!texture) continue
+      gl.bindTexture(gl.TEXTURE_2D, texture.tex)
       gl.uniform4f(
         u.rect,
         layer.rect.x / size.width,
@@ -141,8 +161,10 @@ export function createMeadowRenderer(
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR)
       canvas.width = Math.max(1, Math.round(size.width * dpr))
       canvas.height = Math.max(1, Math.round(size.height * dpr))
-      layers = next.map((layer) => ({ ...layer, tex: textureFor(layer.image) }))
-      draw()
+      layers = next
+      ready = layers.every(({ image }) => hasTexture(image))
+      if (ready) draw()
+      else void prepare(++generation)
     },
     start() {
       if (running || lost) return
@@ -155,6 +177,7 @@ export function createMeadowRenderer(
       cancelAnimationFrame(frame)
     },
     destroy() {
+      destroyed = true
       running = false
       cancelAnimationFrame(frame)
       canvas.removeEventListener('webglcontextlost', handleLost)
@@ -168,6 +191,9 @@ export function createMeadowRenderer(
     time: () => clock,
   }
 }
+
+const nextFrame = () =>
+  new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
 
 function buildProgram(gl: WebGLRenderingContext): WebGLProgram | null {
   const compile = (type: number, source: string) => {

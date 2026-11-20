@@ -38,6 +38,16 @@ declare global {
 
 const FADE = 'opacity 550ms ease-out'
 const CANVAS_FADE = 'opacity 400ms ease-out'
+
+/** Run `task` when the main thread is idle (or after a short delay where unsupported). */
+function whenIdle(task: () => void): () => void {
+  if ('requestIdleCallback' in window) {
+    const id = window.requestIdleCallback(task, { timeout: 2000 })
+    return () => window.cancelIdleCallback(id)
+  }
+  const id = setTimeout(task, 200)
+  return () => clearTimeout(id)
+}
 // A layer that arrives this soon after being requested (cache) appears without fading.
 const QUICK_LOAD_MS = 120
 
@@ -137,25 +147,31 @@ export function Meadow({ size }: { size: Size }) {
   const sourceKey = placed.map(({ source }) => source.variant.src).join('|')
 
   // The WebGL renderer exists only while every layer has loaded and motion is allowed.
+  // It starts when the browser is idle, so it never competes with the first paint.
   useEffect(() => {
     const canvas = canvasRef.current
     if (!animate || !canvas) return
-    const created = createMeadowRenderer(
-      canvas,
-      () => setCanvasShown(true),
-      () => setWebglFailed(true),
-    )
-    if (!created) {
-      setWebglFailed(true)
-      return
+    let created: MeadowRenderer | null = null
+    const begin = () => {
+      created = createMeadowRenderer(
+        canvas,
+        () => setCanvasShown(true),
+        () => setWebglFailed(true),
+      )
+      if (!created) {
+        setWebglFailed(true)
+        return
+      }
+      setRenderer(created)
+      if (import.meta.env.DEV && window.__meadowDebug) {
+        window.__meadowDebug.canvasMountedAt = performance.now()
+        window.__meadowDebug.time = created.time
+      }
     }
-    setRenderer(created)
-    if (import.meta.env.DEV && window.__meadowDebug) {
-      window.__meadowDebug.canvasMountedAt = performance.now()
-      window.__meadowDebug.time = created.time
-    }
+    const cancel = whenIdle(begin)
     return () => {
-      created.destroy()
+      cancel()
+      created?.destroy()
       setRenderer(null)
       setCanvasShown(false)
     }
