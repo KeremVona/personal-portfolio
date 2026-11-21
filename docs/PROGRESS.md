@@ -10,6 +10,7 @@ _Last updated: 2026-11-21_
 | Hero and nav | `specs/2026-11-21-hero-design.md` | `plans/2026-11-21-hero.md` | Notes below |
 | About | `specs/2026-11-21-about-design.md` | `plans/2026-11-21-about.md` | Notes below |
 | Projects | `specs/2026-11-21-projects-design.md` | `plans/2026-11-21-projects.md` | Notes below |
+| Experience | `specs/2026-11-21-experience-design.md` | `plans/2026-11-21-experience.md` | Notes below |
 
 **Hero and nav notes:**
 - A five-layer WebGL meadow with wind sway, phone crops, and flowers that fade in after the sky.
@@ -28,19 +29,25 @@ _Last updated: 2026-11-21_
 - Placeholder media ("Screenshots coming soon") until Kerem adds screenshots. The panel supports images and one self-hosted video.
 - The hero's meadow now fades softly into the cream page at its bottom edge.
 
-**Lighthouse on mobile, with the hero, About and Projects:** Performance 91; Accessibility, Best Practices and SEO 100; CLS 0.
+**Experience notes:**
+- Layout C: Dijital Varlıklar in a wide featured card with its numbers (~2.5M monthly visits, 13+ news portals), then the other roles newest first in a two-column grid.
+- Two highlights per role, with "Show N more" for the rest. A "Now" pill marks the current role.
+- The featured role and its numbers are set in `src/content/experience.ts` (`featured`, `stats`).
+
+**Lighthouse on mobile, with the hero, About, Projects and Experience:** Performance 91; Accessibility, Best Practices and SEO 100; CLS 0.
 
 All spec and plan paths are under `docs/superpowers/`.
 
-## Next: Experience section
+## Next: Footer
 
 Start a brainstorm: mockups in the browser, agree the design with Kerem, write a section spec, plan, build inline, review with Opus, and merge.
 
-Experience and Contact are still unstyled placeholders that render from `src/content/`. They already use the eyebrow heading.
+The footer (`#contact`) is still an unstyled placeholder that renders from `src/content/links.ts`.
+
+**Testing tip:** when the Browser pane is hidden it can freeze CSS animations *and* IntersectionObserver, so `Reveal` content stays hidden. Use headless Chrome over CDP against `npm run preview` for screenshots instead.
 
 ## Then
 
-- **Experience:** five roles as a timeline, with the numbers up front.
 - **Footer:**
   - Contact links (email, LinkedIn, GitHub, résumé).
   - The meadow returns, either as flowers growing from the bottom or as a wordmark filled with the painting.

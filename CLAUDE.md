@@ -8,12 +8,12 @@ A single-page portfolio for Kerem, a final-year Software Engineering student (gr
 
 1. `docs/PROGRESS.md`: what's done, what's next, and the open/deferred items.
 2. `docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md`: the binding foundation (goals, stack, tokens, quality bar, hosting).
-3. `docs/superpowers/specs/2026-11-21-hero-design.md`, `2026-11-21-about-design.md` and `2026-11-21-projects-design.md`: the hero, nav, About and Projects designs (built).
+3. `docs/superpowers/specs/2026-11-21-hero-design.md`, `2026-11-21-about-design.md`, `2026-11-21-projects-design.md` and `2026-11-21-experience-design.md`: the hero, nav, About, Projects and Experience designs (built).
 4. Any newer spec in `docs/superpowers/specs/`. Each section gets its own spec before it is built.
 
 ## How we work (Kerem's preferences)
 
-- **Section by section:** Hero ✅ → About ✅ → Projects ✅ → Experience → Footer. A blog is out of scope for now.
+- **Section by section:** Hero ✅ → About ✅ → Projects ✅ → Experience ✅ → Footer. A blog is out of scope for now.
 - **Each section follows the same loop:**
   1. Brainstorm, with mockups in the browser so Kerem can react to real visuals.
   2. Agree the design.
@@ -52,6 +52,7 @@ src/components/         Nav (fixed, hide/show, phone menu), navState (pure + tes
 src/hooks/              useNavState, useElementSize, useReducedMotion
 src/sections/Hero.tsx   Hero copy and layout
 src/sections/projects/  projectLogic.ts (pure, tested), ProjectCard, ProjectPanel (native <dialog>; CSS in index.css), art.ts
+src/sections/experience/ experienceLogic.ts (pure, tested), ExperienceCard (featured card with a numbers column)
 src/sections/hero/      placement.ts (pure, tested), art.ts (layer data), Meadow.tsx (static layers + canvas),
                         meadowRenderer.ts + windShader.ts (WebGL1 wind sway)
 src/assets/hero/        Committed WebP masters and phone crops (made by scripts/prepare-hero-art.mjs)
