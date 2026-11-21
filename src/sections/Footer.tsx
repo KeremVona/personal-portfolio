@@ -1,4 +1,5 @@
 import { Section } from '../components/Section'
+import { SectionHeading } from '../components/SectionHeading'
 import { LINKS } from '../content/links'
 import { PROFILE } from '../content/profile'
 import { sectionLabel } from '../content/sections'
@@ -9,7 +10,16 @@ const YEAR = new Date().getFullYear()
 export function Footer() {
   return (
     <footer>
-      <Section id="contact" title={sectionLabel('contact')}>
+      <Section
+        id="contact"
+        heading={
+          <SectionHeading
+            id="contact"
+            eyebrow={sectionLabel('contact')}
+            title={sectionLabel('contact')}
+          />
+        }
+      >
         <ul className="flex flex-wrap gap-x-8 gap-y-3 text-lg">
           {CONTACT_LINKS.map((link) => {
             const external = link.href.startsWith('http')

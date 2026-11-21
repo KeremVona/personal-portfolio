@@ -3,27 +3,24 @@ import type { SectionId } from '../content/types'
 
 interface SectionProps {
   id: SectionId
-  title: string
+  /**
+   * A heading rendered above the content (usually a SectionHeading). Omit it when
+   * the section places its own SectionHeading inside its layout.
+   */
+  heading?: ReactNode
   children?: ReactNode
 }
 
-export function Section({ id, title, children }: SectionProps) {
-  const titleId = `${id}-title`
-
+export function Section({ id, heading, children }: SectionProps) {
   return (
     <section
       id={id}
-      aria-labelledby={titleId}
+      aria-labelledby={`${id}-title`}
       className="scroll-mt-24 py-16 sm:py-24"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <h2
-          id={titleId}
-          className="font-display text-3xl font-semibold tracking-[-0.03em] sm:text-4xl"
-        >
-          {title}
-        </h2>
-        {children && <div className="mt-6">{children}</div>}
+        {heading}
+        {children && <div className={heading ? 'mt-6' : ''}>{children}</div>}
       </div>
     </section>
   )
