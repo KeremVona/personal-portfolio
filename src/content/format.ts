@@ -34,3 +34,7 @@ export function formatDateRange(start: string, end: string | null): string {
     ? `${from.name} – ${to.name} ${to.year}`
     : `${from.name} ${from.year} – ${to.name} ${to.year}`
 }
+
+/** True for a "YYYY-MM" date with a real month; content dates must match it. */
+export const isYearMonth = (value: string): boolean =>
+  /^\d{4}-(0[1-9]|1[0-2])$/.test(value)

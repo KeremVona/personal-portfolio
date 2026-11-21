@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { aboutFacts } from './about'
-import { formatDateRange, formatGraduation } from './format'
+import { EXPERIENCE } from './experience'
+import { formatDateRange, formatGraduation, isYearMonth } from './format'
 import { PROFILE } from './profile'
 
 describe('formatGraduation', () => {
@@ -35,5 +36,24 @@ describe('formatDateRange', () => {
 
   it('collapses a single month', () => {
     expect(formatDateRange('2025-04', '2025-04')).toBe('Apr 2025')
+  })
+})
+
+describe('isYearMonth', () => {
+  it('accepts YYYY-MM and rejects anything else', () => {
+    expect(isYearMonth('2026-07')).toBe(true)
+    expect(isYearMonth('2026/07')).toBe(false)
+    expect(isYearMonth('2026-13')).toBe(false)
+    expect(isYearMonth('2026-7')).toBe(false)
+  })
+
+  it('holds for every date in the experience content, in order', () => {
+    for (const item of EXPERIENCE) {
+      expect(isYearMonth(item.start)).toBe(true)
+      if (item.end !== null) {
+        expect(isYearMonth(item.end)).toBe(true)
+        expect(item.start <= item.end).toBe(true)
+      }
+    }
   })
 })

@@ -1,4 +1,5 @@
-import { useId, useState } from 'react'
+import { useId, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { formatDateRange } from '../../content/format'
 import type { ExperienceItem } from '../../content/types'
 import { placeLabel, splitHighlights } from './experienceLogic'
@@ -14,6 +15,15 @@ export function ExperienceCard({ item }: { item: ExperienceItem }) {
   const { shown, hidden } = splitHighlights(item.highlights)
   const [expanded, setExpanded] = useState(false)
   const moreId = useId()
+  const firstHidden = useRef<HTMLLIElement>(null)
+
+  const toggle = () => {
+    if (expanded) return setExpanded(false)
+    // The revealed bullets sit above the button, so move focus to them; otherwise
+    // a screen reader hears "expanded" and reads on past the new content.
+    flushSync(() => setExpanded(true))
+    firstHidden.current?.focus()
+  }
 
   return (
     <article
@@ -68,15 +78,21 @@ export function ExperienceCard({ item }: { item: ExperienceItem }) {
               hidden={!expanded}
               className="mt-1.5 list-disc space-y-1.5 pl-[18px] text-[0.875rem] leading-relaxed text-ink-soft marker:text-meadow"
             >
-              {hidden.map((highlight) => (
-                <li key={highlight}>{highlight}</li>
+              {hidden.map((highlight, index) => (
+                <li
+                  key={highlight}
+                  ref={index === 0 ? firstHidden : undefined}
+                  tabIndex={index === 0 ? -1 : undefined}
+                >
+                  {highlight}
+                </li>
               ))}
             </ul>
             <button
               type="button"
               aria-expanded={expanded}
               aria-controls={moreId}
-              onClick={() => setExpanded((open) => !open)}
+              onClick={toggle}
               className="mt-1.5 cursor-pointer text-[13px] font-medium text-meadow-deep hover:underline"
             >
               {expanded ? 'Show less' : `Show ${hidden.length} more`}

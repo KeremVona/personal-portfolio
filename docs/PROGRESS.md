@@ -90,6 +90,12 @@ The footer (`#contact`) is still an unstyled placeholder that renders from `src/
 - The 760w bouquet variants are ~190–210 KB (lazy, desktop only).
 - The slide-out is only checked in Chromium. Safari and Firefox should now close cleanly (explicit fixed positioning), but check on an iPhone before launch.
 
+**Experience:**
+- The "is this the wide card?" rule (`featured` + stats) is written in both `Experience.tsx` and `ExperienceCard.tsx`. Fold it into one `isWide()` helper.
+- Linked company names and "Show more" don't look clickable until hovered. Consider a small ↗ after linked names (with "opens in a new tab" for screen readers) and an underline or ▾ on the button.
+- The "Show more" button is only 20px tall. `py-1 -my-1` would give a bigger tap target without moving anything.
+- The content test pins the featured role to Dijital Varlıklar and its exact numbers. That's deliberate for now, but it will need updating if Kerem changes them.
+
 **Scaffold:**
 - The deploy workflow's `SITE_URL` guard accepts `http://` and a trailing slash.
 - The Pages permissions could be limited to the deploy job.
