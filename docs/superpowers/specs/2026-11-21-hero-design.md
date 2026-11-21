@@ -78,6 +78,7 @@ The source files are `reference/hero/1.png` to `5.png`. Each is 2730×1536 (16:9
   - Wide: a cream radial gradient, ellipse about 60%×55% centred at about (28%, 38%), from 78% opacity to 0.
   - Narrow: a top-to-bottom cream linear gradient, 75% → 45% at 45% height → 0 at 65%.
   - The wash is decoration; the text must meet AA contrast on the worst part of the art behind it.
+- **Bottom fade** (added after About, at Kerem's request): the meadow dissolves into the cream page instead of ending in a hard line. A cream linear gradient covers the bottom `clamp(80px, 18%, 200px)` of the hero, eased from 0 to full opacity. It sits above the canvas and is static, so it works the same with reduced motion.
 
 ## 5. Motion (WebGL)
 

@@ -13,6 +13,13 @@ const WASH_NARROW: CSSProperties = {
     'linear-gradient(rgb(251 247 238 / 0.75), rgb(251 247 238 / 0.45) 45%, rgb(251 247 238 / 0) 65%)',
 }
 
+// The meadow dissolves into the cream page instead of ending in a hard line.
+// Eased stops so the fade has no visible starting edge.
+const BOTTOM_FADE: CSSProperties = {
+  background:
+    'linear-gradient(rgb(251 247 238 / 0), rgb(251 247 238 / 0.06) 25%, rgb(251 247 238 / 0.22) 45%, rgb(251 247 238 / 0.5) 65%, rgb(251 247 238 / 0.82) 85%, rgb(251 247 238))',
+}
+
 // The hero is full width and max(100svh, 600px) tall (see the section's class),
 // so the first render can request the right images before layout is measured.
 const guessHeroSize = () => ({
@@ -36,6 +43,11 @@ export function Hero() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={narrow ? WASH_NARROW : WASH_WIDE}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[clamp(80px,18%,200px)]"
+        style={BOTTOM_FADE}
       />
       <div
         className={
