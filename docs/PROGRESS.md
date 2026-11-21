@@ -76,6 +76,13 @@ Experience and Contact are still unstyled placeholders that render from `src/con
 - `useInitialHashScroll` smooth-scrolls on load, and overrides scroll restoration on reload/back. Fix: `behavior: 'instant'`, and skip for `reload`/`back_forward` navigations.
 - The koi `width`/`height` are hardcoded (1200×1599) rather than taken from the image metadata.
 
+**Projects:**
+- On Windows the open side panel stops 15px short of the right edge (the price of `scrollbar-gutter: stable`, which stops the page jumping). Nearly invisible, since the panel and gutter are both cream.
+- For when media is added: pause any video when the panel closes; use the first *image* (not `media[0]`) as the card cover; derive the cover `sizes` from the project count; show panel images uncropped (`object-contain`); make content entries go through the sorted-variants helper (thumbnails use `variants[0]` without a srcset).
+- Reopening the same project keeps the last gallery item shown.
+- The 760w bouquet variants are ~190–210 KB (lazy, desktop only).
+- The slide-out is only checked in Chromium. Safari and Firefox should now close cleanly (explicit fixed positioning), but check on an iPhone before launch.
+
 **Scaffold:**
 - The deploy workflow's `SITE_URL` guard accepts `http://` and a trailing slash.
 - The Pages permissions could be limited to the deploy job.

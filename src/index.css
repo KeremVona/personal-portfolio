@@ -47,8 +47,15 @@
  * See docs/superpowers/specs/2026-11-21-projects-design.md §4.
  */
 @layer components {
+  /*
+   * Positioned explicitly rather than relying on the browser's modal styles:
+   * Safari and Firefox drop those the moment close() runs, mid-slide.
+   */
   .project-panel {
-    margin: auto 0 0;
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 50;
+    margin: 0;
     width: 100%;
     max-width: 100%;
     max-height: 92dvh;
@@ -97,7 +104,7 @@
 
   @media (min-width: 48rem) {
     .project-panel {
-      margin: 0 0 0 auto;
+      inset: 0 0 0 auto;
       width: min(520px, 92vw);
       height: 100dvh;
       max-height: 100dvh;

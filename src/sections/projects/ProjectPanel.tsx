@@ -21,6 +21,9 @@ const MEDIA_SIZES = '(min-width: 768px) 460px, 100vw'
  */
 export function ProjectPanel({ ref }: { ref: Ref<ProjectPanelHandle> }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
+  // Where the last press started: a text selection dragged out of the panel ends
+  // with a click on the dialog itself, which must not count as a backdrop click.
+  const pressedOnBackdrop = useRef(false)
   // Kept after closing, so the closing slide still shows the content.
   const [project, setProject] = useState<ProjectItem | null>(null)
 
@@ -46,9 +49,14 @@ export function ProjectPanel({ ref }: { ref: Ref<ProjectPanelHandle> }) {
       ref={dialogRef}
       className="project-panel"
       aria-labelledby="project-panel-title"
-      // The content fills the dialog, so a click on the dialog itself is the backdrop.
+      // The content fills the dialog, so a press and click on the dialog itself
+      // are on the backdrop.
+      onPointerDown={(event) => {
+        pressedOnBackdrop.current = event.target === event.currentTarget
+      }}
       onClick={(event) => {
-        if (event.target === event.currentTarget) close()
+        if (pressedOnBackdrop.current && event.target === event.currentTarget)
+          close()
       }}
     >
       {project && (
@@ -69,14 +77,17 @@ function PanelContent({
 
   return (
     <div className="relative flex min-h-full flex-col px-6 pt-6 sm:px-8 sm:pt-8">
-      <button
-        type="button"
-        onClick={onClose}
-        aria-label="Close"
-        className="absolute top-4 right-4 grid size-10 cursor-pointer place-items-center rounded-full border border-ink/18 bg-white/70 text-ink hover:bg-white"
-      >
-        <X aria-hidden="true" size={18} />
-      </button>
+      {/* Sticky, so the × stays in reach after scrolling a long phone sheet. */}
+      <div className="sticky top-3 z-10 -mt-2 -mr-2 -mb-10 flex justify-end">
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="grid size-10 cursor-pointer place-items-center rounded-full border border-ink/18 bg-white/80 text-ink backdrop-blur-sm hover:bg-white"
+        >
+          <X aria-hidden="true" size={18} />
+        </button>
+      </div>
 
       <h2
         id="project-panel-title"
@@ -130,7 +141,7 @@ function PanelContent({
           </a>
         ))}
         {!project.repoUrl && (
-          <span className="text-sm text-ink/60">Closed source</span>
+          <span className="text-sm text-ink-soft">Closed source</span>
         )}
       </div>
 

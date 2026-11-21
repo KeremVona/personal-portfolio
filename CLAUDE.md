@@ -61,7 +61,7 @@ docs/superpowers/       Specs (decisions) and plans (how each piece was built)
 
 ## Things that will bite you
 
-- **`reference/` is git-ignored and is not in the repo.** It holds the raw art and the private style references. Kerem copies it between machines by hand if needed. Only `npm run art:hero` requires it; the built art is already committed.
+- **`reference/` is git-ignored and is not in the repo.** It holds the raw art and the private style references. Kerem copies it between machines by hand if needed. Only `npm run art:hero` and `npm run art:projects` require it; the built art is already committed.
 - **Tailwind v4 `translate-*` utilities set the CSS `translate` property, not `transform`.** Transition `translate` and read `getComputedStyle(el).translate`.
 - **vite-imagetools ships no TypeScript types.** `src/imagetools.d.ts` declares the `?…&as=metadata` imports.
 - **The linter is Oxlint, not ESLint.** The Vite template ships Oxlint, and typescript-eslint doesn't support TS 7.
