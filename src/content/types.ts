@@ -38,12 +38,26 @@ export interface ExperienceItem {
   highlights: string[]
 }
 
+/** Placeholder colour for a project without screenshots. */
+export type ProjectTone = 'parchment' | 'meadow' | 'sky'
+
+export type ProjectMedia =
+  | { kind: 'image'; variants: ImagetoolsMetadata[]; alt: string }
+  | { kind: 'video'; src: string; poster: string; alt: string }
+
 export interface ProjectItem {
   slug: string
   name: string
+  /** One line on the card. */
   summary: string
+  /** The panel's longer paragraph. */
+  description: string
   highlights: string[]
   stack: string[]
+  /** Set for open-source projects; its absence means closed source. */
   repoUrl?: string
-  closedSource: boolean
+  liveUrl?: string
+  /** Empty until screenshots exist; the first image is the card cover. */
+  media: ProjectMedia[]
+  tone: ProjectTone
 }
