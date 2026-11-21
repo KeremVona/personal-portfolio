@@ -24,6 +24,11 @@ export const EXPERIENCE: ExperienceItem[] = [
     end: '2026-08',
     location: 'Istanbul, Türkiye',
     workMode: 'Hybrid',
+    featured: true,
+    stats: [
+      { value: '~2.5M', label: 'monthly visits' },
+      { value: '13+', label: 'news portals tracked' },
+    ],
     stack: ['.NET MVC', 'MSSQL', 'HtmlAgilityPack', 'Web Scraping'],
     highlights: [
       'Developed high-performance, interactive browser-based games deployed to the Türkiye Gazetesi web platform, reaching an audience across a high-traffic site serving ~2.5M monthly visits.',
