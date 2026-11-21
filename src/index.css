@@ -33,6 +33,11 @@
     outline-offset: 3px;
   }
 
+  /* Cornflower is too dark on the ink footer. */
+  footer :focus-visible {
+    outline-color: var(--color-cream);
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     html {
       scroll-behavior: smooth;

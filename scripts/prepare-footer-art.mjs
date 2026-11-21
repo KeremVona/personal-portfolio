@@ -21,9 +21,12 @@ const band = await sharp(png('5'))
   .composite([{ input: png('2') }, { input: png('1') }])
   .png()
   .toBuffer()
+// The band only ever sits on the footer's ink background, so flatten onto it:
+// no alpha channel makes every served variant far smaller.
 await sharp(band)
   .extract(CROP)
-  .webp({ quality: 82, alphaQuality: 90 })
+  .flatten({ background: '#1c2a1e' })
+  .webp({ quality: 85 })
   .toFile(`${OUT}/band.webp`)
 
 console.log(`Wrote ${OUT}/band.webp`)
