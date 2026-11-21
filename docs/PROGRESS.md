@@ -66,6 +66,12 @@ Experience and Contact are still unstyled placeholders that render from `src/con
 - `setLayers` on a just-destroyed renderer starts harmless `decode()` calls. Fix: return early if destroyed.
 - The DPR is read only on render, so moving to a monitor with a different pixel density keeps the old canvas resolution.
 
+**About:**
+- Content not yet revealed prints invisible. Fix: add `print:opacity-100 print:translate-y-0` to `Reveal`.
+- The print's hover can flicker at its bottom edge, because the lifted element is the one being hovered. Fix: `group` on the wrapper and `group-hover:` on the image.
+- `useInitialHashScroll` smooth-scrolls on load, and overrides scroll restoration on reload/back. Fix: `behavior: 'instant'`, and skip for `reload`/`back_forward` navigations.
+- The koi `width`/`height` are hardcoded (1200×1599) rather than taken from the image metadata.
+
 **Scaffold:**
 - The deploy workflow's `SITE_URL` guard accepts `http://` and a trailing slash.
 - The Pages permissions could be limited to the deploy job.
