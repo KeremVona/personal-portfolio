@@ -78,10 +78,12 @@ export function Footer() {
       </Section>
 
       {/* Never narrower than 720px, so phones see flowers at both edges; capped at
-          700px tall on very wide screens, cropping from the top (2.797 = 2730/976). */}
+          700px tall on very wide screens, cropping from the top (2.797 = 2730/976).
+          The cap starts at 700 × 2.797 ≈ 1958px wide; from there the top fades into
+          the ink so cropped flower heads don't end in a hard line. */}
       <div
         aria-hidden="true"
-        className="relative h-[min(calc(max(100vw,720px)/2.797),700px)] overflow-hidden"
+        className="relative h-[min(calc(max(100vw,720px)/2.797),700px)] overflow-hidden min-[1958px]:[mask-image:linear-gradient(to_bottom,transparent,#000_180px)]"
       >
         <img
           src={BAND_FULL.src}

@@ -37,7 +37,7 @@ _Last updated: 2026-11-21_
 
 **Footer notes:**
 - Option A, "Night meadow": a dark ink footer. It has the email button, "Copy email" (hidden where the Clipboard API is missing), LinkedIn, GitHub and the résumé, then the hero's painted flowers edge to edge (`npm run art:footer`), then a bottom strip with "Back to top".
-- The band is flattened onto the ink colour (no alpha) to keep it light: about 115 KB on phones, lazy-loaded. If the footer colour ever changes, re-run `npm run art:footer` with the new colour.
+- The band is flattened onto the ink colour (no alpha) to keep it light and lazy-loaded: 67 KB on a 1.75× phone, 115 KB on 2×, 226 KB on 3× (which picks the 2730w file). If the footer colour ever changes, re-run `npm run art:footer` with the new colour.
 
 **Lighthouse on mobile, whole page:** Performance 90–91; Accessibility, Best Practices and SEO 100; CLS 0. Performance is right at the 90 target, so watch it with any new weight. LCP (3.5s) is the hero's flower layer.
 
@@ -98,6 +98,13 @@ All five sections are built. What's left:
 - Linked company names and "Show more" don't look clickable until hovered. Consider a small ↗ after linked names (with "opens in a new tab" for screen readers) and an underline or ▾ on the button.
 - The "Show more" button is only 20px tall. `py-1 -my-1` would give a bigger tap target without moving anything.
 - The content test pins the featured role to Dijital Varlıklar and its exact numbers. That's deliberate for now, but it will need updating if Kerem changes them.
+
+**Footer:**
+- A failed clipboard write (denied permission, some iframes) gives no feedback. Could show "Couldn't copy" for 2s.
+- 3× phones load the 226 KB band; a ~2160w variant would halve it.
+- The image helpers (sort variants, srcset, largest) are repeated in About, Projects and Footer. Move them to one shared module.
+- "Back to top ↑" and "Copied ✓": screen readers read the glyphs aloud. Wrap them in `aria-hidden` spans.
+- The band's height uses `100vw` but the image width uses `100%`, so with a Windows scrollbar there's a 6px ink strip above the image. It's invisible today because the band's top is ink, but it would show if the band were re-exported with transparency.
 
 **Scaffold:**
 - The deploy workflow's `SITE_URL` guard accepts `http://` and a trailing slash.
