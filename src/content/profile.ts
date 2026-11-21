@@ -8,4 +8,5 @@ export const PROFILE: Profile = {
   graduation: '2027-06',
   availability: 'Open to full-stack roles · 2027',
   email: 'keremvona@gmail.com',
+  languages: ['English', 'Turkish'],
 }

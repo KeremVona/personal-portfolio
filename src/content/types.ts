@@ -14,6 +14,7 @@ export interface Profile {
   graduation: string
   availability: string
   email: string
+  languages: string[]
 }
 
 export interface ExternalLink {
