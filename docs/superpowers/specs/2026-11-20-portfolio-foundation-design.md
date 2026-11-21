@@ -109,7 +109,7 @@ All of these are Claude's recommendations, accepted in conversation. Use the lat
 |---|---|---|
 | Build | Vite + React + TypeScript | `strict` TypeScript |
 | Styling | Tailwind CSS v4 via `@tailwindcss/vite` | No PostCSS config. No component library: components are hand-built. |
-| Animation | `motion` (formerly Framer Motion, `motion/react`) | Scroll reveals and parallax |
+| Animation | Native `Reveal` (IntersectionObserver + CSS transitions) | Changed during the About build: `motion` was tried and removed, because it cost about 14–31 KB of JS and dropped mobile Performance to 90. Add a library only if a later section needs animation that CSS can't do. |
 | Sway | Plain CSS keyframes | Cheapest for the browser. If the hero session chooses option (b), a small WebGL setup is added then. |
 | UI icons | `lucide-react` | |
 | Tech logos | Simple Icons | Check that needed logos exist (e.g. .NET); fall back to inline SVG |

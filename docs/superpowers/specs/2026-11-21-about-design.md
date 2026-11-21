@@ -101,4 +101,4 @@ A short, personal pause between the hero and the work. It tells the reader who K
 - File and component names.
 - Exact gaps and font sizes within the ranges above.
 - Whether the About content lives in `profile.ts` or a new `about.ts`.
-- How `Reveal` is built on top of `motion` (`whileInView`, `once`, reduced-motion handling).
+- How the native `Reveal` is built (IntersectionObserver options, transition classes, reduced-motion handling).

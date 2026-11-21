@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { hashTarget } from './hashTarget'
 
 /**
  * Deep links like /#projects: the browser looks for the target before React has
@@ -6,7 +7,7 @@ import { useEffect } from 'react'
  */
 export function useInitialHashScroll() {
   useEffect(() => {
-    const id = decodeURIComponent(window.location.hash.slice(1))
+    const id = hashTarget(window.location.hash)
     if (id) document.getElementById(id)?.scrollIntoView()
   }, [])
 }

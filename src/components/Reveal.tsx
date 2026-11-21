@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { anyIntersecting } from './revealLogic'
 
 interface RevealProps {
   children: ReactNode
@@ -23,8 +24,8 @@ export function Reveal({ children, delay = 0, className = '' }: RevealProps) {
     // Fires once the top of the element is in the lower 85% of the viewport,
     // so tall content reveals too.
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return
+      (entries) => {
+        if (!anyIntersecting(entries)) return
         setShown(true)
         observer.disconnect()
       },
