@@ -8,12 +8,12 @@ A single-page portfolio for Kerem, a final-year Software Engineering student (gr
 
 1. `docs/PROGRESS.md`: what's done, what's next, and the open/deferred items.
 2. `docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md`: the binding foundation (goals, stack, tokens, quality bar, hosting).
-3. `docs/superpowers/specs/2026-11-21-hero-design.md`, `2026-11-21-about-design.md`, `2026-11-21-projects-design.md` and `2026-11-21-experience-design.md`: the hero, nav, About, Projects and Experience designs (built).
+3. `docs/superpowers/specs/2026-11-21-hero-design.md`, `2026-11-21-about-design.md`, `2026-11-21-projects-design.md`, `2026-11-21-experience-design.md` and `2026-11-21-footer-design.md`: the hero, nav, About, Projects, Experience and footer designs (built).
 4. Any newer spec in `docs/superpowers/specs/`. Each section gets its own spec before it is built.
 
 ## How we work (Kerem's preferences)
 
-- **Section by section:** Hero ✅ → About ✅ → Projects ✅ → Experience ✅ → Footer. A blog is out of scope for now.
+- **Section by section:** Hero ✅ → About ✅ → Projects ✅ → Experience ✅ → Footer ✅. Next: Kerem's copy pass and the launch checklist. A blog is out of scope for now.
 - **Each section follows the same loop:**
   1. Brainstorm, with mockups in the browser so Kerem can react to real visuals.
   2. Agree the design.
@@ -40,6 +40,7 @@ The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via 
 | `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                                 |
 | `npm run art:hero`                                            | Regenerate the hero art (needs the private `reference/hero/*.png`; see below) |
 | `npm run art:projects`                                        | Regenerate the Projects corner bouquets (same private source)                 |
+| `npm run art:footer`                                          | Regenerate the footer flower band (same private source)                       |
 
 **The gate before every commit:** `npm test && npm run typecheck && npm run lint && npm run format:check && npm run build`
 
@@ -53,6 +54,7 @@ src/hooks/              useNavState, useElementSize, useReducedMotion
 src/sections/Hero.tsx   Hero copy and layout
 src/sections/projects/  projectLogic.ts (pure, tested), ProjectCard, ProjectPanel (native <dialog>; CSS in index.css), art.ts
 src/sections/experience/ experienceLogic.ts (pure, tested), ExperienceCard (featured card with a numbers column)
+src/sections/footer/    footerLogic.ts (pure, tested), CopyEmailButton; Footer.tsx is the night-meadow contact section
 src/sections/hero/      placement.ts (pure, tested), art.ts (layer data), Meadow.tsx (static layers + canvas),
                         meadowRenderer.ts + windShader.ts (WebGL1 wind sway)
 src/assets/hero/        Committed WebP masters and phone crops (made by scripts/prepare-hero-art.mjs)
@@ -62,7 +64,7 @@ docs/superpowers/       Specs (decisions) and plans (how each piece was built)
 
 ## Things that will bite you
 
-- **`reference/` is git-ignored and is not in the repo.** It holds the raw art and the private style references. Kerem copies it between machines by hand if needed. Only `npm run art:hero` and `npm run art:projects` require it; the built art is already committed.
+- **`reference/` is git-ignored and is not in the repo.** It holds the raw art and the private style references. Kerem copies it between machines by hand if needed. Only the `npm run art:*` scripts require it; the built art is already committed.
 - **Tailwind v4 `translate-*` utilities set the CSS `translate` property, not `transform`.** Transition `translate` and read `getComputedStyle(el).translate`.
 - **vite-imagetools ships no TypeScript types.** `src/imagetools.d.ts` declares the `?…&as=metadata` imports.
 - **The linter is Oxlint, not ESLint.** The Vite template ships Oxlint, and typescript-eslint doesn't support TS 7.
@@ -71,7 +73,7 @@ docs/superpowers/       Specs (decisions) and plans (how each piece was built)
   - the wind shader numbers and bend strengths ("very subtle, never overdone"),
   - the sky-first, flowers-fade-in load order,
   - the phone crops.
-- **Browser testing in the Claude desktop app:** when the Browser pane is hidden, animation frames are throttled to about 1–3 fps. Wait longer, or measure canvas pixels rather than relying on screenshots.
+- **Browser testing in the Claude desktop app:** when the Browser pane is hidden, animation frames are throttled or frozen, and IntersectionObserver may not fire (so `Reveal` content stays hidden). Use headless Chrome over CDP against `npm run preview` for screenshots and scripted checks.
 - **Subagents on Claude Fable 5.2 failed** because the account needs usage credits. Use Opus for reviewer subagents unless Kerem says otherwise.
 
 ## Hosting

@@ -11,6 +11,7 @@ _Last updated: 2026-11-21_
 | About | `specs/2026-11-21-about-design.md` | `plans/2026-11-21-about.md` | Notes below |
 | Projects | `specs/2026-11-21-projects-design.md` | `plans/2026-11-21-projects.md` | Notes below |
 | Experience | `specs/2026-11-21-experience-design.md` | `plans/2026-11-21-experience.md` | Notes below |
+| Footer (Contact) | `specs/2026-11-21-footer-design.md` | `plans/2026-11-21-footer.md` | Notes below |
 
 **Hero and nav notes:**
 - A five-layer WebGL meadow with wind sway, phone crops, and flowers that fade in after the sky.
@@ -34,24 +35,26 @@ _Last updated: 2026-11-21_
 - Two highlights per role, with "Show N more" for the rest. A "Now" pill marks the current role.
 - The featured role and its numbers are set in `src/content/experience.ts` (`featured`, `stats`).
 
-**Lighthouse on mobile, with the hero, About, Projects and Experience:** Performance 91; Accessibility, Best Practices and SEO 100; CLS 0.
+**Footer notes:**
+- Option A, "Night meadow": a dark ink footer. It has the email button, "Copy email" (hidden where the Clipboard API is missing), LinkedIn, GitHub and the résumé, then the hero's painted flowers edge to edge (`npm run art:footer`), then a bottom strip with "Back to top".
+- The band is flattened onto the ink colour (no alpha) to keep it light: about 115 KB on phones, lazy-loaded. If the footer colour ever changes, re-run `npm run art:footer` with the new colour.
+
+**Lighthouse on mobile, whole page:** Performance 90–91; Accessibility, Best Practices and SEO 100; CLS 0. Performance is right at the 90 target, so watch it with any new weight. LCP (3.5s) is the hero's flower layer.
 
 All spec and plan paths are under `docs/superpowers/`.
 
-## Next: Footer
+## Next: copy pass and launch
 
-Start a brainstorm: mockups in the browser, agree the design with Kerem, write a section spec, plan, build inline, review with Opus, and merge.
-
-The footer (`#contact`) is still an unstyled placeholder that renders from `src/content/links.ts`.
+All five sections are built. What's left:
+1. **Kerem's copy pass:** every heading, paragraph and project or role description is placeholder text.
+2. **Content Kerem owes** (see "Waiting on Kerem").
+3. **The README launch checklist:** domain, `SITE_URL`, Pages custom domain, the `push` trigger, and the résumé link.
+4. Optionally, work through the deferred items below.
 
 **Testing tip:** when the Browser pane is hidden it can freeze CSS animations *and* IntersectionObserver, so `Reveal` content stays hidden. Use headless Chrome over CDP against `npm run preview` for screenshots instead.
 
 ## Then
 
-- **Footer:**
-  - Contact links (email, LinkedIn, GitHub, résumé).
-  - The meadow returns, either as flowers growing from the bottom or as a wordmark filled with the painting.
-  - LinkedIn has no Simple Icons logo, so use an inline SVG.
 - **Launch:** follow the README checklist.
   - Buy the domain.
   - Set the repo variable `SITE_URL`.
