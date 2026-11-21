@@ -9,6 +9,7 @@ _Last updated: 2026-11-21_
 | Foundation and scaffold | `specs/2026-11-20-portfolio-foundation-design.md` | `plans/2026-11-20-portfolio-scaffold.md` | Tokens, fonts, typed content, page shell, metadata, manual deploy workflow |
 | Hero and nav | `specs/2026-11-21-hero-design.md` | `plans/2026-11-21-hero.md` | Notes below |
 | About | `specs/2026-11-21-about-design.md` | `plans/2026-11-21-about.md` | Notes below |
+| Projects | `specs/2026-11-21-projects-design.md` | `plans/2026-11-21-projects.md` | Notes below |
 
 **Hero and nav notes:**
 - A five-layer WebGL meadow with wind sway, phone crops, and flowers that fade in after the sky.
@@ -21,11 +22,17 @@ _Last updated: 2026-11-21_
 - A native scroll `Reveal` component (no animation library).
 - Deep links like `/#projects` now scroll to their section.
 
-**Lighthouse on mobile, with the hero and About:** Performance 92; Accessibility, Best Practices and SEO 100.
+**Projects notes:**
+- A card grid (up to three columns, never more columns than projects). Each card opens a native `<dialog>`: a side panel on desktop, a bottom sheet on phones.
+- Painted bouquets from the hero clusters sit in the section's bottom corners (`npm run art:projects`).
+- Placeholder media ("Screenshots coming soon") until Kerem adds screenshots. The panel supports images and one self-hosted video.
+- The hero's meadow now fades softly into the cream page at its bottom edge.
+
+**Lighthouse on mobile, with the hero, About and Projects:** Performance 91; Accessibility, Best Practices and SEO 100; CLS 0.
 
 All spec and plan paths are under `docs/superpowers/`.
 
-## Next: Projects section
+## Next: Experience section
 
 Start a brainstorm: mockups in the browser, agree the design with Kerem, write a section spec, plan, build inline, review with Opus, and merge.
 
@@ -33,16 +40,11 @@ Experience and Contact are still unstyled placeholders that render from `src/con
 
 ## Then
 
-- **Projects:**
-  - HOI4 Multiplayer Platform first. It's closed source, so it needs screenshots or a short video from Kerem, and its tech stack, which isn't on the résumé.
-  - Agricultural Management Platform: confirm the name. The résumé says "Agricultural Management and Platform", which looks like a typo.
-  - Decide the card layout.
 - **Experience:** five roles as a timeline, with the numbers up front.
 - **Footer:**
   - Contact links (email, LinkedIn, GitHub, résumé).
   - The meadow returns, either as flowers growing from the bottom or as a wordmark filled with the painting.
   - LinkedIn has no Simple Icons logo, so use an inline SVG.
-- **Scroll reveals:** add `motion` and follow the foundation spec §5.
 - **Launch:** follow the README checklist.
   - Buy the domain.
   - Set the repo variable `SITE_URL`.
@@ -52,6 +54,8 @@ Experience and Contact are still unstyled placeholders that render from `src/con
 
 ## Waiting on Kerem
 
+- **Projects content:** HOI4 screenshots or a short recording, the HOI4 tech stack, and the third project. Until then the cards show placeholders (on the README launch checklist).
+- **Agriculture project name:** the résumé says "Agricultural Management and Platform"; the site uses "Agricultural Management Platform".
 - **Headline size:** the hero headline is `clamp(2.25rem, 5.6vw, 5.75rem)` in a 62% column, to match the approved mockup. The spec said about 88–92px in a 58% column. He needs to confirm.
 - **All copy is placeholder.** Kerem rewrites it at the end, including the headline "Rooted in the back end. Blooming on the front."
 

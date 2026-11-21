@@ -8,12 +8,12 @@ A single-page portfolio for Kerem, a final-year Software Engineering student (gr
 
 1. `docs/PROGRESS.md`: what's done, what's next, and the open/deferred items.
 2. `docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md`: the binding foundation (goals, stack, tokens, quality bar, hosting).
-3. `docs/superpowers/specs/2026-11-21-hero-design.md` and `2026-11-21-about-design.md`: the hero, nav and About designs (built).
+3. `docs/superpowers/specs/2026-11-21-hero-design.md`, `2026-11-21-about-design.md` and `2026-11-21-projects-design.md`: the hero, nav, About and Projects designs (built).
 4. Any newer spec in `docs/superpowers/specs/`. Each section gets its own spec before it is built.
 
 ## How we work (Kerem's preferences)
 
-- **Section by section:** Hero ✅ → About ✅ → Projects → Experience → Footer. A blog is out of scope for now.
+- **Section by section:** Hero ✅ → About ✅ → Projects ✅ → Experience → Footer. A blog is out of scope for now.
 - **Each section follows the same loop:**
   1. Brainstorm, with mockups in the browser so Kerem can react to real visuals.
   2. Agree the design.
@@ -39,6 +39,7 @@ The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via 
 | `npm test`                                                    | Run Vitest (pure logic only)                                                  |
 | `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                                 |
 | `npm run art:hero`                                            | Regenerate the hero art (needs the private `reference/hero/*.png`; see below) |
+| `npm run art:projects`                                        | Regenerate the Projects corner bouquets (same private source)                 |
 
 **The gate before every commit:** `npm test && npm run typecheck && npm run lint && npm run format:check && npm run build`
 
@@ -50,6 +51,7 @@ src/content/            Typed site content (profile, links, experience, projects
 src/components/         Nav (fixed, hide/show, phone menu), navState (pure + tests), Section + SectionHeading (eyebrow + h2), Reveal, SkipLink
 src/hooks/              useNavState, useElementSize, useReducedMotion
 src/sections/Hero.tsx   Hero copy and layout
+src/sections/projects/  projectLogic.ts (pure, tested), ProjectCard, ProjectPanel (native <dialog>; CSS in index.css), art.ts
 src/sections/hero/      placement.ts (pure, tested), art.ts (layer data), Meadow.tsx (static layers + canvas),
                         meadowRenderer.ts + windShader.ts (WebGL1 wind sway)
 src/assets/hero/        Committed WebP masters and phone crops (made by scripts/prepare-hero-art.mjs)
