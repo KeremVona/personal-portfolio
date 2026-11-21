@@ -42,7 +42,8 @@ Deploys run only when started by hand until launch.
 5. Recommended: verify the domain in your **account** Settings → Pages → Add a domain. This prevents domain takeover.
 6. Add the DNS records from GitHub's [custom domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site).
 7. Repo Settings → Pages → **Custom domain**: enter the domain and Save. Deploys from a workflow ignore a `CNAME` file, so this setting is the one that counts. Without it the site would publish under `<user>.github.io/<repo>/`, where the root-relative asset paths break.
-8. Actions → Deploy → **Run workflow**.
-9. Repo Settings → Pages: enable **Enforce HTTPS** once the certificate is issued.
-10. In `.github/workflows/deploy.yml`, add `push: branches: [main]` under `on:`.
-11. Update the portfolio link on the résumé.
+8. Replace the Projects placeholders with real screenshots (and the HOI4 tech stack) in `src/content/projects.ts`.
+9. Actions → Deploy → **Run workflow**.
+10. Repo Settings → Pages: enable **Enforce HTTPS** once the certificate is issued.
+11. In `.github/workflows/deploy.yml`, add `push: branches: [main]` under `on:`.
+12. Update the portfolio link on the résumé.

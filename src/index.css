@@ -39,3 +39,105 @@
     }
   }
 }
+
+/*
+ * The project panel: a native <dialog>. A bottom sheet on phones, a side panel from
+ * 768px. It slides in and out (fade only with reduced motion), using @starting-style
+ * for the entry and allow-discrete so closing animates too.
+ * See docs/superpowers/specs/2026-11-21-projects-design.md §4.
+ */
+@layer components {
+  .project-panel {
+    margin: auto 0 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 92dvh;
+    padding: 0;
+    border: 0;
+    border-radius: 18px 18px 0 0;
+    background: var(--color-cream);
+    color: var(--color-ink);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    translate: 0 100%;
+    transition:
+      translate 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+      display 0.35s allow-discrete,
+      overlay 0.35s allow-discrete;
+  }
+
+  .project-panel[open] {
+    translate: 0 0;
+  }
+
+  @starting-style {
+    .project-panel[open] {
+      translate: 0 100%;
+    }
+  }
+
+  .project-panel::backdrop {
+    background: rgb(28 42 30 / 0.3);
+    opacity: 0;
+    transition:
+      opacity 0.35s ease-out,
+      display 0.35s allow-discrete,
+      overlay 0.35s allow-discrete;
+  }
+
+  .project-panel[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .project-panel[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .project-panel {
+      margin: 0 0 0 auto;
+      width: min(520px, 92vw);
+      height: 100dvh;
+      max-height: 100dvh;
+      border-radius: 0;
+      box-shadow: -14px 0 44px rgb(30 50 30 / 0.2);
+      translate: 100% 0;
+    }
+
+    @starting-style {
+      .project-panel[open] {
+        translate: 100% 0;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-panel,
+    .project-panel[open] {
+      translate: none;
+      opacity: 0;
+      transition:
+        opacity 0.25s ease-out,
+        display 0.25s allow-discrete,
+        overlay 0.25s allow-discrete;
+    }
+
+    .project-panel[open] {
+      opacity: 1;
+    }
+
+    @starting-style {
+      .project-panel[open] {
+        opacity: 0;
+      }
+    }
+  }
+}
+
+/* Keep the page still behind an open panel, without a sideways jump. */
+html:has(.project-panel[open]) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}

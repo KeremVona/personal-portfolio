@@ -1,10 +1,13 @@
+import { useRef } from 'react'
 import { Reveal } from '../components/Reveal'
 import { Section } from '../components/Section'
 import { SectionHeading } from '../components/SectionHeading'
 import { PROJECTS } from '../content/projects'
 import { sectionLabel } from '../content/sections'
+import type { ProjectItem } from '../content/types'
 import { BOUQUET_LEFT, BOUQUET_RIGHT, largest, srcSet } from './projects/art'
 import { ProjectCard } from './projects/ProjectCard'
+import { ProjectPanel, type ProjectPanelHandle } from './projects/ProjectPanel'
 import { gridClass } from './projects/projectLogic'
 
 const BOUQUET_SIZES = '(min-width: 1545px) 340px, (min-width: 768px) 22vw, 44vw'
@@ -47,8 +50,8 @@ function Bouquets() {
  * See docs/superpowers/specs/2026-11-21-projects-design.md.
  */
 export function Projects() {
-  // Wired to the project panel in the next task.
-  const openProject = () => {}
+  const panelRef = useRef<ProjectPanelHandle>(null)
+  const openProject = (project: ProjectItem) => panelRef.current?.open(project)
 
   return (
     <Section
@@ -72,6 +75,7 @@ export function Projects() {
           </li>
         ))}
       </ul>
+      <ProjectPanel ref={panelRef} />
     </Section>
   )
 }

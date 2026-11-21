@@ -7,7 +7,7 @@ const COVER_SIZES = '(min-width: 1024px) 360px, (min-width: 768px) 45vw, 100vw'
 
 interface ProjectCardProps {
   project: ProjectItem
-  onOpen: (project: ProjectItem, opener: HTMLButtonElement) => void
+  onOpen: (project: ProjectItem) => void
 }
 
 /**
@@ -20,7 +20,7 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
   const { shown, extra } = visibleTags(project.stack)
 
   return (
-    <article className="relative flex h-full flex-col overflow-hidden rounded-card bg-white shadow-card transition-[translate,box-shadow] duration-300 ease-out hover:shadow-[0_14px_34px_rgb(30_50_30/0.17)] motion-safe:hover:-translate-y-1">
+    <article className="relative flex h-full flex-col overflow-hidden rounded-card bg-white shadow-card transition-[translate,box-shadow] duration-300 ease-out hover:shadow-[0_14px_34px_rgb(30_50_30/0.17)] has-focus-visible:outline-2 has-focus-visible:outline-offset-4 has-focus-visible:outline-cornflower motion-safe:hover:-translate-y-1">
       {cover?.kind === 'image' ? (
         <img
           src={largest(cover.variants).src}
@@ -37,12 +37,13 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
         <MediaPlaceholder tone={project.tone} className="aspect-[16/10]" />
       )}
       <div className="flex flex-1 flex-col px-5 pt-4.5 pb-5">
+        {/* The ring is drawn on the article: its overflow-hidden would clip one on ::after. */}
         <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">
           <button
             type="button"
             aria-haspopup="dialog"
-            onClick={(event) => onOpen(project, event.currentTarget)}
-            className="cursor-pointer text-left after:absolute after:inset-0 after:rounded-card focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-cornflower"
+            onClick={() => onOpen(project)}
+            className="cursor-pointer text-left after:absolute after:inset-0 after:rounded-card focus-visible:outline-none"
           >
             {project.name}
           </button>
