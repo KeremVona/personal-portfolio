@@ -1,4 +1,5 @@
 import koiMeta from '../assets/about/koi.webp?w=480;720;960&format=webp&quality=80&as=metadata'
+import { Reveal } from '../components/Reveal'
 import { Section } from '../components/Section'
 import { SectionHeading } from '../components/SectionHeading'
 import { ABOUT, aboutFacts } from '../content/about'
@@ -21,7 +22,7 @@ export function About() {
   return (
     <Section id="about">
       <div className="grid items-center gap-7 md:grid-cols-[38%_1fr] md:gap-[6%]">
-        <div className="w-[68%] max-w-[320px] md:w-full md:max-w-none">
+        <Reveal className="w-[68%] max-w-[320px] md:w-full md:max-w-none">
           <img
             src={KOI[1]?.src ?? KOI[0].src}
             srcSet={KOI_SRCSET}
@@ -33,8 +34,8 @@ export function About() {
             decoding="async"
             className="block h-auto w-full -rotate-[1.6deg] bg-[#f2ead8] shadow-[0_14px_30px_-12px_rgb(30_50_30/0.35),0_2px_6px_rgb(30_50_30/0.08)] motion-safe:transition-[rotate,translate] motion-safe:duration-300 motion-safe:ease-out motion-safe:hover:-translate-y-1 motion-safe:hover:rotate-0"
           />
-        </div>
-        <div>
+        </Reveal>
+        <Reveal delay={0.12}>
           <SectionHeading
             id="about"
             eyebrow={sectionLabel('about')}
@@ -57,7 +58,7 @@ export function About() {
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
       </div>
     </Section>
   )
