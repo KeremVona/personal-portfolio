@@ -8,12 +8,12 @@ A single-page portfolio for Kerem, a final-year Software Engineering student (gr
 
 1. `docs/PROGRESS.md`: what's done, what's next, and the open/deferred items.
 2. `docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md`: the binding foundation (goals, stack, tokens, quality bar, hosting).
-3. `docs/superpowers/specs/2026-11-21-hero-design.md`: the hero and nav design (built).
+3. `docs/superpowers/specs/2026-11-21-hero-design.md` and `2026-11-21-about-design.md`: the hero, nav and About designs (built).
 4. Any newer spec in `docs/superpowers/specs/`. Each section gets its own spec before it is built.
 
 ## How we work (Kerem's preferences)
 
-- **Section by section:** Hero ✅ → About → Projects → Experience → Footer. A blog is out of scope for now.
+- **Section by section:** Hero ✅ → About ✅ → Projects → Experience → Footer. A blog is out of scope for now.
 - **Each section follows the same loop:**
   1. Brainstorm, with mockups in the browser so Kerem can react to real visuals.
   2. Agree the design.
@@ -29,7 +29,7 @@ A single-page portfolio for Kerem, a final-year Software Engineering student (gr
 
 ## Stack and commands
 
-The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via `@tailwindcss/vite`, with no PostCSS and no `tailwind.config`** · Oxlint · Prettier (with `prettier-plugin-tailwindcss`) · Vitest · vite-imagetools · `motion` is planned for scroll reveals but not yet installed.
+The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via `@tailwindcss/vite`, with no PostCSS and no `tailwind.config`** · Oxlint · Prettier (with `prettier-plugin-tailwindcss`) · Vitest · vite-imagetools. Scroll reveals use a small native `Reveal` (IntersectionObserver + CSS). `motion` was tried and removed because it cost too much mobile performance.
 
 | Command                                                       | What it does                                                                  |
 | ------------------------------------------------------------- | ----------------------------------------------------------------------------- |
@@ -47,7 +47,7 @@ The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via 
 ```
 src/index.css           Tailwind import + Meadow tokens in @theme (colours, fonts, radius, shadow)
 src/content/            Typed site content (profile, links, experience, projects, SECTIONS)
-src/components/         Nav (fixed, hide/show, phone menu), navState (pure + tests), Section, SkipLink
+src/components/         Nav (fixed, hide/show, phone menu), navState (pure + tests), Section + SectionHeading (eyebrow + h2), Reveal, SkipLink
 src/hooks/              useNavState, useElementSize, useReducedMotion
 src/sections/Hero.tsx   Hero copy and layout
 src/sections/hero/      placement.ts (pure, tested), art.ts (layer data), Meadow.tsx (static layers + canvas),

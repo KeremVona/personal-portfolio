@@ -8,31 +8,30 @@ _Last updated: 2026-11-21_
 |---|---|---|---|
 | Foundation and scaffold | `specs/2026-11-20-portfolio-foundation-design.md` | `plans/2026-11-20-portfolio-scaffold.md` | Tokens, fonts, typed content, page shell, metadata, manual deploy workflow |
 | Hero and nav | `specs/2026-11-21-hero-design.md` | `plans/2026-11-21-hero.md` | Notes below |
+| About | `specs/2026-11-21-about-design.md` | `plans/2026-11-21-about.md` | Notes below |
 
 **Hero and nav notes:**
 - A five-layer WebGL meadow with wind sway, phone crops, and flowers that fade in after the sky.
 - A fixed nav that hides and shows, with a phone menu.
 - An Open Graph image.
-- Lighthouse on mobile: Performance 93–94; Accessibility, Best Practices and SEO 100.
+
+**About notes:**
+- Kerem's koi watercolour (`reference/671.png`) shown as a tilted print beside short placeholder text and fact pills.
+- Section headings now have an eyebrow (`SectionHeading`).
+- A native scroll `Reveal` component (no animation library).
+- Deep links like `/#projects` now scroll to their section.
+
+**Lighthouse on mobile, with the hero and About:** Performance 92; Accessibility, Best Practices and SEO 100.
 
 All spec and plan paths are under `docs/superpowers/`.
 
-## Next: About section
+## Next: Projects section
 
-Start a brainstorm for the About section:
-- Show mockups in the browser.
-- Agree the design with Kerem.
-- Write `docs/superpowers/specs/<date>-about-design.md`.
-- Then write a plan, build it inline, review it with Opus, and merge.
+Start a brainstorm: mockups in the browser, agree the design with Kerem, write a section spec, plan, build inline, review with Opus, and merge.
 
-Open questions from the foundation spec (§11):
-- A photo or not?
-- How long should it be?
-- Do skills live here?
+Experience and Contact are still unstyled placeholders that render from `src/content/`. They already use the eyebrow heading.
 
-Below the hero, About, Projects and Experience are still unstyled placeholders that render from `src/content/`.
-
-## After that
+## Then
 
 - **Projects:**
   - HOI4 Multiplayer Platform first. It's closed source, so it needs screenshots or a short video from Kerem, and its tech stack, which isn't on the résumé.

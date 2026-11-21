@@ -82,10 +82,12 @@ A short, personal pause between the hero and the work. It tells the reader who K
   - The print and the text column fade in and rise about 16–24px **once**, as they enter the viewport.
   - ~0.5–0.7s ease-out, with a light stagger (print first, then text).
   - Nothing moves with reduced motion.
-- This adds the planned `motion` library and a small shared `Reveal` wrapper, so later sections can reuse it.
-- **Keep the bundle small:** load `motion` through `LazyMotion` with the `domAnimation` feature set, and re-check Lighthouse after adding it. Performance is 93–94 against a target of 90.
-- **Reveal goes on a wrapper around the print, not on the `<img>`.** That keeps the reveal's transform separate from the print's tilt and hover transforms.
-  - The image may still be loading lazily when the wrapper reveals. That's acceptable, because its reserved space and the paper-coloured placeholder background (~#F2EAD8, the painting's paper tone) mean it never fades in as an empty hole.
+- **Built without a library (changed at build time).** It is a small shared `Reveal` component: an IntersectionObserver plus a CSS transition on `opacity` and `translate`.
+  - `motion` was tried first, as the foundation spec planned. It added about 14–31 KB of JavaScript, and Lighthouse mobile Performance fell to exactly 90 (LCP 3.6s).
+  - The lazily loaded variant also risked content staying invisible if its chunk failed to load.
+  - The native version restores Performance to 92 (LCP 3.4s) with no extra request.
+- **Reveal wraps the print's wrapper, not the `<img>`.** That keeps the reveal's `translate` separate from the print's tilt and hover. The image may still be loading lazily when the wrapper reveals; its reserved space and paper-coloured background (~#F2EAD8) mean it never shows as an empty hole.
+- **Deep links:** loading the page at `/#about` (or any `#section`) scrolls to that section after the first render. The browser can't do it alone, because React renders after the browser looks for the target.
 
 ## 7. Quality bar
 
