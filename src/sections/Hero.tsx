@@ -1,70 +1,67 @@
 import type { CSSProperties } from 'react'
-import { useElementSize } from '../hooks/useElementSize'
-import { Meadow } from './hero/Meadow'
-import { isNarrow } from './hero/placement'
+import portraitMeta from '../assets/hero/valley-portrait.webp?w=640;900;1024;1152&format=webp&quality=62&as=metadata'
+import wideMeta from '../assets/hero/valley.webp?w=1280;1920;2730&format=webp&quality=65&as=metadata'
 
-// Cream wash behind the copy so it stays legible over the painting (spec §4).
-const WASH_WIDE: CSSProperties = {
-  background:
-    'radial-gradient(ellipse 60% 55% at 28% 38%, rgb(251 247 238 / 0.78), rgb(251 247 238 / 0.4) 55%, rgb(251 247 238 / 0) 100%)',
-}
-const WASH_NARROW: CSSProperties = {
-  background:
-    'linear-gradient(rgb(251 247 238 / 0.75), rgb(251 247 238 / 0.45) 45%, rgb(251 247 238 / 0) 65%)',
-}
+const byWidth = (meta: ImagetoolsMetadata | ImagetoolsMetadata[]) =>
+  (Array.isArray(meta) ? meta : [meta]).toSorted((a, b) => a.width - b.width)
+const srcSet = (variants: ImagetoolsMetadata[]) =>
+  variants.map((v) => `${v.src} ${v.width}w`).join(', ')
+const WIDE = byWidth(wideMeta)
+const WIDE_FULL = WIDE[WIDE.length - 1]
+const PORTRAIT = byWidth(portraitMeta)
 
-// The meadow dissolves into the cream page instead of ending in a hard line.
+// The valley dissolves into the cream page instead of ending in a hard line.
 // Eased stops so the fade has no visible starting edge.
 const BOTTOM_FADE: CSSProperties = {
   background:
     'linear-gradient(rgb(251 247 238 / 0), rgb(251 247 238 / 0.06) 25%, rgb(251 247 238 / 0.22) 45%, rgb(251 247 238 / 0.5) 65%, rgb(251 247 238 / 0.82) 85%, rgb(251 247 238))',
 }
 
-// The hero is full width and max(100svh, 600px) tall (see the section's class),
-// so the first render can request the right images before layout is measured.
-const guessHeroSize = () => ({
-  width: document.documentElement.clientWidth,
-  height: Math.max(window.innerHeight, 600),
-})
-
+/**
+ * The hero: a still valley picture with the copy in its sky.
+ * See docs/superpowers/specs/2026-11-22-hero-still-design.md.
+ */
 export function Hero() {
-  const [ref, size] = useElementSize<HTMLElement>(guessHeroSize)
-  const narrow = size ? isNarrow(size) : false
-
   return (
     <section
-      ref={ref}
       id="top"
       aria-labelledby="hero-title"
-      className="relative min-h-[max(100svh,600px)] scroll-mt-24 overflow-hidden"
+      className="relative min-h-[max(100svh,600px)] scroll-mt-24 overflow-clip"
     >
-      {size && <Meadow size={size} />}
+      <picture aria-hidden="true">
+        {/* The picture covers the hero, so on tall screens it is drawn wider than
+            the screen: hence the heights in `sizes`. */}
+        <source
+          media="(max-aspect-ratio: 3/4)"
+          srcSet={srcSet(PORTRAIT)}
+          sizes="max(100vw, 75vh, 450px)"
+        />
+        <img
+          fetchPriority="high"
+          sizes="max(100vw, 178vh, 1067px)"
+          srcSet={srcSet(WIDE)}
+          src={WIDE_FULL.src}
+          alt=""
+          draggable={false}
+          className="pointer-events-none absolute inset-0 size-full object-cover object-[47%_60%] select-none"
+        />
+      </picture>
+      <div aria-hidden="true" className="hero-mist absolute inset-0" />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={narrow ? WASH_NARROW : WASH_WIDE}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[clamp(80px,18%,200px)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[clamp(64px,12%,140px)]"
         style={BOTTOM_FADE}
       />
-      <div
-        className={
-          narrow
-            ? 'absolute inset-x-5 top-[16%]'
-            : 'absolute top-[22%] left-[7%] w-[62%]'
-        }
-      >
+      <div className="absolute top-[max(88px,14%)] left-[7%] isolate w-[62%] narrow:inset-x-5 narrow:top-[max(84px,11%)] narrow:w-auto">
         <h1
           id="hero-title"
-          className="font-display text-[clamp(2.25rem,5.6vw,5.75rem)] leading-[0.98] font-semibold tracking-[-0.045em] text-ink"
+          className="font-display text-[clamp(2.25rem,5.6vw,5.75rem)] leading-[0.98] font-semibold tracking-[-0.045em] text-balance text-ink"
         >
           Rooted in the back end.
           <br />
           Blooming on the front.
         </h1>
-        <p className="mt-5 max-w-[44ch] text-[1.05rem] leading-relaxed text-ink-soft sm:text-[1.15rem]">
+        <p className="hero-lead mt-5 max-w-[44ch] text-[1.05rem] leading-relaxed text-ink sm:text-[1.15rem]">
           I'm Kerem, a full-stack engineer finishing my Software Engineering
           degree in Istanbul. I build with .NET, React and TypeScript.
         </p>
@@ -77,7 +74,7 @@ export function Hero() {
           </a>
           <a
             href="#contact"
-            className="rounded-full border border-ink/22 bg-white/62 px-6 py-3 font-medium text-ink backdrop-blur-sm hover:bg-white/80"
+            className="rounded-full border border-ink/22 bg-cream/85 px-6 py-3 font-medium text-ink hover:bg-cream"
           >
             Get in touch
           </a>

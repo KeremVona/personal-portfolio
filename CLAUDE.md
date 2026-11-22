@@ -2,13 +2,13 @@
 
 A single-page portfolio for Kerem, a final-year Software Engineering student (graduating June 2027) aiming for **full-stack web roles**.
 
-**Look:** a clean, botanical "Meadow" style. A painted meadow hero has a subtle WebGL wind sway, and the rest of the page sits on cream.
+**Look:** a clean, botanical "Meadow" style. The hero is a still sunrise-valley picture, the footer a hilltop computer under a blue sky, and the rest of the page sits on cream.
 
 **Read these before doing anything:**
 
 1. `docs/PROGRESS.md`: what's done, what's next, and the open/deferred items.
 2. `docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md`: the binding foundation (goals, stack, tokens, quality bar, hosting).
-3. `docs/superpowers/specs/2026-11-21-hero-design.md`, `2026-11-21-about-design.md`, `2026-11-21-projects-design.md`, `2026-11-21-experience-design.md` and `2026-11-21-footer-design.md` (its look is replaced by `2026-11-22-footer-sky-design.md`): the hero, nav, About, Projects, Experience and footer designs (built).
+3. `docs/superpowers/specs/2026-11-21-hero-design.md` (its background and motion are replaced by `2026-11-22-hero-still-design.md`), `2026-11-21-about-design.md`, `2026-11-21-projects-design.md`, `2026-11-21-experience-design.md` and `2026-11-21-footer-design.md` (its look is replaced by `2026-11-22-footer-sky-design.md`): the hero, nav, About, Projects, Experience and footer designs (built).
 4. Any newer spec in `docs/superpowers/specs/`. Each section gets its own spec before it is built.
 
 ## How we work (Kerem's preferences)
@@ -31,16 +31,16 @@ A single-page portfolio for Kerem, a final-year Software Engineering student (gr
 
 The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via `@tailwindcss/vite`, with no PostCSS and no `tailwind.config`** · Oxlint · Prettier (with `prettier-plugin-tailwindcss`) · Vitest · vite-imagetools. Scroll reveals use a small native `Reveal` (IntersectionObserver + CSS). `motion` was tried and removed because it cost too much mobile performance.
 
-| Command                                                       | What it does                                                                  |
-| ------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `npm run dev`                                                 | Start the dev server (http://localhost:5173)                                  |
-| `npm run build`                                               | Type-check and build to `dist/`                                               |
-| `npm run preview`                                             | Serve the production build (http://localhost:4173)                            |
-| `npm test`                                                    | Run Vitest (pure logic only)                                                  |
-| `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                                 |
-| `npm run art:hero`                                            | Regenerate the hero art (needs the private `reference/hero/*.png`; see below) |
-| `npm run art:projects`                                        | Regenerate the Projects corner bouquets (same private source)                 |
-| `npm run art:footer`                                          | Regenerate the footer sky (needs the private `reference/674561874.png`)       |
+| Command                                                       | What it does                                                            |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `npm run dev`                                                 | Start the dev server (http://localhost:5173)                            |
+| `npm run build`                                               | Type-check and build to `dist/`                                         |
+| `npm run preview`                                             | Serve the production build (http://localhost:4173)                      |
+| `npm test`                                                    | Run Vitest (pure logic only)                                            |
+| `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                           |
+| `npm run art:hero`                                            | Regenerate the hero and share image (needs `reference/6478364781.png`)  |
+| `npm run art:projects`                                        | Regenerate the Projects corner bouquets (needs `reference/hero/*.png`)  |
+| `npm run art:footer`                                          | Regenerate the footer sky (needs the private `reference/674561874.png`) |
 
 **The gate before every commit:** `npm test && npm run typecheck && npm run lint && npm run format:check && npm run build`
 
@@ -50,14 +50,12 @@ The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via 
 src/index.css           Tailwind import + Meadow tokens in @theme (colours, fonts, radius, shadow)
 src/content/            Typed site content (profile, links, experience, projects, SECTIONS)
 src/components/         Nav (fixed, hide/show, phone menu), navState (pure + tests), Section + SectionHeading (eyebrow + h2), Reveal, SkipLink
-src/hooks/              useNavState, useElementSize, useReducedMotion
+src/hooks/              useNavState, useInitialHashScroll
 src/sections/Hero.tsx   Hero copy and layout
 src/sections/projects/  projectLogic.ts (pure, tested), ProjectCard, ProjectPanel (native <dialog>; CSS in index.css), art.ts
 src/sections/experience/ experienceLogic.ts (pure, tested), ExperienceCard (featured card with a numbers column)
 src/sections/footer/    footerLogic.ts (pure, tested), CopyEmailButton; Footer.tsx is the contact section over the hilltop-computer sky (geometry: .sky-footer in index.css)
-src/sections/hero/      placement.ts (pure, tested), art.ts (layer data), Meadow.tsx (static layers + canvas),
-                        meadowRenderer.ts + windShader.ts (WebGL1 wind sway)
-src/assets/hero/        Committed WebP masters and phone crops (made by scripts/prepare-hero-art.mjs)
+src/assets/hero/        Committed WebP master and portrait crop of the hero picture (made by scripts/prepare-hero-art.mjs)
 public/                 Résumé PDF (published as is, phone number included, by Kerem's choice), og-image.jpg, favicon, robots.txt
 docs/superpowers/       Specs (decisions) and plans (how each piece was built)
 ```
@@ -69,10 +67,10 @@ docs/superpowers/       Specs (decisions) and plans (how each piece was built)
 - **vite-imagetools ships no TypeScript types.** `src/imagetools.d.ts` declares the `?…&as=metadata` imports.
 - **The linter is Oxlint, not ESLint.** The Vite template ships Oxlint, and typescript-eslint doesn't support TS 7.
 - **Windows:** `.gitattributes` forces LF, so Prettier stays happy with `core.autocrlf=true`.
-- **The hero art/motion rules are agreed with Kerem.** These need his say-so to change:
-  - the wind shader numbers and bend strengths ("very subtle, never overdone"),
-  - the sky-first, flowers-fade-in load order,
-  - the phone crops.
+- **The hero rules are agreed with Kerem.** These need his say-so to change:
+  - the picture is still: no swaying,
+  - the portrait crop.
+- **Text over the hero:** the cream mist (`.hero-mist`, `.hero-lead::before` in index.css) is what makes it pass AA. Re-measure on real pixels if the copy or the picture changes.
 - **Browser testing in the Claude desktop app:** when the Browser pane is hidden, animation frames are throttled or frozen, and IntersectionObserver may not fire (so `Reveal` content stays hidden). Use headless Chrome over CDP against `npm run preview` for screenshots and scripted checks.
 - **Subagents on Claude Fable 5.2 failed** because the account needs usage credits. Use Opus for reviewer subagents unless Kerem says otherwise.
 

@@ -3,6 +3,9 @@
 @import '@fontsource-variable/inter-tight';
 
 /* Meadow design tokens: see docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md §4.1 */
+/* Phones and portrait tablets: the hero's copy spans the screen. */
+@custom-variant narrow (@media (max-aspect-ratio: 6/5));
+
 @theme {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-display:
@@ -203,5 +206,57 @@ html:has(.project-panel[open]) {
 
   .sky-footer-art {
     width: var(--art-h);
+  }
+}
+
+/* Sunrise mist behind the hero's copy, so ink passes AA where it crosses the trees. */
+.hero-mist {
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 44% 25% at 22% 39%,
+    rgb(251 247 238 / 0.66),
+    rgb(251 247 238 / 0.56) 52%,
+    rgb(251 247 238 / 0.22) 80%,
+    rgb(251 247 238 / 0)
+  );
+}
+
+/* Wide, short screens crop the sky, so the headline crosses the hills and trees. */
+@media (min-aspect-ratio: 19/10) {
+  .hero-mist {
+    background: radial-gradient(
+      ellipse 48% 30% at 23% 38%,
+      rgb(251 247 238 / 0.78),
+      rgb(251 247 238 / 0.62) 50%,
+      rgb(251 247 238 / 0.25) 78%,
+      rgb(251 247 238 / 0)
+    );
+  }
+}
+
+@media (max-aspect-ratio: 6/5) {
+  /* The copy's height varies a lot here, so the mist follows the paragraph. */
+  .hero-mist {
+    display: none;
+  }
+
+  .hero-lead {
+    position: relative;
+  }
+
+  .hero-lead::before {
+    content: '';
+    position: absolute;
+    z-index: -1; /* under the whole copy block, which is isolated */
+    inset: -3.5rem -100vw;
+    pointer-events: none;
+    background: linear-gradient(
+      rgb(251 247 238 / 0),
+      rgb(251 247 238 / 0.3) 1.75rem,
+      rgb(251 247 238 / 0.64) 3.5rem,
+      rgb(251 247 238 / 0.64) calc(100% - 3.5rem),
+      rgb(251 247 238 / 0.3) calc(100% - 1.75rem),
+      rgb(251 247 238 / 0)
+    );
   }
 }

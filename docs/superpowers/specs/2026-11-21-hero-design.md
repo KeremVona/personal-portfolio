@@ -2,6 +2,7 @@
 
 **Date:** 2026-11-21
 **Status:** Agreed in conversation with Kerem. This builds on the foundation spec, `2026-11-20-portfolio-foundation-design.md`, which still governs anything not covered here.
+**Superseded in part (2026-11-22):** §1's motion, §3–5 and §7's source are replaced by `2026-11-22-hero-still-design.md` (a still picture, no sway). The copy, nav and quality bar still apply.
 **Mockups:**
 - `.superpowers/brainstorm/39-1795204904/content/hero-mockup.html` (the final hero and nav)
 - `sway-spike.html` in the same folder (the sway comparison)

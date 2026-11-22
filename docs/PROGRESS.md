@@ -14,7 +14,7 @@ _Last updated: 2026-11-22_
 | Footer (Contact) | `specs/2026-11-21-footer-design.md`, look replaced by `specs/2026-11-22-footer-sky-design.md` | `plans/2026-11-21-footer.md`, `plans/2026-11-22-footer-sky.md` | Notes below |
 
 **Hero and nav notes:**
-- A five-layer WebGL meadow with wind sway, phone crops, and flowers that fade in after the sky.
+- A still sunrise-valley picture (`specs/2026-11-22-hero-still-design.md`), with a portrait crop for phones. It replaced the five-layer WebGL meadow and its sway on 2026-11-22.
 - A fixed nav that hides and shows, with a phone menu.
 - An Open Graph image.
 
@@ -42,7 +42,7 @@ _Last updated: 2026-11-22_
 - The geometry is `.sky-footer` in `index.css`: text ends above 32% of the image, and up to 15% (grass, and some hills at the sides) is cropped to fit short screens.
 - Lazy-loaded: 26/53/105 KB on phones (square crop), 43/81/152 KB on wider screens.
 
-**Lighthouse on mobile, whole page:** Performance 89–91 (median 90); Accessibility, Best Practices and SEO 100; CLS 0. Performance is right at the 90 target, so watch it with any new weight. LCP (3.5s) is the hero's flower layer.
+**Lighthouse on mobile, whole page:** 100 in Performance, Accessibility, Best Practices and SEO; CLS 0; about 550 KB. The LCP (0.8s) is the headline: Chrome doesn't count a full-screen background picture, so watch the hero picture's weight (235 KB on phones) by eye as well.
 
 All spec and plan paths are under `docs/superpowers/`.
 
@@ -71,6 +71,7 @@ All five sections are built. What's left:
 - **Agriculture project name:** the résumé says "Agricultural Management and Platform"; the site uses "Agricultural Management Platform".
 - **Headline size:** the hero headline is `clamp(2.25rem, 5.6vw, 5.75rem)` in a 62% column, to match the approved mockup. The spec said about 88–92px in a 58% column. He needs to confirm.
 - **Footer image rights:** confirm where `674561874.png` came from and that it may be published.
+- **Hero image rights:** confirm where `6478364781.png` came from and that it may be published.
 - **All copy is placeholder.** Kerem rewrites it at the end, including the headline "Rooted in the back end. Blooming on the front."
 
 ## Known small issues (deferred from reviews)
@@ -79,10 +80,6 @@ All five sections are built. What's left:
 - A mouse click on a nav link counts as "focus inside", so the nav stops auto-hiding until focus leaves. Fix: count only `:focus-visible`.
 - Pressing Escape in the phone menu while a link is focused drops focus to `body`. Fix: return focus to the menu button.
 - `useNavState`'s `lastY` starts at 0, so a deep link (`/#contact`) or restored scroll starts with the nav hidden. Fix: initialise it to `window.scrollY`.
-- No `failIfMajorPerformanceCaveat` on the WebGL context, so software WebGL still animates.
-- Textures are cached per `<img>`, so on wide screens the shared stems image uploads twice. Fix: cache by `currentSrc`.
-- `setLayers` on a just-destroyed renderer starts harmless `decode()` calls. Fix: return early if destroyed.
-- The DPR is read only on render, so moving to a monitor with a different pixel density keeps the old canvas resolution.
 
 **About:**
 - Content not yet revealed prints invisible. Fix: add `print:opacity-100 print:translate-y-0` to `Reveal`.

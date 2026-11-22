@@ -23,7 +23,7 @@ Kerem Can Bas is a final-year Software Engineering student (Fatih Sultan Mehmet 
 **Goals**
 - A single page with five sections in order: **Hero → About → Projects → Experience → Footer**.
 - A clean, botanical, meadow-themed look (direction "A · Meadow", §4).
-- Subtle motion: flowers sway gently in the wind, and content reveals softly on scroll.
+- Subtle motion: content reveals softly on scroll. (The wind sway was removed at Kerem's request on 2026-11-22.)
 - Content (jobs, projects, links) is easy to update without touching layout code.
 - Fast, accessible and responsive (targets in §8).
 
@@ -92,7 +92,7 @@ Every text/background pair must meet WCAG AA contrast.
 
 ## 5. Motion principles
 
-- **Wind sway (decided):** flowers sway as if a light wind passes through. It is **very subtle and must not be overdone**: slow, small bends (on the order of 1–2°), each flower out of step with its neighbours, with an occasional soft gust rolling across.
+- **Wind sway (removed on 2026-11-22 at Kerem's request; see `2026-11-22-hero-still-design.md`):** flowers sway as if a light wind passes through. It is **very subtle and must not be overdone**: slow, small bends (on the order of 1–2°), each flower out of step with its neighbours, with an occasional soft gust rolling across.
   - *How* it is built is decided in the hero session. The two candidates are (a) painting the hero as separate transparent layers (sky, hills, back flowers, front flowers or individual stems) and animating them with CSS transforms, or (b) a WebGL displacement effect on the flat painting.
   - This choice determines how the art is produced.
 - **Scroll reveals:** fade plus a small rise (≈16–24px), once per element, ~0.5–0.7s ease-out, with a light stagger on groups.
