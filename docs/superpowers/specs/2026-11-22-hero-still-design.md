@@ -1,7 +1,7 @@
 # Still Hero Background: Design
 
 **Date:** 2026-11-22
-**Status:** Kerem chose the picture and "no swaying". The layout details are Claude's calls, to be approved from the built preview before merging.
+**Status:** Kerem chose the picture and "no swaying". The layout details are Claude's calls, approved by Kerem from the built preview (he skipped the review).
 **Replaces:** §1's motion, §3–5 and §7's source in `2026-11-21-hero-design.md`. The copy, buttons, left alignment, nav and quality bar still apply.
 
 ## 1. Decided by Kerem
