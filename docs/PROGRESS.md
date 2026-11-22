@@ -42,7 +42,7 @@ _Last updated: 2026-11-22_
 - The geometry is `.sky-footer` in `index.css`: text ends above 32% of the image, and up to 15% (grass, and some hills at the sides) is cropped to fit short screens.
 - Lazy-loaded: 26/53/105 KB on phones (square crop), 43/81/152 KB on wider screens.
 
-**Lighthouse on mobile, whole page:** Performance 90–91; Accessibility, Best Practices and SEO 100; CLS 0. Performance is right at the 90 target, so watch it with any new weight. LCP (3.5s) is the hero's flower layer.
+**Lighthouse on mobile, whole page:** Performance 89–91 (median 90); Accessibility, Best Practices and SEO 100; CLS 0. Performance is right at the 90 target, so watch it with any new weight. LCP (3.5s) is the hero's flower layer.
 
 All spec and plan paths are under `docs/superpowers/`.
 
@@ -54,7 +54,7 @@ All five sections are built. What's left:
 3. **The README launch checklist:** domain, `SITE_URL`, Pages custom domain, the `push` trigger, and the résumé link.
 4. Optionally, work through the deferred items below.
 
-**Testing tip:** when the Browser pane is hidden it can freeze CSS animations *and* IntersectionObserver, so `Reveal` content stays hidden. Use headless Chrome over CDP against `npm run preview` for screenshots instead.
+**Testing tip:** when the Browser pane is hidden it can freeze CSS animations *and* IntersectionObserver, so `Reveal` content stays hidden. Use headless Chrome over CDP against `npm run preview` for screenshots instead. To judge the page's last pixel row, use Chrome's `--force-device-scale-factor`: emulated metrics with a fractional device height draw a false light line there.
 
 ## Then
 
@@ -107,6 +107,8 @@ All five sections are built. What's left:
 - A failed clipboard write (denied permission, some iframes) gives no feedback. Could show "Couldn't copy" for 2s.
 - The image helpers (sort variants, srcset, largest) are repeated in About, Projects and Footer. Move them to one shared module.
 - "Copied ✓": screen readers read the glyph aloud. Wrap it in an `aria-hidden` span.
+- At some odd widths the outermost pixel column of the sky image blends ~20% of the blue background over the grass (the centring lands on a half pixel). Fix: from 901px wide, `width: calc(var(--art-w) + 2px)`.
+- `--text-room` is approximate: at 426–500px wide it crops up to 76px of grass needlessly (23rem would suit that range), and a few sizes at 320px and below overflow by ~19px.
 - The sky footer is only checked in Chromium. Check it on an iPhone before launch (container units, `svh`).
 
 **Scaffold:**

@@ -8,4 +8,4 @@
   - no sideways scroll, no text over the computer, no seam at the top of the image;
   - measured contrast behind every piece of text ≥ 4.5:1;
   - focus rings and "Copy email" still work.
-- [ ] **Finish:** gate, Lighthouse, docs, fresh Opus review, merge, push (no `reference/` files).
+- [x] **Finish:** gate, Lighthouse, docs, fresh Opus review, merge, push (no `reference/` files).
