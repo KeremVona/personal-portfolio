@@ -1,6 +1,6 @@
 # Progress
 
-_Last updated: 2026-11-21_
+_Last updated: 2026-11-22_
 
 ## Done
 
@@ -11,7 +11,7 @@ _Last updated: 2026-11-21_
 | About | `specs/2026-11-21-about-design.md` | `plans/2026-11-21-about.md` | Notes below |
 | Projects | `specs/2026-11-21-projects-design.md` | `plans/2026-11-21-projects.md` | Notes below |
 | Experience | `specs/2026-11-21-experience-design.md` | `plans/2026-11-21-experience.md` | Notes below |
-| Footer (Contact) | `specs/2026-11-21-footer-design.md` | `plans/2026-11-21-footer.md` | Notes below |
+| Footer (Contact) | `specs/2026-11-21-footer-design.md`, look replaced by `specs/2026-11-22-footer-sky-design.md` | `plans/2026-11-21-footer.md`, `plans/2026-11-22-footer-sky.md` | Notes below |
 
 **Hero and nav notes:**
 - A five-layer WebGL meadow with wind sway, phone crops, and flowers that fade in after the sky.
@@ -36,8 +36,11 @@ _Last updated: 2026-11-21_
 - The featured role and its numbers are set in `src/content/experience.ts` (`featured`, `stats`).
 
 **Footer notes:**
-- Option A, "Night meadow": a dark ink footer. It has the email button, "Copy email" (hidden where the Clipboard API is missing), LinkedIn, GitHub and the résumé, then the hero's painted flowers edge to edge (`npm run art:footer`), then a bottom strip with "Back to top".
-- The band is flattened onto the ink colour (no alpha) to keep it light and lazy-loaded: 67 KB on a 1.75× phone, 115 KB on 2×, 226 KB on 3× (which picks the 2730w file). If the footer colour ever changes, re-run `npm run art:footer` with the new colour.
+- Kerem's hilltop-computer image is the background (`specs/2026-11-22-footer-sky-design.md`). It replaced the first "Night meadow" footer and its flower band on 2026-11-22.
+- The contact content is centred in the sky. `npm run art:footer` deepens the upper sky so cream text passes AA (worst measured 4.70:1); the computer is masked out of that.
+- Nothing sits under the image: Kerem removed the copyright and "Back to top" strip.
+- The geometry is `.sky-footer` in `index.css`: text ends above 32% of the image, and up to 15% (grass, and some hills at the sides) is cropped to fit short screens.
+- Lazy-loaded: 26/53/105 KB on phones (square crop), 43/81/152 KB on wider screens.
 
 **Lighthouse on mobile, whole page:** Performance 90–91; Accessibility, Best Practices and SEO 100; CLS 0. Performance is right at the 90 target, so watch it with any new weight. LCP (3.5s) is the hero's flower layer.
 
@@ -67,6 +70,7 @@ All five sections are built. What's left:
 - **Projects content:** HOI4 screenshots or a short recording, the HOI4 tech stack, and the third project. Until then the cards show placeholders (on the README launch checklist).
 - **Agriculture project name:** the résumé says "Agricultural Management and Platform"; the site uses "Agricultural Management Platform".
 - **Headline size:** the hero headline is `clamp(2.25rem, 5.6vw, 5.75rem)` in a 62% column, to match the approved mockup. The spec said about 88–92px in a 58% column. He needs to confirm.
+- **Footer image rights:** confirm where `674561874.png` came from and that it may be published.
 - **All copy is placeholder.** Kerem rewrites it at the end, including the headline "Rooted in the back end. Blooming on the front."
 
 ## Known small issues (deferred from reviews)
@@ -101,10 +105,9 @@ All five sections are built. What's left:
 
 **Footer:**
 - A failed clipboard write (denied permission, some iframes) gives no feedback. Could show "Couldn't copy" for 2s.
-- 3× phones load the 226 KB band; a ~2160w variant would halve it.
 - The image helpers (sort variants, srcset, largest) are repeated in About, Projects and Footer. Move them to one shared module.
-- "Back to top ↑" and "Copied ✓": screen readers read the glyphs aloud. Wrap them in `aria-hidden` spans.
-- The band's height uses `100vw` but the image width uses `100%`, so with a Windows scrollbar there's a 6px ink strip above the image. It's invisible today because the band's top is ink, but it would show if the band were re-exported with transparency.
+- "Copied ✓": screen readers read the glyph aloud. Wrap it in an `aria-hidden` span.
+- The sky footer is only checked in Chromium. Check it on an iPhone before launch (container units, `svh`).
 
 **Scaffold:**
 - The deploy workflow's `SITE_URL` guard accepts `http://` and a trailing slash.

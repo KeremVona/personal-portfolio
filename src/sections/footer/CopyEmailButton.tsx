@@ -29,7 +29,8 @@ export function CopyEmailButton({ email }: { email: string }) {
       <button
         type="button"
         onClick={copy}
-        className="cursor-pointer rounded-full border border-cream/45 px-5 py-3 font-medium text-cream hover:bg-cream/10"
+        // A fixed minimum, so "Copied ✓" doesn't re-centre or re-wrap the row.
+        className="min-w-34 cursor-pointer rounded-full border border-cream/90 px-5 py-3 font-medium text-cream hover:bg-ink/20"
       >
         {copied ? 'Copied ✓' : 'Copy email'}
       </button>

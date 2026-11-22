@@ -2,6 +2,7 @@
 
 **Date:** 2026-11-21
 **Status:** Agreed in conversation with Kerem. This builds on the foundation spec (`2026-11-20-portfolio-foundation-design.md`, which says "the meadow returns at the footer") and follows the patterns of the earlier section specs.
+**Superseded in part (2026-11-22):** the look (ink background, flower band, left alignment, colours, bottom strip with copyright and "Back to top") is replaced by `2026-11-22-footer-sky-design.md`. The content and behaviour still apply.
 **Mockup:** `.superpowers/brainstorm/922-1795263385/content/footer-layouts.html`, option **A** ("Night meadow").
 
 ---

@@ -1,32 +1,65 @@
-// Composites the footer's flower band from the private reference/hero PNGs (the hero's
-// stems and both flower clusters) into a committed WebP master.
+// Writes the footer's sky background from the private reference PNG: the full image,
+// plus a square centre crop for phones.
 // Run once with `npm run art:footer` when the art changes.
-// See docs/superpowers/specs/2026-11-21-footer-design.md §3.
+// See docs/superpowers/specs/2026-11-22-footer-sky-design.md.
 import { existsSync, mkdirSync } from 'node:fs'
 import sharp from 'sharp'
 
-const SRC = 'reference/hero'
+const SRC = 'reference/674561874.png'
 const OUT = 'src/assets/footer'
-// The flowering part of the 2730×1536 art; painted content starts at about y 572.
-const CROP = { left: 0, top: 560, width: 2730, height: 976 }
+const W = 2730
+const H = 1536
+// Keep in step with --color-footer-sky in src/index.css: the footer continues in it
+// above the image.
+const SKY = '#3a64ac'
+// [height, strength] of SKY over the upper sky, so cream text (which ends above
+// 32% of the height) reaches 4.5:1. The long tail keeps the fade from showing as
+// a band; the computer is cut out of it.
+const DEEPEN = [
+  [0, 1],
+  [0.1, 0.78],
+  [0.22, 0.64],
+  [0.32, 0.53],
+  [0.36, 0.43],
+  [0.4, 0.32],
+  [0.44, 0.22],
+  [0.48, 0.13],
+  [0.53, 0.06],
+  [0.6, 0],
+]
+const COMPUTER = { x: 1151, y: 699, width: 432, height: 540, rx: 22 }
 
 if (!existsSync(SRC)) {
-  console.error('reference/hero not found')
+  console.error(`${SRC} not found`)
   process.exit(1)
 }
 mkdirSync(OUT, { recursive: true })
 
-const png = (file) => `${SRC}/${file}.png`
-const band = await sharp(png('5'))
-  .composite([{ input: png('2') }, { input: png('1') }])
+const stops = DEEPEN.map(
+  ([at, strength]) =>
+    `<stop offset="${at}" stop-color="${SKY}" stop-opacity="${strength}"/>`,
+).join('')
+const overlay = Buffer.from(
+  `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">${stops}</linearGradient>
+    <mask id="keep" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}">
+      <rect width="${W}" height="${H}" fill="#fff"/>
+      <rect x="${COMPUTER.x}" y="${COMPUTER.y}" width="${COMPUTER.width}"
+        height="${COMPUTER.height}" rx="${COMPUTER.rx}" fill="#000"/>
+    </mask>
+    <rect width="${W}" height="${H}" fill="url(#sky)" mask="url(#keep)"/>
+  </svg>`,
+)
+const art = await sharp(SRC)
+  .composite([{ input: overlay }])
+  .removeAlpha()
   .png()
   .toBuffer()
-// The band only ever sits on the footer's ink background, so flatten onto it:
-// no alpha channel makes every served variant far smaller.
-await sharp(band)
-  .extract(CROP)
-  .flatten({ background: '#1c2a1e' })
-  .webp({ quality: 85 })
-  .toFile(`${OUT}/band.webp`)
 
-console.log(`Wrote ${OUT}/band.webp`)
+await sharp(art).webp({ quality: 90 }).toFile(`${OUT}/sky.webp`)
+await sharp(art)
+  .extract({ left: (W - H) / 2, top: 0, width: H, height: H })
+  .webp({ quality: 90 })
+  .toFile(`${OUT}/sky-phone.webp`)
+
+console.log(`Wrote ${OUT}/sky.webp and ${OUT}/sky-phone.webp`)

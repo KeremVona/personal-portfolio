@@ -18,7 +18,7 @@ Show Kerem's work history so a recruiter sees real, shipped work with numbers in
   - The others follow newest first: Ihlas Holding, OBSS, InfinitumIT, Freelance.
   - Two highlights show at first; "Show N more" reveals the rest inside the card.
   - Current roles get a "Now" pill.
-  - No flowers in this section. Projects has the corner bouquets, and the footer brings the meadow back.
+  - No flowers in this section. Projects has the corner bouquets, and the footer brings the meadow back (since 2026-11-22 as a grassy hill; see `2026-11-22-footer-sky-design.md`).
 - **Copy is a placeholder.** Kerem rewrites it at the end.
 
 ## 3. Layout

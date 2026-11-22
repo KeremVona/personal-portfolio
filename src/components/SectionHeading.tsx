@@ -5,7 +5,7 @@ interface SectionHeadingProps {
   /** Small uppercase label above the title, usually the section's nav label. */
   eyebrow: string
   title: string
-  /** 'dark' for sections on the ink background: a lighter green eyebrow. */
+  /** 'dark' for sections on a deep background (the footer's sky): a cream eyebrow. */
   tone?: 'light' | 'dark'
   /** Replaces the default title size, e.g. for the footer's larger heading. */
   titleClassName?: string
@@ -23,7 +23,7 @@ export function SectionHeading({
     <div>
       <p
         className={`mb-2.5 font-display text-[13px] font-semibold tracking-[0.08em] uppercase ${
-          tone === 'dark' ? 'text-meadow' : 'text-meadow-deep'
+          tone === 'dark' ? 'text-cream' : 'text-meadow-deep'
         }`}
       >
         {eyebrow}

@@ -8,7 +8,7 @@ A single-page portfolio for Kerem, a final-year Software Engineering student (gr
 
 1. `docs/PROGRESS.md`: what's done, what's next, and the open/deferred items.
 2. `docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md`: the binding foundation (goals, stack, tokens, quality bar, hosting).
-3. `docs/superpowers/specs/2026-11-21-hero-design.md`, `2026-11-21-about-design.md`, `2026-11-21-projects-design.md`, `2026-11-21-experience-design.md` and `2026-11-21-footer-design.md`: the hero, nav, About, Projects, Experience and footer designs (built).
+3. `docs/superpowers/specs/2026-11-21-hero-design.md`, `2026-11-21-about-design.md`, `2026-11-21-projects-design.md`, `2026-11-21-experience-design.md` and `2026-11-21-footer-design.md` (its look is replaced by `2026-11-22-footer-sky-design.md`): the hero, nav, About, Projects, Experience and footer designs (built).
 4. Any newer spec in `docs/superpowers/specs/`. Each section gets its own spec before it is built.
 
 ## How we work (Kerem's preferences)
@@ -40,7 +40,7 @@ The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via 
 | `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                                 |
 | `npm run art:hero`                                            | Regenerate the hero art (needs the private `reference/hero/*.png`; see below) |
 | `npm run art:projects`                                        | Regenerate the Projects corner bouquets (same private source)                 |
-| `npm run art:footer`                                          | Regenerate the footer flower band (same private source)                       |
+| `npm run art:footer`                                          | Regenerate the footer sky (needs the private `reference/674561874.png`)       |
 
 **The gate before every commit:** `npm test && npm run typecheck && npm run lint && npm run format:check && npm run build`
 
@@ -54,7 +54,7 @@ src/hooks/              useNavState, useElementSize, useReducedMotion
 src/sections/Hero.tsx   Hero copy and layout
 src/sections/projects/  projectLogic.ts (pure, tested), ProjectCard, ProjectPanel (native <dialog>; CSS in index.css), art.ts
 src/sections/experience/ experienceLogic.ts (pure, tested), ExperienceCard (featured card with a numbers column)
-src/sections/footer/    footerLogic.ts (pure, tested), CopyEmailButton; Footer.tsx is the night-meadow contact section
+src/sections/footer/    footerLogic.ts (pure, tested), CopyEmailButton; Footer.tsx is the contact section over the hilltop-computer sky (geometry: .sky-footer in index.css)
 src/sections/hero/      placement.ts (pure, tested), art.ts (layer data), Meadow.tsx (static layers + canvas),
                         meadowRenderer.ts + windShader.ts (WebGL1 wind sway)
 src/assets/hero/        Committed WebP masters and phone crops (made by scripts/prepare-hero-art.mjs)

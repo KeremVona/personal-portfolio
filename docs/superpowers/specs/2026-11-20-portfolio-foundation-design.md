@@ -61,9 +61,9 @@ Chosen from three mockups (Meadow / Herbarium / Night Garden). The mockup is at 
 - White cards with ~14px radius and a soft, slightly green-tinted shadow.
 - Pill-shaped tags.
 - Painted flower accents between sections, so the meadow carries through the page.
-- The meadow returns at the footer.
+- The meadow returns at the footer. (Since 2026-11-22 as a grassy hill under a blue sky: see `2026-11-22-footer-sky-design.md`.)
 
-**One illustration style everywhere: painterly.** The pixel/cross-stitch flowers in the footer reference (`reference/1.jpg`) are not used as-is. Any footer flowers are painted in the meadow's style.
+**One illustration style everywhere: painterly.** The pixel/cross-stitch flowers in the footer reference (`reference/1.jpg`) are not used as-is. Any footer flowers are painted in the meadow's style. **Exception (2026-11-22):** Kerem chose a rendered hilltop-computer image as the footer's background; see `2026-11-22-footer-sky-design.md`.
 
 ### 4.1 Design tokens (starting values, tuned during section work)
 
@@ -181,7 +181,7 @@ public/       résumé PDF, favicon, Open Graph image
   - *Open:* which other projects (if any) appear, and the card layout.
 - **Experience:** all five roles as a timeline with the numbers up front: Ihlas Holding, Dijital Varlıklar, OBSS, InfinitumIT, and the freelance web work.
   - *Open:* layout and how much detail to show per role.
-- **Footer:** the ways to reach Kerem: email, LinkedIn, GitHub and a résumé download. The meadow returns to close the page.
+- **Footer:** the ways to reach Kerem: email, LinkedIn, GitHub and a résumé download. The meadow returns to close the page (since 2026-11-22 as a grassy hill under a blue sky).
   - *Open:* the visual treatment, e.g. flowers growing from the bottom edge, or a large wordmark filled with the painting.
 
 ## 12. Left to the builder

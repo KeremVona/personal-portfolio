@@ -18,6 +18,7 @@
   --color-sky: #a9c6dc;
   --color-poppy: #e0603a; /* decoration only, never text */
   --color-cornflower: #4a6fa5;
+  --color-footer-sky: #3a64ac; /* the top row of the footer art */
 
   --radius-card: 14px;
   --shadow-card: 0 6px 24px rgb(30 50 30 / 0.12);
@@ -33,7 +34,7 @@
     outline-offset: 3px;
   }
 
-  /* Cornflower is too dark on the ink footer. */
+  /* Cornflower disappears on the footer. */
   footer :focus-visible {
     outline-color: var(--color-cream);
   }
@@ -152,4 +153,55 @@
 html:has(.project-panel[open]) {
   overflow: hidden;
   scrollbar-gutter: stable;
+}
+
+/*
+ * The footer's sky. The image sits on the bottom edge and text stays above 32% of
+ * its height, because the computer starts at 45%. Up to 15% of the image drops below
+ * the edge (grass, and some hills at the sides) to fit the footer on one screen:
+ * --text-room is roughly the height of the text. Nothing follows the image: it is
+ * the end of the page.
+ * cqw, not vw, so a desktop scrollbar doesn't throw the sums off.
+ */
+.sky-footer {
+  --text-room: 21.25rem;
+  --art-w: max(100cqw, 900px);
+  --art-h: calc(var(--art-w) * 1536 / 2730);
+  --art-space: max(
+    var(--art-h) * 0.53,
+    min(var(--art-h) * 0.68, 100svh - var(--text-room))
+  );
+  container-type: inline-size;
+  position: relative;
+  /* Not hidden: that can still be scrolled by anchors and scrollIntoView. */
+  overflow: clip;
+  background: var(--color-footer-sky);
+}
+
+.sky-footer-space {
+  height: var(--art-space);
+}
+
+.sky-footer-art {
+  position: absolute;
+  bottom: calc(var(--art-space) - var(--art-h) * 0.68);
+  left: 50%;
+  width: var(--art-w);
+  max-width: none;
+  height: var(--art-h);
+  object-fit: cover;
+  translate: -50%;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Phones get the square centre crop from <picture>. */
+@media (max-width: 500px) {
+  .sky-footer {
+    --text-room: 27rem; /* the text and buttons wrap */
+  }
+
+  .sky-footer-art {
+    width: var(--art-h);
+  }
 }
