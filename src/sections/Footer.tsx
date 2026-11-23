@@ -1,4 +1,5 @@
 import { Mail } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 import phoneMeta from '../assets/footer/sky-phone.webp?w=640;1024;1536&format=webp&quality=78&as=metadata'
 import wideMeta from '../assets/footer/sky.webp?w=1280;1920;2730&format=webp&quality=78&as=metadata'
 import { Reveal } from '../components/Reveal'
@@ -26,12 +27,28 @@ const LINK_ROW = [LINKS.linkedin, LINKS.github, LINKS.resume]
  * See docs/superpowers/specs/2026-11-22-footer-sky-design.md.
  */
 export function Footer() {
+  const ref = useRef<HTMLElement>(null)
+  // While the footer is on screen, the overscroll bounce under it is sky, not cream.
+  useEffect(() => {
+    const footer = ref.current
+    if (!footer || !('IntersectionObserver' in window)) return
+    const root = document.documentElement
+    const observer = new IntersectionObserver(([entry]) =>
+      root.classList.toggle('at-footer', entry.isIntersecting),
+    )
+    observer.observe(footer)
+    return () => {
+      observer.disconnect()
+      root.classList.remove('at-footer')
+    }
+  }, [])
+
   return (
-    <footer className="text-cream">
+    <footer ref={ref} className="text-cream">
       <div className="sky-footer">
         <Section
           id="contact"
-          className="relative z-10 pt-12 pb-0 text-center sm:pt-12 sm:pb-0"
+          className="relative z-10 scroll-mt-0! pt-12 pb-0 text-center sm:pt-12 sm:pb-0"
           heading={
             <SectionHeading
               id="contact"
