@@ -32,6 +32,18 @@
     @apply bg-cream font-sans text-ink antialiased;
   }
 
+  /*
+   * The page itself is cream; the root's colour shows only in the overscroll bounce.
+   * The footer turns it sky blue while it's on screen, so the bounce under it matches.
+   */
+  body {
+    @apply bg-cream;
+  }
+
+  html.at-footer {
+    background-color: var(--color-footer-sky);
+  }
+
   :focus-visible {
     outline: 2px solid var(--color-cornflower);
     outline-offset: 3px;
@@ -176,6 +188,9 @@ html:has(.project-panel[open]) {
   );
   container-type: inline-size;
   position: relative;
+  /* At the end of the page the footer fills the screen: no cream strip above it. */
+  min-height: 100vh;
+  min-height: 100lvh;
   /* Not hidden: that can still be scrolled by anchors and scrollIntoView. */
   overflow: clip;
   background: var(--color-footer-sky);
