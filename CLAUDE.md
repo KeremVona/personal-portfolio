@@ -31,16 +31,17 @@ A single-page portfolio for Kerem, a final-year Software Engineering student (gr
 
 The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via `@tailwindcss/vite`, with no PostCSS and no `tailwind.config`** · Oxlint · Prettier (with `prettier-plugin-tailwindcss`) · Vitest · vite-imagetools. Scroll reveals use a small native `Reveal` (IntersectionObserver + CSS). `motion` was tried and removed because it cost too much mobile performance.
 
-| Command                                                       | What it does                                                            |
-| ------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `npm run dev`                                                 | Start the dev server (http://localhost:5173)                            |
-| `npm run build`                                               | Type-check and build to `dist/`                                         |
-| `npm run preview`                                             | Serve the production build (http://localhost:4173)                      |
-| `npm test`                                                    | Run Vitest (pure logic only)                                            |
-| `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                           |
-| `npm run art:hero`                                            | Regenerate the hero and share image (needs `reference/6478364781.png`)  |
-| `npm run art:projects`                                        | Regenerate the Projects corner bouquets (needs `reference/hero/*.png`)  |
-| `npm run art:footer`                                          | Regenerate the footer sky (needs the private `reference/674561874.png`) |
+| Command                                                       | What it does                                                                  |
+| ------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `npm run dev`                                                 | Start the dev server (http://localhost:5173)                                  |
+| `npm run build`                                               | Type-check and build to `dist/`                                               |
+| `npm run preview`                                             | Serve the production build (http://localhost:4173)                            |
+| `npm test`                                                    | Run Vitest (pure logic only)                                                  |
+| `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                                 |
+| `npm run art:hero`                                            | Regenerate the hero and share image (needs `reference/6478364781.png`)        |
+| `npm run art:about`                                           | Regenerate the About painting and its pond pieces (needs `reference/671.png`) |
+| `npm run art:projects`                                        | Regenerate the Projects corner bouquets (needs `reference/hero/*.png`)        |
+| `npm run art:footer`                                          | Regenerate the footer sky (needs the private `reference/674561874.png`)       |
 
 **The gate before every commit:** `npm test && npm run typecheck && npm run lint && npm run format:check && npm run build`
 
@@ -52,6 +53,7 @@ src/content/            Typed site content (profile, links, experience, projects
 src/components/         Nav (fixed, hide/show, phone menu), navState (pure + tests), Section + SectionHeading (eyebrow + h2), Reveal, SkipLink
 src/hooks/              useNavState, useInitialHashScroll
 src/sections/Hero.tsx   Hero copy and layout
+src/sections/about/     PondLayer (loads the pond lazily over the painting); pond/swim.ts (pure, tested), pond/renderer.ts (WebGL1), pond/LivePond.tsx
 src/sections/projects/  projectLogic.ts (pure, tested), ProjectCard, ProjectPanel (native <dialog>; CSS in index.css), art.ts
 src/sections/experience/ experienceLogic.ts (pure, tested), ExperienceCard (featured card with a numbers column)
 src/sections/footer/    footerLogic.ts (pure, tested), CopyEmailButton; Footer.tsx is the contact section over the hilltop-computer sky (geometry: .sky-footer in index.css)
@@ -67,6 +69,7 @@ docs/superpowers/       Specs (decisions) and plans (how each piece was built)
 - **vite-imagetools ships no TypeScript types.** `src/imagetools.d.ts` declares the `?…&as=metadata` imports.
 - **The linter is Oxlint, not ESLint.** The Vite template ships Oxlint, and typescript-eslint doesn't support TS 7.
 - **Windows:** `.gitattributes` forces LF, so Prettier stays happy with `core.autocrlf=true`.
+- **The About pond's motion is agreed with Kerem** (stiff head, swinging tail, glide and kick, bend limits; constants in `pond/swim.ts`). Changes need his say-so. Its scripted checks expose `window.__pond` in development only.
 - **The hero rules are agreed with Kerem.** These need his say-so to change:
   - the picture is still: no swaying,
   - the portrait crop.
