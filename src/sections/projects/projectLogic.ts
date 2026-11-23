@@ -51,12 +51,17 @@ export function sourceLabel(
   return project.repoUrl ? 'Open source' : 'Closed source'
 }
 
+/** How far (px) the bouquets may reach above the section, into About's bottom padding. */
+const REACH_ABOVE = 60
+/** The bouquets sink over the last this-many px of scrolling before the section ends. */
+const SINK_SCROLL = 120
+
 /**
  * How far (px) a corner bouquet pinned to the bottom of the screen sits below the
  * screen edge. It rides up with the section's top as Projects arrives, stays in the
- * corner while Projects fills the screen, and has sunk out of sight by the time the
- * section's end reaches the screen's bottom edge, so its cut stems only ever meet the
- * screen edge. `top` and `bottom` are the section's edges relative to the screen.
+ * corner while Projects fills the screen, and sinks quickly just before the section's
+ * end reaches the screen's bottom edge, so its cut stems only ever meet the screen
+ * edge. `top` and `bottom` are the section's edges relative to the screen.
  */
 export function sinkBy(
   top: number,
@@ -64,7 +69,7 @@ export function sinkBy(
   screen: number,
   height: number,
 ): number {
-  const arriving = top - (screen - height)
-  const leaving = screen + height - bottom
+  const arriving = top - (screen - height) - REACH_ABOVE
+  const leaving = ((screen + SINK_SCROLL - bottom) * height) / SINK_SCROLL
   return Math.min(height, Math.max(0, arriving, leaving))
 }

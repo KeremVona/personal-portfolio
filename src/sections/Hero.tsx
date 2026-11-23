@@ -10,11 +10,12 @@ const WIDE = byWidth(wideMeta)
 const WIDE_FULL = WIDE[WIDE.length - 1]
 const PORTRAIT = byWidth(portraitMeta)
 
-// The valley dissolves into the cream page instead of ending in a hard line.
-// Eased stops so the fade has no visible starting edge.
+// The valley dissolves into the cream page instead of ending in a hard line. Short
+// and mostly clear, so it doesn't lay a milky band over the meadow; eased stops so
+// it has no visible starting edge.
 const BOTTOM_FADE: CSSProperties = {
   background:
-    'linear-gradient(rgb(251 247 238 / 0), rgb(251 247 238 / 0.06) 25%, rgb(251 247 238 / 0.22) 45%, rgb(251 247 238 / 0.5) 65%, rgb(251 247 238 / 0.82) 85%, rgb(251 247 238))',
+    'linear-gradient(rgb(251 247 238 / 0), rgb(251 247 238 / 0.04) 30%, rgb(251 247 238 / 0.16) 52%, rgb(251 247 238 / 0.45) 74%, rgb(251 247 238 / 0.84) 91%, rgb(251 247 238))',
 }
 
 /**
@@ -49,7 +50,7 @@ export function Hero() {
       <div aria-hidden="true" className="hero-mist absolute inset-0" />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[clamp(64px,12%,140px)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[clamp(44px,7%,96px)]"
         style={BOTTOM_FADE}
       />
       <div className="absolute top-[max(88px,14%)] left-[7%] isolate w-[62%] narrow:inset-x-5 narrow:top-[max(84px,11%)] narrow:w-auto">

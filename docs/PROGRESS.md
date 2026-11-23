@@ -14,7 +14,7 @@ _Last updated: 2026-11-23_
 | Footer (Contact) | `specs/2026-11-21-footer-design.md`, look replaced by `specs/2026-11-22-footer-sky-design.md` | `plans/2026-11-21-footer.md`, `plans/2026-11-22-footer-sky.md` | Notes below |
 
 **Hero and nav notes:**
-- A still sunrise-valley picture (`specs/2026-11-22-hero-still-design.md`), with a portrait crop for phones. It replaced the five-layer WebGL meadow and its sway on 2026-11-22.
+- A still picture (`specs/2026-11-22-hero-still-design.md`), with a portrait crop for phones. It replaced the five-layer WebGL meadow and its sway on 2026-11-22. On 2026-11-23 Kerem swapped the picture to `reference/hero-background.png` (a path through meadows to the sea, with a tree; the phone crop takes the bend in the path and the tree) and the bottom fade was made shorter, as it looked too white.
 - A fixed nav that hides and shows, with a phone menu.
 - An Open Graph image.
 
@@ -32,7 +32,7 @@ _Last updated: 2026-11-23_
 
 **Projects notes:**
 - A card grid (up to three columns, never more columns than projects). Each card opens a native `<dialog>`: a side panel on desktop, a bottom sheet on phones.
-- Painted bouquets from the hero clusters sit in the section's bottom corners (`npm run art:projects`).
+- Painted bouquets from the hero clusters (`npm run art:projects`). Since 2026-11-23 they are pinned to the screen's bottom corners while Projects is on screen: they ride up with the section and sink below the screen edge just before it ends (`sinkBy` in projectLogic.ts), because their stems end in a straight cut that only looks right on the screen edge. To do before merging: a still version for reduced motion.
 - Placeholder media ("Screenshots coming soon") until Kerem adds screenshots. The panel supports images and one self-hosted video.
 - The hero's meadow now fades softly into the cream page at its bottom edge.
 
@@ -78,7 +78,7 @@ All five sections are built. What's left:
 - **Headline size:** the hero headline is `clamp(2.25rem, 5.6vw, 5.75rem)` in a 62% column, to match the approved mockup. The spec said about 88–92px in a 58% column. He needs to confirm.
 - **Footer image rights:** confirm where `674561874.png` came from and that it may be published.
 - **Pond on real phones:** try the About pond on an iPhone and an Android phone (taps, scrolling over it, the pause button).
-- **Hero image rights:** confirm where `6478364781.png` came from and that it may be published.
+- **Hero image rights:** confirm where `hero-background.png` came from and that it may be published.
 - **All copy is placeholder.** Kerem rewrites it at the end, including the headline "Rooted in the back end. Blooming on the front."
 
 ## Known small issues (deferred from reviews)

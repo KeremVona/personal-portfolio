@@ -2,7 +2,7 @@
 
 A single-page portfolio for Kerem, a final-year Software Engineering student (graduating June 2027) aiming for **full-stack web roles**.
 
-**Look:** a clean, botanical "Meadow" style. The hero is a still sunrise-valley picture, the footer a hilltop computer under a blue sky, and the rest of the page sits on cream.
+**Look:** a clean, botanical "Meadow" style. The hero is a still watercolour picture of a path through meadows to the sea, the footer a hilltop computer under a blue sky, and the rest of the page sits on cream.
 
 **Read these before doing anything:**
 
@@ -38,7 +38,7 @@ The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via 
 | `npm run preview`                                             | Serve the production build (http://localhost:4173)                            |
 | `npm test`                                                    | Run Vitest (pure logic only)                                                  |
 | `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                                 |
-| `npm run art:hero`                                            | Regenerate the hero and share image (needs `reference/6478364781.png`)        |
+| `npm run art:hero`                                            | Regenerate the hero and share image (needs `reference/hero-background.png`)   |
 | `npm run art:about`                                           | Regenerate the About painting and its pond pieces (needs `reference/671.png`) |
 | `npm run art:projects`                                        | Regenerate the Projects corner bouquets (needs `reference/hero/*.png`)        |
 | `npm run art:footer`                                          | Regenerate the footer sky (needs the private `reference/674561874.png`)       |
