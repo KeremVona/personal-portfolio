@@ -32,7 +32,7 @@ _Last updated: 2026-11-23_
 
 **Projects notes:**
 - A card grid (up to three columns, never more columns than projects). Each card opens a native `<dialog>`: a side panel on desktop, a bottom sheet on phones.
-- Painted bouquets from the hero clusters (`npm run art:projects`). Since 2026-11-23 they are pinned to the screen's bottom corners while Projects is on screen: they ride up with the section and sink below the screen edge just before it ends (`sinkBy` in projectLogic.ts), because their stems end in a straight cut that only looks right on the screen edge. To do before merging: a still version for reduced motion.
+- Painted bouquets from the hero clusters (`npm run art:projects`). Since 2026-11-23 they are pinned to the screen's bottom corners while Projects is on screen: they rise once the section is 160px into the screen and sink below the screen edge just before it ends (`sinkBy` in projectLogic.ts), because their stems end in a straight cut that only looks right on the screen edge. With reduced motion they stay still and fade in and out instead.
 - Placeholder media ("Screenshots coming soon") until Kerem adds screenshots. The panel supports images and one self-hosted video.
 - The hero's meadow now fades softly into the cream page at its bottom edge.
 

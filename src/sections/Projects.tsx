@@ -16,7 +16,8 @@ const BOUQUET_CLASS =
 
 /**
  * Keeps the bouquets in the screen's bottom corners while Projects is on screen,
- * sinking them below the edge as it arrives and leaves (see sinkBy).
+ * sinking them below the edge as it arrives and leaves (see sinkBy). With reduced
+ * motion they stay still in the corners and fade in and out instead.
  */
 function useCornerBouquets(
   section: RefObject<HTMLElement | null>,
@@ -25,14 +26,22 @@ function useCornerBouquets(
   useEffect(() => {
     const element = section.current
     if (!element) return
+    const still = matchMedia('(prefers-reduced-motion: reduce)')
     let frame = 0
     const place = () => {
       frame = 0
       const { top, bottom } = element.getBoundingClientRect()
       for (const image of bouquets.current) {
         if (!image) continue
-        const sink = sinkBy(top, bottom, innerHeight, image.offsetHeight)
-        image.style.translate = `0 ${sink}px`
+        const height = image.offsetHeight
+        const sink = sinkBy(top, bottom, innerHeight, height)
+        if (still.matches) {
+          image.style.translate = '0 0'
+          image.style.opacity = String(height ? 1 - sink / height : 0)
+        } else {
+          image.style.translate = `0 ${sink}px`
+          image.style.removeProperty('opacity')
+        }
       }
     }
     const request = () => {
@@ -47,12 +56,16 @@ function useCornerBouquets(
       } else {
         removeEventListener('scroll', request)
         removeEventListener('resize', request)
-        for (const image of bouquets.current)
+        for (const image of bouquets.current) {
           image?.style.removeProperty('translate')
+          image?.style.removeProperty('opacity')
+        }
       }
     })
     watcher.observe(element)
+    still.addEventListener('change', request)
     return () => {
+      still.removeEventListener('change', request)
       watcher.disconnect()
       removeEventListener('scroll', request)
       removeEventListener('resize', request)

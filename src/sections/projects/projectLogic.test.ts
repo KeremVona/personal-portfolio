@@ -91,18 +91,19 @@ describe('PROJECTS content', () => {
 })
 
 describe('sinkBy', () => {
-  // A 900px screen and a 300px-tall bouquet; 60px of room above the section (About's bottom padding is 64px or more) and a
-  // sink over the last 120px of scrolling.
+  // A 900px screen and a 300px-tall bouquet. It waits until the section is 160px into
+  // the screen, rises over the next 160px of scrolling, and sinks over the last 120px.
   const at = (top: number, bottom: number) => sinkBy(top, bottom, 900, 300)
 
-  it('keeps the bouquet below the screen until the section arrives', () => {
+  it('keeps the bouquet below the screen until the section is well in view', () => {
     expect(at(1200, 4000)).toBe(300)
-    expect(at(960, 4000)).toBe(300)
+    expect(at(900, 4000)).toBe(300)
+    expect(at(740, 4000)).toBe(300)
   })
 
-  it('rides up with the section top, reaching 60px above it at most', () => {
-    expect(at(810, 4000)).toBe(150)
-    expect(at(660, 4000)).toBe(0)
+  it('rises over the next 160px of scrolling', () => {
+    expect(at(660, 4000)).toBe(150)
+    expect(at(580, 4000)).toBe(0)
   })
 
   it('stays in the corner while the section fills the screen', () => {
