@@ -10,6 +10,7 @@ export const ABOUT = {
     "Away from the keyboard, you'll usually find me [a hobby or two].",
   ],
   imageAlt: 'Watercolour painting of koi fish swimming among lily pads',
+  pondLabel: 'Watercolour koi pond. The koi swim; click one and it darts away.',
 }
 
 /** The small pills under the About text, derived from the profile. */
