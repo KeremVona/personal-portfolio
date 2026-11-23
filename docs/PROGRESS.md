@@ -93,6 +93,13 @@ All five sections are built. What's left:
 - `useInitialHashScroll` smooth-scrolls on load, and overrides scroll restoration on reload/back. Fix: `behavior: 'instant'`, and skip for `reload`/`back_forward` navigations.
 - The koi `width`/`height` are hardcoded (1200×1599) rather than taken from the image metadata.
 
+**About pond:**
+- The art size is picked once, when the pond loads. If the print grows later (rotating a tablet, widening a window), the pond can look softer than the still painting. Fix: reload the textures when the needed width passes the next size.
+- `poke` takes a `random` parameter it doesn't use. Drop it.
+- `getUniformLocation` runs on every draw call. Cache the locations once (negligible at 5 fish).
+- Pausing freezes a ripple mid-spread. Clear ripples on pause if that looks odd.
+- The frame rate was only measured in headless Chrome, which says nothing about real phones. The real-phone check covers it.
+
 **Projects:**
 - On Windows the open side panel stops 15px short of the right edge (the price of `scrollbar-gutter: stable`, which stops the page jumping). Nearly invisible, since the panel and gutter are both cream.
 - For when media is added: pause any video when the panel closes; use the first *image* (not `media[0]`) as the card cover; derive the cover `sizes` from the project count; show panel images uncropped (`object-contain`); make content entries go through the sorted-variants helper (thumbnails use `variants[0]` without a srcset).

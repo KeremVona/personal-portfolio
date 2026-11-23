@@ -126,11 +126,11 @@ function resetTrail(fish: Fish) {
 const nearest = (fish: Fish, at: Point) =>
   Math.min(...fish.line.map((p) => Math.hypot(p.x - at.x, p.y - at.y)))
 
-/** The topmost fish under a point, ignoring fish that are out of sight. */
+/** The topmost fish under a point, among fish simply swimming (not fleeing, away or returning). */
 export function hitFish(fishes: readonly Fish[], at: Point): Fish | undefined {
   return fishes.findLast(
     (fish) =>
-      fish.mode !== 'away' &&
+      fish.mode === 'swim' &&
       fish.line
         .slice(1, -6)
         .some((p) => Math.hypot(p.x - at.x, p.y - at.y) < fish.length * HIT),

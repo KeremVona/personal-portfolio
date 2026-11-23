@@ -191,3 +191,14 @@ describe('toPond undoes the tilt', () => {
     ).toBeLessThan(0.5)
   })
 })
+
+describe('clicks only land on fish that are simply swimming', () => {
+  it('lets a click pass through a fleeing fish to the one underneath', () => {
+    const random = seeded(13)
+    const fishes = pond(random)
+    const fleeing = fishes[0]
+    poke(fishes, fleeing.line[10], false, random)
+    expect(fleeing.mode).toBe('leave')
+    expect(hitFish(fishes, fleeing.line[10])).not.toBe(fleeing)
+  })
+})

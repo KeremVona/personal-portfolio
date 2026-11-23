@@ -1,4 +1,5 @@
 import {
+  type ReactNode,
   Suspense,
   lazy,
   useCallback,
@@ -25,27 +26,19 @@ type Phase = 'waiting' | 'loading' | 'shown' | 'leaving' | 'off'
 const reducedMotion = () =>
   window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
 
-const hasWebGL = () => {
-  try {
-    return !!document.createElement('canvas').getContext('webgl')
-  } catch {
-    return false
-  }
-}
-
 /**
- * Lays the living pond over the About painting. It loads only when the section is
- * near the screen, only with motion allowed and WebGL available, and fades in over the
- * painting once its first frame is drawn. Any failure fades it back out, leaving the
- * still painting. See docs/superpowers/specs/2026-11-23-about-pond-design.md §3.
+ * Lays the living pond over the About painting (its children). It loads only when the
+ * section is near the screen and with motion allowed, and fades in over the painting
+ * once its first frame is drawn. Any failure (no WebGL included: the renderer reports
+ * it) fades it back out, leaving the still painting.
+ * Only one of the two is ever announced or focusable: the painting until the pond shows.
+ * See docs/superpowers/specs/2026-11-23-about-pond-design.md §3.
  */
-export function PondLayer() {
+export function PondLayer({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null)
-  // Without motion allowed, an observer or WebGL, the painting simply stays still.
+  // Without motion allowed or an observer, the painting simply stays still.
   const [phase, setPhase] = useState<Phase>(() =>
-    'IntersectionObserver' in window && !reducedMotion() && hasWebGL()
-      ? 'waiting'
-      : 'off',
+    'IntersectionObserver' in window && !reducedMotion() ? 'waiting' : 'off',
   )
 
   useEffect(() => {
@@ -97,20 +90,25 @@ export function PondLayer() {
   }, [phase])
 
   const live = phase === 'loading' || phase === 'shown' || phase === 'leaving'
+  const shown = phase === 'shown'
   return (
-    <div
-      ref={ref}
-      className={`absolute inset-0 transition-opacity duration-[400ms] ease-out ${phase === 'shown' ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
-    >
-      {live && (
-        <Suspense fallback={null}>
-          <LivePond
-            onReady={onReady}
-            onFail={onFail}
-            running={phase !== 'leaving'}
-          />
-        </Suspense>
-      )}
-    </div>
+    <>
+      <div aria-hidden={shown || undefined}>{children}</div>
+      <div
+        ref={ref}
+        inert={!shown}
+        className={`absolute inset-0 transition-opacity duration-[400ms] ease-out ${shown ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+      >
+        {live && (
+          <Suspense fallback={null}>
+            <LivePond
+              onReady={onReady}
+              onFail={onFail}
+              running={phase !== 'leaving'}
+            />
+          </Suspense>
+        )}
+      </div>
+    </>
   )
 }

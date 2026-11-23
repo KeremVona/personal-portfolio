@@ -27,18 +27,19 @@ export function About() {
       <div className="grid items-center gap-7 md:grid-cols-[38%_1fr] md:gap-[6%]">
         <Reveal className="w-[68%] max-w-[320px] md:w-full md:max-w-none">
           <div className="relative -rotate-[1.6deg] bg-[#f2ead8] shadow-[0_14px_30px_-12px_rgb(30_50_30/0.35),0_2px_6px_rgb(30_50_30/0.08)]">
-            <img
-              src={KOI[1]?.src ?? KOI[0].src}
-              srcSet={KOI_SRCSET}
-              sizes={KOI_SIZES}
-              width={1200}
-              height={1599}
-              alt={ABOUT.imageAlt}
-              loading="lazy"
-              decoding="async"
-              className="block h-auto w-full"
-            />
-            <PondLayer />
+            <PondLayer>
+              <img
+                src={KOI[1]?.src ?? KOI[0].src}
+                srcSet={KOI_SRCSET}
+                sizes={KOI_SIZES}
+                width={1200}
+                height={1599}
+                alt={ABOUT.imageAlt}
+                loading="lazy"
+                decoding="async"
+                className="block h-auto w-full"
+              />
+            </PondLayer>
           </div>
         </Reveal>
         <Reveal delay={0.12}>
