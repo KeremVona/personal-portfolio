@@ -50,3 +50,21 @@ export function sourceLabel(
 ): 'Open source' | 'Closed source' {
   return project.repoUrl ? 'Open source' : 'Closed source'
 }
+
+/**
+ * How far (px) a corner bouquet pinned to the bottom of the screen sits below the
+ * screen edge. It rides up with the section's top as Projects arrives, stays in the
+ * corner while Projects fills the screen, and has sunk out of sight by the time the
+ * section's end reaches the screen's bottom edge, so its cut stems only ever meet the
+ * screen edge. `top` and `bottom` are the section's edges relative to the screen.
+ */
+export function sinkBy(
+  top: number,
+  bottom: number,
+  screen: number,
+  height: number,
+): number {
+  const arriving = top - (screen - height)
+  const leaving = screen + height - bottom
+  return Math.min(height, Math.max(0, arriving, leaving))
+}
