@@ -50,3 +50,29 @@ export function sourceLabel(
 ): 'Open source' | 'Closed source' {
   return project.repoUrl ? 'Open source' : 'Closed source'
 }
+
+/** The bouquets wait until the section is this many px into the screen... */
+const RISE_DELAY = 160
+/** ...then rise over this many px of scrolling. */
+const RISE_SCROLL = 160
+/** The bouquets sink over the last this-many px of scrolling before the section ends. */
+const SINK_SCROLL = 120
+
+/**
+ * How far (px) a corner bouquet pinned to the bottom of the screen sits below the
+ * screen edge. It rises once Projects is well into the screen (so it never covers
+ * About), stays in the corner while Projects fills the screen, and sinks quickly just
+ * before the section's end reaches the screen's bottom edge, so its cut stems only
+ * ever meet the screen edge. `top` and `bottom` are the section's edges relative to the screen.
+ */
+export function sinkBy(
+  top: number,
+  bottom: number,
+  screen: number,
+  height: number,
+): number {
+  const arriving =
+    height + ((top - (screen - RISE_DELAY)) * height) / RISE_SCROLL
+  const leaving = ((screen + SINK_SCROLL - bottom) * height) / SINK_SCROLL
+  return Math.min(height, Math.max(0, arriving, leaving))
+}

@@ -4,10 +4,10 @@
 import { existsSync, mkdirSync } from 'node:fs'
 import sharp from 'sharp'
 
-const SRC = 'reference/6478364781.png'
+const SRC = 'reference/hero-background.png'
 const OUT = 'src/assets/hero'
-// 3:4, on the path and the misty valley.
-const PORTRAIT = { left: 707, top: 0, width: 1152, height: 1536 }
+// 3:4, on the bend in the path and the tree.
+const PORTRAIT = { left: 1490, top: 0, width: 1152, height: 1536 }
 
 if (!existsSync(SRC)) {
   console.error(`${SRC} not found`)

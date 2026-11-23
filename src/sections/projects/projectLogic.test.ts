@@ -3,6 +3,7 @@ import { PROJECTS } from '../../content/projects'
 import {
   gridClass,
   projectLinks,
+  sinkBy,
   sourceLabel,
   visibleTags,
 } from './projectLogic'
@@ -86,5 +87,33 @@ describe('PROJECTS content', () => {
       expect(project.description).not.toBe('')
       expect(project.highlights.length).toBeGreaterThan(0)
     }
+  })
+})
+
+describe('sinkBy', () => {
+  // A 900px screen and a 300px-tall bouquet. It waits until the section is 160px into
+  // the screen, rises over the next 160px of scrolling, and sinks over the last 120px.
+  const at = (top: number, bottom: number) => sinkBy(top, bottom, 900, 300)
+
+  it('keeps the bouquet below the screen until the section is well in view', () => {
+    expect(at(1200, 4000)).toBe(300)
+    expect(at(900, 4000)).toBe(300)
+    expect(at(740, 4000)).toBe(300)
+  })
+
+  it('rises over the next 160px of scrolling', () => {
+    expect(at(660, 4000)).toBe(150)
+    expect(at(580, 4000)).toBe(0)
+  })
+
+  it('stays in the corner while the section fills the screen', () => {
+    expect(at(-500, 3000)).toBe(0)
+    expect(at(-2000, 1020)).toBe(0)
+  })
+
+  it('sinks quickly, out of sight by the time the section ends on screen', () => {
+    expect(at(-2500, 960)).toBe(150)
+    expect(at(-2600, 900)).toBe(300)
+    expect(at(-3000, 400)).toBe(300)
   })
 })

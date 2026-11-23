@@ -51,6 +51,7 @@ The section keeps the Meadow look: the cream page, with the hero's painted flowe
 **The corner bouquets**
 - Two bouquets cut from the hero's painted flower clusters: **left** from the left cluster, **right** from the right cluster. They match the hero's style because they're the same painting.
 - They sit in the **section's bottom-left and bottom-right corners**, anchored to the section edges (not the `max-w-6xl` container), **behind** the cards.
+- **Changed 2026-11-23 (Kerem's choice):** their stems end in a straight cut, which looked wrong at the section's bottom. They are now pinned to the **screen's** bottom corners while Projects is on screen, rising once the section is 160px into view and sinking below the screen edge just before it ends (`sinkBy`). With reduced motion they stay still and fade instead. The cards paint above them.
 - Size: about `clamp(150px, 22vw, 340px)` wide on wide screens.
 - **Phones get only the left bouquet**, a little smaller (about 40–46% of the screen width).
 - **They must never cover card text, tags or the footer row.** Give the section enough bottom padding, and keep the bouquets mostly in the space below and beside the grid. Overlapping a card's lower corner slightly, behind it, is fine.

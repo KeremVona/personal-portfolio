@@ -2,6 +2,7 @@
 
 **Date:** 2026-11-21
 **Status:** Agreed in conversation with Kerem. This builds on the foundation spec, `2026-11-20-portfolio-foundation-design.md`.
+**Changed (2026-11-23):** the painting is now a living pond; see `2026-11-23-about-pond-design.md`. The hover lift is gone.
 **Mockup:** `.superpowers/brainstorm/868-1795245819/content/about-layouts.html`, option **A**.
 
 ---

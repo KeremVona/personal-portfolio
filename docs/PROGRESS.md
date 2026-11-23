@@ -1,6 +1,6 @@
 # Progress
 
-_Last updated: 2026-11-22_
+_Last updated: 2026-11-23_
 
 ## Done
 
@@ -8,25 +8,31 @@ _Last updated: 2026-11-22_
 |---|---|---|---|
 | Foundation and scaffold | `specs/2026-11-20-portfolio-foundation-design.md` | `plans/2026-11-20-portfolio-scaffold.md` | Tokens, fonts, typed content, page shell, metadata, manual deploy workflow |
 | Hero and nav | `specs/2026-11-21-hero-design.md` | `plans/2026-11-21-hero.md` | Notes below |
-| About | `specs/2026-11-21-about-design.md` | `plans/2026-11-21-about.md` | Notes below |
+| About | `specs/2026-11-21-about-design.md`, pond: `specs/2026-11-23-about-pond-design.md` | `plans/2026-11-21-about.md`, `plans/2026-11-23-about-pond.md` | Notes below |
 | Projects | `specs/2026-11-21-projects-design.md` | `plans/2026-11-21-projects.md` | Notes below |
 | Experience | `specs/2026-11-21-experience-design.md` | `plans/2026-11-21-experience.md` | Notes below |
 | Footer (Contact) | `specs/2026-11-21-footer-design.md`, look replaced by `specs/2026-11-22-footer-sky-design.md` | `plans/2026-11-21-footer.md`, `plans/2026-11-22-footer-sky.md` | Notes below |
 
 **Hero and nav notes:**
-- A still sunrise-valley picture (`specs/2026-11-22-hero-still-design.md`), with a portrait crop for phones. It replaced the five-layer WebGL meadow and its sway on 2026-11-22.
+- A still picture (`specs/2026-11-22-hero-still-design.md`), with a portrait crop for phones. It replaced the five-layer WebGL meadow and its sway on 2026-11-22. On 2026-11-23 Kerem swapped the picture to `reference/hero-background.png` (a path through meadows to the sea, with a tree; the phone crop takes the bend in the path and the tree) and the bottom fade was made shorter, as it looked too white. Re-measured on real pixels afterwards: the copy passes AA at all 26 checked sizes (worst h1 4.13 at 320×568, large text).
 - A fixed nav that hides and shows, with a phone menu.
 - An Open Graph image.
 
 **About notes:**
 - Kerem's koi watercolour (`reference/671.png`) shown as a tilted print beside short placeholder text and fact pills.
+- **The pond (2026-11-23):** the painting's own koi swim in it, drawn with WebGL over the still painting.
+  - **Clicks:** clicking a fish makes it dart out and come back after 2–4s. Clicking the water ripples and scares fish nearby. Enter or Space scares them all.
+  - **Controls:** a pause button; reduced motion, no WebGL or any failure leaves the still painting.
+  - **Cost:** about 85 KB extra on a phone, loaded after the page.
+  - **Code:** `src/sections/about/` (swimming in `pond/swim.ts`, tested; drawing in `pond/renderer.ts`); art from `npm run art:about`.
+  - **Changed from the prototype:** fish now brake and turn harder near the edge, because the approved prototype let them drift out of the pond.
 - Section headings now have an eyebrow (`SectionHeading`).
 - A native scroll `Reveal` component (no animation library).
 - Deep links like `/#projects` now scroll to their section.
 
 **Projects notes:**
 - A card grid (up to three columns, never more columns than projects). Each card opens a native `<dialog>`: a side panel on desktop, a bottom sheet on phones.
-- Painted bouquets from the hero clusters sit in the section's bottom corners (`npm run art:projects`).
+- Painted bouquets from the hero clusters (`npm run art:projects`). Since 2026-11-23 they are pinned to the screen's bottom corners while Projects is on screen: they rise once the section is 160px into the screen and sink below the screen edge just before it ends (`sinkBy` in projectLogic.ts), because their stems end in a straight cut that only looks right on the screen edge. With reduced motion they stay still and fade in and out instead.
 - Placeholder media ("Screenshots coming soon") until Kerem adds screenshots. The panel supports images and one self-hosted video.
 - The hero's meadow now fades softly into the cream page at its bottom edge.
 
@@ -42,7 +48,7 @@ _Last updated: 2026-11-22_
 - The geometry is `.sky-footer` in `index.css`: text ends above 32% of the image, and up to 15% (grass, and some hills at the sides) is cropped to fit short screens.
 - Lazy-loaded: 26/53/105 KB on phones (square crop), 43/81/152 KB on wider screens.
 
-**Lighthouse on mobile, whole page:** 100 in Performance, Accessibility, Best Practices and SEO; CLS 0; about 550 KB. The LCP (0.8s) is the headline: Chrome doesn't count a full-screen background picture, so watch the hero picture's weight (235 KB on phones) by eye as well.
+**Lighthouse on mobile, whole page:** 100 in Performance, Accessibility, Best Practices and SEO; CLS 0; about 636 KB with the pond. The LCP (0.8s) is the headline: Chrome doesn't count a full-screen background picture, so watch the hero picture's weight (235 KB on phones) by eye as well.
 
 All spec and plan paths are under `docs/superpowers/`.
 
@@ -71,7 +77,8 @@ All five sections are built. What's left:
 - **Agriculture project name:** the résumé says "Agricultural Management and Platform"; the site uses "Agricultural Management Platform".
 - **Headline size:** the hero headline is `clamp(2.25rem, 5.6vw, 5.75rem)` in a 62% column, to match the approved mockup. The spec said about 88–92px in a 58% column. He needs to confirm.
 - **Footer image rights:** confirm where `674561874.png` came from and that it may be published.
-- **Hero image rights:** confirm where `6478364781.png` came from and that it may be published.
+- **Pond on real phones:** try the About pond on an iPhone and an Android phone (taps, scrolling over it, the pause button).
+- **Hero image rights:** confirm where `hero-background.png` came from and that it may be published.
 - **All copy is placeholder.** Kerem rewrites it at the end, including the headline "Rooted in the back end. Blooming on the front."
 
 ## Known small issues (deferred from reviews)
@@ -83,9 +90,15 @@ All five sections are built. What's left:
 
 **About:**
 - Content not yet revealed prints invisible. Fix: add `print:opacity-100 print:translate-y-0` to `Reveal`.
-- The print's hover can flicker at its bottom edge, because the lifted element is the one being hovered. Fix: `group` on the wrapper and `group-hover:` on the image.
 - `useInitialHashScroll` smooth-scrolls on load, and overrides scroll restoration on reload/back. Fix: `behavior: 'instant'`, and skip for `reload`/`back_forward` navigations.
 - The koi `width`/`height` are hardcoded (1200×1599) rather than taken from the image metadata.
+
+**About pond:**
+- The art size is picked once, when the pond loads. If the print grows later (rotating a tablet, widening a window), the pond can look softer than the still painting. Fix: reload the textures when the needed width passes the next size.
+- `poke` takes a `random` parameter it doesn't use. Drop it.
+- `getUniformLocation` runs on every draw call. Cache the locations once (negligible at 5 fish).
+- Pausing freezes a ripple mid-spread. Clear ripples on pause if that looks odd.
+- The frame rate was only measured in headless Chrome, which says nothing about real phones. The real-phone check covers it.
 
 **Projects:**
 - On Windows the open side panel stops 15px short of the right edge (the price of `scrollbar-gutter: stable`, which stops the page jumping). Nearly invisible, since the panel and gutter are both cream.
