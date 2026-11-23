@@ -14,7 +14,7 @@ _Last updated: 2026-11-23_
 | Footer (Contact) | `specs/2026-11-21-footer-design.md`, look replaced by `specs/2026-11-22-footer-sky-design.md` | `plans/2026-11-21-footer.md`, `plans/2026-11-22-footer-sky.md` | Notes below |
 
 **Hero and nav notes:**
-- A still picture (`specs/2026-11-22-hero-still-design.md`), with a portrait crop for phones. It replaced the five-layer WebGL meadow and its sway on 2026-11-22. On 2026-11-23 Kerem swapped the picture to `reference/hero-background.png` (a path through meadows to the sea, with a tree; the phone crop takes the bend in the path and the tree) and the bottom fade was made shorter, as it looked too white.
+- A still picture (`specs/2026-11-22-hero-still-design.md`), with a portrait crop for phones. It replaced the five-layer WebGL meadow and its sway on 2026-11-22. On 2026-11-23 Kerem swapped the picture to `reference/hero-background.png` (a path through meadows to the sea, with a tree; the phone crop takes the bend in the path and the tree) and the bottom fade was made shorter, as it looked too white. Re-measured on real pixels afterwards: the copy passes AA at all 26 checked sizes (worst h1 4.13 at 320×568, large text).
 - A fixed nav that hides and shows, with a phone menu.
 - An Open Graph image.
 

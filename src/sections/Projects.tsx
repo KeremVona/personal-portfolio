@@ -12,7 +12,7 @@ import { gridClass, sinkBy } from './projects/projectLogic'
 
 const BOUQUET_SIZES = '(min-width: 1545px) 340px, (min-width: 768px) 22vw, 44vw'
 const BOUQUET_CLASS =
-  'pointer-events-none fixed bottom-0 h-auto translate-y-full select-none will-change-transform md:w-[clamp(150px,22vw,340px)]'
+  'pointer-events-none fixed bottom-0 h-auto translate-y-full select-none will-change-[translate] print:hidden md:w-[clamp(150px,22vw,340px)]'
 
 /**
  * Keeps the bouquets in the screen's bottom corners while Projects is on screen,
@@ -25,9 +25,10 @@ function useCornerBouquets(
 ) {
   useEffect(() => {
     const element = section.current
-    if (!element) return
+    if (!element || !('IntersectionObserver' in window)) return
     const still = matchMedia('(prefers-reduced-motion: reduce)')
     let frame = 0
+    let inView = false
     const place = () => {
       frame = 0
       const { top, bottom } = element.getBoundingClientRect()
@@ -49,7 +50,8 @@ function useCornerBouquets(
     }
     // Only follow the scroll while the section is near the screen.
     const watcher = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
+      inView = entry.isIntersecting
+      if (inView) {
         addEventListener('scroll', request, { passive: true })
         addEventListener('resize', request)
         request()
@@ -63,9 +65,10 @@ function useCornerBouquets(
       }
     })
     watcher.observe(element)
-    still.addEventListener('change', request)
+    const restyle = () => inView && request()
+    still.addEventListener('change', restyle)
     return () => {
-      still.removeEventListener('change', request)
+      still.removeEventListener('change', restyle)
       watcher.disconnect()
       removeEventListener('scroll', request)
       removeEventListener('resize', request)
@@ -94,6 +97,7 @@ function Bouquets({
         aria-hidden="true"
         loading="lazy"
         decoding="async"
+        fetchPriority="low"
         className={`${BOUQUET_CLASS} left-0 w-[44vw]`}
       />
       <img
@@ -109,6 +113,7 @@ function Bouquets({
         aria-hidden="true"
         loading="lazy"
         decoding="async"
+        fetchPriority="low"
         className={`${BOUQUET_CLASS} right-0 hidden md:block`}
       />
     </>
