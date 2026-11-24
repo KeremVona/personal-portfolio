@@ -1,3 +1,4 @@
+import { TAG_LABEL } from '../../components/labelStyle'
 import type { ProjectItem } from '../../content/types'
 import { largest, srcSet } from './art'
 import { MediaPlaceholder } from './MediaPlaceholder'
@@ -11,7 +12,7 @@ interface ProjectCardProps {
 }
 
 /**
- * A project card. The whole card is clickable through a "stretched" button: the
+ * A project, as a classic computer window (.window in index.css). The whole card is clickable through a "stretched" button: the
  * button sits in the h3 (headings can't go inside a button) and its ::after
  * covers the card.
  */
@@ -20,7 +21,11 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
   const { shown, extra } = visibleTags(project.stack)
 
   return (
-    <article className="relative flex h-full flex-col overflow-hidden rounded-card bg-white shadow-card transition-[translate,box-shadow] duration-300 ease-out hover:shadow-[0_14px_34px_rgb(30_50_30/0.17)] has-focus-visible:outline-2 has-focus-visible:outline-offset-4 has-focus-visible:outline-cornflower motion-safe:hover:-translate-y-1">
+    <article className="window relative flex h-full flex-col has-focus-visible:outline-2 has-focus-visible:outline-offset-4 has-focus-visible:outline-sky-deep">
+      <div className="window-bar" aria-hidden="true">
+        <span className="window-close" />
+        <span className="window-title">{project.slug}</span>
+      </div>
       {cover?.kind === 'image' ? (
         <img
           src={largest(cover.variants).src}
@@ -34,16 +39,16 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
           className="aspect-[16/10] w-full object-cover"
         />
       ) : (
-        <MediaPlaceholder tone={project.tone} className="aspect-[16/10]" />
+        <MediaPlaceholder className="aspect-[16/10]" />
       )}
       <div className="flex flex-1 flex-col px-5 pt-4.5 pb-5">
-        {/* The ring is drawn on the article: its overflow-hidden would clip one on ::after. */}
+        {/* The ring is drawn on the article, around the whole window. */}
         <h3 className="font-display text-lg font-semibold tracking-[-0.01em]">
           <button
             type="button"
             aria-haspopup="dialog"
             onClick={() => onOpen(project)}
-            className="cursor-pointer text-left after:absolute after:inset-0 after:rounded-card focus-visible:outline-none"
+            className="cursor-pointer text-left after:absolute after:inset-0 focus-visible:outline-none"
           >
             {project.name}
           </button>
@@ -54,24 +59,17 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
         {shown.length > 0 && (
           <ul className="mt-3 flex flex-wrap gap-1.5">
             {shown.map((tag) => (
-              <li
-                key={tag}
-                className="rounded-full bg-meadow-tint px-2.5 py-1 text-xs text-meadow-deep"
-              >
+              <li key={tag} className={TAG_LABEL}>
                 {tag}
               </li>
             ))}
-            {extra > 0 && (
-              <li className="rounded-full bg-meadow-tint px-2.5 py-1 text-xs text-meadow-deep">
-                +{extra}
-              </li>
-            )}
+            {extra > 0 && <li className={TAG_LABEL}>+{extra}</li>}
           </ul>
         )}
-        <p className="mt-auto flex justify-between pt-4 text-xs text-ink/65">
+        <p className="mt-auto flex justify-between pt-4 font-mono text-xs text-ink-soft">
           <span>{sourceLabel(project)}</span>
-          <span aria-hidden="true" className="font-medium text-meadow-deep">
-            Read more →
+          <span aria-hidden="true" className="font-semibold text-sky-deep">
+            open ↗
           </span>
         </p>
       </div>

@@ -1,8 +1,8 @@
-import { X } from 'lucide-react'
 import { useImperativeHandle, useRef, useState, type Ref } from 'react'
 import { flushSync } from 'react-dom'
+import { TAG_LABEL } from '../../components/labelStyle'
 import type { ProjectItem, ProjectMedia } from '../../content/types'
-import { BOUQUET_RIGHT, largest, srcSet } from './art'
+import { largest, srcSet } from './art'
 import { MediaPlaceholder } from './MediaPlaceholder'
 import { projectLinks } from './projectLogic'
 
@@ -11,7 +11,7 @@ export interface ProjectPanelHandle {
 }
 
 const LABEL =
-  'font-display text-xs font-semibold tracking-[0.08em] text-meadow-deep uppercase'
+  'font-display text-xs font-semibold tracking-[0.08em] text-sky-deep uppercase'
 const MEDIA_SIZES = '(min-width: 768px) 460px, 100vw'
 
 /**
@@ -76,87 +76,75 @@ function PanelContent({
   const links = projectLinks(project)
 
   return (
-    <div className="relative flex min-h-full flex-col px-6 pt-6 sm:px-8 sm:pt-8">
-      {/* Sticky, so the × stays in reach after scrolling a long phone sheet. */}
-      <div className="sticky top-3 z-10 -mt-2 -mr-2 -mb-10 flex justify-end">
+    <div className="flex min-h-full flex-col">
+      {/* Sticky, so the close box stays in reach after scrolling a long phone sheet. */}
+      <div className="window-bar sticky top-0 z-10 h-10!">
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="grid size-10 cursor-pointer place-items-center rounded-full border border-ink/18 bg-white/80 text-ink backdrop-blur-sm hover:bg-white"
+          className="-ml-1.5 grid size-10 cursor-pointer place-items-center focus-visible:outline-offset-[-6px]"
         >
-          <X aria-hidden="true" size={18} />
+          <span className="window-close" />
         </button>
+        <span aria-hidden="true" className="window-title">
+          {project.slug}
+        </span>
       </div>
+      <div className="flex flex-1 flex-col px-6 pt-2 pb-8 sm:px-8 sm:pb-10">
+        <h2
+          id="project-panel-title"
+          className="mt-6 font-display text-[1.65rem] leading-tight font-semibold tracking-[-0.025em]"
+        >
+          {project.name}
+        </h2>
+        <p className="mt-3 leading-relaxed text-ink-soft">
+          {project.description}
+        </p>
 
-      <h2
-        id="project-panel-title"
-        className="mt-10 pr-8 font-display text-[1.65rem] leading-tight font-semibold tracking-[-0.025em]"
-      >
-        {project.name}
-      </h2>
-      <p className="mt-3 leading-relaxed text-ink-soft">
-        {project.description}
-      </p>
+        <Gallery project={project} />
 
-      <Gallery project={project} />
+        <h3 className={`mt-7 ${LABEL}`}>What I built</h3>
+        <ul className="mt-2.5 list-disc space-y-2 pl-5 text-[0.9rem] leading-relaxed text-ink-soft marker:text-sky">
+          {project.highlights.map((highlight) => (
+            <li key={highlight}>{highlight}</li>
+          ))}
+        </ul>
 
-      <h3 className={`mt-7 ${LABEL}`}>What I built</h3>
-      <ul className="mt-2.5 list-disc space-y-2 pl-5 text-[0.9rem] leading-relaxed text-ink-soft marker:text-meadow">
-        {project.highlights.map((highlight) => (
-          <li key={highlight}>{highlight}</li>
-        ))}
-      </ul>
-
-      {project.stack.length > 0 && (
-        <>
-          <h3 className={`mt-7 ${LABEL}`}>Built with</h3>
-          <ul className="mt-2.5 flex flex-wrap gap-1.5">
-            {project.stack.map((tag) => (
-              <li
-                key={tag}
-                className="rounded-full bg-meadow-tint px-2.5 py-1 text-xs text-meadow-deep"
-              >
-                {tag}
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      <div className="mt-7 flex flex-wrap items-center gap-3">
-        {links.map((link) => (
-          <a
-            key={link.href}
-            href={link.href}
-            target="_blank"
-            rel="noreferrer"
-            className={
-              link.primary
-                ? 'rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-cream hover:bg-ink-soft'
-                : 'rounded-full border border-ink/22 px-5 py-2.5 text-sm font-medium text-ink hover:bg-white/70'
-            }
-          >
-            {link.label}
-          </a>
-        ))}
-        {!project.repoUrl && (
-          <span className="text-sm text-ink-soft">Closed source</span>
+        {project.stack.length > 0 && (
+          <>
+            <h3 className={`mt-7 ${LABEL}`}>Built with</h3>
+            <ul className="mt-2.5 flex flex-wrap gap-1.5">
+              {project.stack.map((tag) => (
+                <li key={tag} className={TAG_LABEL}>
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          </>
         )}
-      </div>
 
-      <img
-        src={largest(BOUQUET_RIGHT).src}
-        srcSet={srcSet(BOUQUET_RIGHT)}
-        sizes="240px"
-        width={largest(BOUQUET_RIGHT).width}
-        height={largest(BOUQUET_RIGHT).height}
-        alt=""
-        aria-hidden="true"
-        loading="lazy"
-        decoding="async"
-        className="pointer-events-none mt-auto -mr-6 ml-auto block h-auto w-[46%] pt-8 select-none sm:-mr-8"
-      />
+        <div className="mt-7 flex flex-wrap items-center gap-3">
+          {links.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              target="_blank"
+              rel="noreferrer"
+              className={
+                link.primary
+                  ? 'bg-ink px-5 py-2.5 text-sm font-medium text-cream hover:bg-ink-soft'
+                  : 'border-2 border-ink px-5 py-2.5 text-sm font-medium text-ink hover:bg-white/70'
+              }
+            >
+              {link.label}
+            </a>
+          ))}
+          {!project.repoUrl && (
+            <span className="text-sm text-ink-soft">Closed source</span>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
@@ -171,10 +159,7 @@ function Gallery({ project }: { project: ProjectItem }) {
       {current ? (
         <MediaItem item={current} />
       ) : (
-        <MediaPlaceholder
-          tone={project.tone}
-          className="aspect-video rounded-[10px]"
-        />
+        <MediaPlaceholder className="aspect-video border-2 border-ink" />
       )}
       {media.length > 1 && (
         <div className="mt-2 grid grid-cols-4 gap-2">
@@ -185,7 +170,7 @@ function Gallery({ project }: { project: ProjectItem }) {
               aria-label={`Show ${item.alt}`}
               aria-pressed={i === index}
               onClick={() => setIndex(i)}
-              className="cursor-pointer overflow-hidden rounded-md ring-meadow-deep aria-pressed:ring-2"
+              className="cursor-pointer overflow-hidden ring-sky-deep ring-offset-2 aria-pressed:ring-2"
             >
               <img
                 src={item.kind === 'image' ? item.variants[0].src : item.poster}
@@ -210,7 +195,7 @@ function MediaItem({ item }: { item: ProjectMedia }) {
         preload="none"
         poster={item.poster}
         aria-label={item.alt}
-        className="aspect-video w-full rounded-[10px] bg-ink"
+        className="aspect-video w-full border-2 border-ink bg-ink"
       >
         <source src={item.src} type="video/mp4" />
       </video>
@@ -227,7 +212,7 @@ function MediaItem({ item }: { item: ProjectMedia }) {
       alt={item.alt}
       loading="lazy"
       decoding="async"
-      className="aspect-video w-full rounded-[10px] object-cover"
+      className="aspect-video w-full border-2 border-ink object-cover"
     />
   )
 }

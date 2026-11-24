@@ -1,5 +1,7 @@
 # Projects Section: Design
 
+> **2026-11-24:** the look (cards, tags, bouquets) is replaced by `2026-11-24-sky-redesign-design.md` §6: classic computer windows, no bouquets. Behaviour (grid, panel, media) still stands.
+
 **Date:** 2026-11-21
 **Status:** Agreed in conversation with Kerem. This builds on the foundation spec, `2026-11-20-portfolio-foundation-design.md`, and follows the patterns set by the hero and About specs.
 **Mockup:** `.superpowers/brainstorm/868-1795245819/content/projects-cards.html`, flower treatment **B**. (The mockup's dashed "third project?" slot and the poppy/cornflower sprigs from option A are not part of the design.)

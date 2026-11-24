@@ -23,7 +23,7 @@ export function SectionHeading({
     <div>
       <p
         className={`mb-2.5 font-display text-[13px] font-semibold tracking-[0.08em] uppercase ${
-          tone === 'dark' ? 'text-cream' : 'text-meadow-deep'
+          tone === 'dark' ? 'text-cream' : 'text-sky-deep'
         }`}
       >
         {eyebrow}

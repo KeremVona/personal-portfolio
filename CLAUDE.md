@@ -2,13 +2,13 @@
 
 A single-page portfolio for Kerem, a final-year Software Engineering student (graduating June 2027) aiming for **full-stack web roles**.
 
-**Look:** a clean, botanical "Meadow" style. The hero is a still watercolour picture of a path through meadows to the sea, the footer a hilltop computer under a blue sky, and the rest of the page sits on cream.
+**Look:** the page lives in the footer's world (`docs/superpowers/specs/2026-11-24-sky-redesign-design.md`). The hero is still a watercolour picture of a path through meadows to the sea; below it the page is one sky that deepens from cream to the footer's deep blue, where a hilltop computer sits. Projects are classic '80s computer windows; Experience is one straight timeline. Colours come from the footer picture.
 
 **Read these before doing anything:**
 
 1. `docs/PROGRESS.md`: what's done, what's next, and the open/deferred items.
 2. `docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md`: the binding foundation (goals, stack, tokens, quality bar, hosting).
-3. `docs/superpowers/specs/2026-11-21-hero-design.md` (its background and motion are replaced by `2026-11-22-hero-still-design.md`), `2026-11-21-about-design.md`, `2026-11-21-projects-design.md`, `2026-11-21-experience-design.md` and `2026-11-21-footer-design.md` (its look is replaced by `2026-11-22-footer-sky-design.md`): the hero, nav, About, Projects, Experience and footer designs (built).
+3. `docs/superpowers/specs/2026-11-21-hero-design.md` (its background and motion are replaced by `2026-11-22-hero-still-design.md`), `2026-11-21-about-design.md`, `2026-11-21-projects-design.md`, `2026-11-21-experience-design.md` and `2026-11-21-footer-design.md` (its look is replaced by `2026-11-22-footer-sky-design.md`): the hero, nav, About, Projects, Experience and footer designs (built). The colours and the Projects and Experience look are replaced by `2026-11-24-sky-redesign-design.md`.
 4. Any newer spec in `docs/superpowers/specs/`. Each section gets its own spec before it is built.
 
 ## How we work (Kerem's preferences)
@@ -40,7 +40,6 @@ The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via 
 | `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                                 |
 | `npm run art:hero`                                            | Regenerate the hero and share image (needs `reference/hero-background.png`)   |
 | `npm run art:about`                                           | Regenerate the About painting and its pond pieces (needs `reference/671.png`) |
-| `npm run art:projects`                                        | Regenerate the Projects corner bouquets (needs `reference/hero/*.png`)        |
 | `npm run art:footer`                                          | Regenerate the footer sky (needs the private `reference/674561874.png`)       |
 
 **The gate before every commit:** `npm test && npm run typecheck && npm run lint && npm run format:check && npm run build`
@@ -48,14 +47,14 @@ The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via 
 ## Where things live
 
 ```
-src/index.css           Tailwind import + Meadow tokens in @theme (colours, fonts, radius, shadow)
+src/index.css           Tailwind import + footer-palette tokens in @theme (pinned by src/theme/palette.test.ts), the .sky-* section gradients, .window and .timeline
 src/content/            Typed site content (profile, links, experience, projects, SECTIONS)
 src/components/         Nav (fixed, hide/show, phone menu), navState (pure + tests), Section + SectionHeading (eyebrow + h2), Reveal, SkipLink
 src/hooks/              useNavState, useInitialHashScroll
 src/sections/Hero.tsx   Hero copy and layout
 src/sections/about/     PondLayer (loads the pond lazily over the painting); pond/swim.ts (pure, tested), pond/renderer.ts (WebGL1), pond/LivePond.tsx
-src/sections/projects/  projectLogic.ts (pure, tested), ProjectCard, ProjectPanel (native <dialog>; CSS in index.css), art.ts
-src/sections/experience/ experienceLogic.ts (pure, tested), ExperienceCard (featured card with a numbers column)
+src/sections/projects/  projectLogic.ts (pure, tested), ProjectCard (a .window), ProjectPanel (native <dialog>; CSS in index.css), art.ts
+src/sections/experience/ experienceLogic.ts (pure, tested; newest first), ExperienceCard (a card on the timeline)
 src/sections/footer/    footerLogic.ts (pure, tested), CopyEmailButton; Footer.tsx is the contact section over the hilltop-computer sky (geometry: .sky-footer in index.css)
 src/assets/hero/        Committed WebP master and portrait crop of the hero picture (made by scripts/prepare-hero-art.mjs)
 public/                 Résumé PDF (published as is, phone number included, by Kerem's choice), og-image.jpg, favicon, robots.txt

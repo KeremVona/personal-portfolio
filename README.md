@@ -1,6 +1,6 @@
 # Kerem Can Bas — Portfolio
 
-The personal portfolio site of Kerem Can Bas, a full-stack engineer. It's a single static page (Hero, About, Projects, Experience, Footer) with a botanical "Meadow" look and subtle motion.
+The personal portfolio site of Kerem Can Bas, a full-stack engineer. It's a single static page (Hero, About, Projects, Experience, Footer) that lives in the footer picture's world: one sky that deepens down the page to a hilltop computer, Projects as classic computer windows, and subtle motion.
 
 Design decisions live in [`docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md`](docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md).
 
@@ -20,7 +20,7 @@ Design decisions live in [`docs/superpowers/specs/2026-11-20-portfolio-foundatio
 
 ```
 src/
-  index.css     Tailwind import, Meadow design tokens (@theme), fonts, base styles
+  index.css     Tailwind import, footer-palette tokens (@theme), the sky gradients, fonts, base styles
   content/      Typed site content: profile, links, experience, projects, nav sections
   components/   Shared UI (Section, Nav, SkipLink …)
   sections/     One component per page section

@@ -1,5 +1,7 @@
 # Experience Section: Design
 
+> **2026-11-24:** the layout is replaced by `2026-11-24-sky-redesign-design.md` §7: one straight timeline, newest first, no featured card. Highlights, "Show N more" and the numbers still stand.
+
 **Date:** 2026-11-21
 **Status:** Agreed in conversation with Kerem. This builds on the foundation spec (`2026-11-20-portfolio-foundation-design.md`) and follows the patterns of the About and Projects specs.
 **Mockup:** `.superpowers/brainstorm/868-1795245819/content/experience-layouts.html`, option **C** ("Cards, biggest numbers first").

@@ -36,14 +36,9 @@ export interface ExperienceItem {
   workMode: WorkMode
   stack: string[]
   highlights: string[]
-  /** The wide card with a numbers column. At most one role should be featured. */
-  featured?: boolean
-  /** The featured card's headline numbers. */
+  /** Headline numbers, shown in the role's card. */
   stats?: { value: string; label: string }[]
 }
-
-/** Placeholder colour for a project without screenshots. */
-export type ProjectTone = 'parchment' | 'meadow' | 'sky'
 
 export type ProjectMedia =
   | { kind: 'image'; variants: ImagetoolsMetadata[]; alt: string }
@@ -63,5 +58,4 @@ export interface ProjectItem {
   liveUrl?: string
   /** Empty until screenshots exist; the first image is the card cover. */
   media: ProjectMedia[]
-  tone: ProjectTone
 }
