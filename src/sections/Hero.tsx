@@ -4,6 +4,7 @@ import portraitMeta from '../assets/hero/sky-portrait.webp?w=640;900;1152&format
 import wideMeta from '../assets/hero/sky.webp?w=1280;1920;2730&format=webp&quality=65&as=metadata'
 import { CLOUD_BOX } from './hero/heroArt'
 import { useCloudPlacement } from './hero/useCloudPlacement'
+import { useShyCloud } from './hero/useShyCloud'
 
 const byWidth = (meta: ImagetoolsMetadata | ImagetoolsMetadata[]) =>
   (Array.isArray(meta) ? meta : [meta]).toSorted((a, b) => a.width - b.width)
@@ -31,6 +32,7 @@ export function Hero() {
   const copyRef = useRef<HTMLDivElement>(null)
   const cloudRef = useRef<HTMLImageElement>(null)
   useCloudPlacement(heroRef, copyRef, cloudRef)
+  useShyCloud(heroRef, copyRef, cloudRef)
 
   return (
     <section
