@@ -2,13 +2,13 @@
 
 A single-page portfolio for Kerem, a final-year Software Engineering student (graduating June 2027) aiming for **full-stack web roles**.
 
-**Look:** the page lives in the footer's world (`docs/superpowers/specs/2026-11-24-sky-redesign-design.md`). The hero is still a watercolour picture of a path through meadows to the sea; below it the page is one sky that deepens from cream to the footer's deep blue, where a hilltop computer sits. Projects are classic '80s computer windows; Experience is one straight timeline. Colours come from the footer picture.
+**Look:** the page lives in the footer's world (`docs/superpowers/specs/2026-11-24-sky-redesign-design.md`). The hero is Kerem's old computer on a floating cloud in a deep sky (`2026-11-24-sky-hero-design.md`); the cloud shies away from a nearby cursor. Below it the page is one sky that deepens from cream to the footer's deep blue, where a hilltop computer sits. Projects are classic '80s computer windows; Experience is one straight timeline. Colours come from the footer picture.
 
 **Read these before doing anything:**
 
 1. `docs/PROGRESS.md`: what's done, what's next, and the open/deferred items.
 2. `docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md`: the binding foundation (goals, stack, tokens, quality bar, hosting).
-3. `docs/superpowers/specs/2026-11-21-hero-design.md` (its background and motion are replaced by `2026-11-22-hero-still-design.md`), `2026-11-21-about-design.md`, `2026-11-21-projects-design.md`, `2026-11-21-experience-design.md` and `2026-11-21-footer-design.md` (its look is replaced by `2026-11-22-footer-sky-design.md`): the hero, nav, About, Projects, Experience and footer designs (built). The colours and the Projects and Experience look are replaced by `2026-11-24-sky-redesign-design.md`.
+3. `docs/superpowers/specs/2026-11-21-hero-design.md` (its background and motion are replaced by `2026-11-22-hero-still-design.md`, then by `2026-11-24-sky-hero-design.md`), `2026-11-21-about-design.md`, `2026-11-21-projects-design.md`, `2026-11-21-experience-design.md` and `2026-11-21-footer-design.md` (its look is replaced by `2026-11-22-footer-sky-design.md`): the hero, nav, About, Projects, Experience and footer designs (built). The colours and the Projects and Experience look are replaced by `2026-11-24-sky-redesign-design.md`.
 4. Any newer spec in `docs/superpowers/specs/`. Each section gets its own spec before it is built.
 
 ## How we work (Kerem's preferences)
@@ -31,16 +31,16 @@ A single-page portfolio for Kerem, a final-year Software Engineering student (gr
 
 The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via `@tailwindcss/vite`, with no PostCSS and no `tailwind.config`** · Oxlint · Prettier (with `prettier-plugin-tailwindcss`) · Vitest · vite-imagetools. Scroll reveals use a small native `Reveal` (IntersectionObserver + CSS). `motion` was tried and removed because it cost too much mobile performance.
 
-| Command                                                       | What it does                                                                  |
-| ------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `npm run dev`                                                 | Start the dev server (http://localhost:5173)                                  |
-| `npm run build`                                               | Type-check and build to `dist/`                                               |
-| `npm run preview`                                             | Serve the production build (http://localhost:4173)                            |
-| `npm test`                                                    | Run Vitest (pure logic only)                                                  |
-| `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                                 |
-| `npm run art:hero`                                            | Regenerate the hero and share image (needs `reference/hero-background.png`)   |
-| `npm run art:about`                                           | Regenerate the About painting and its pond pieces (needs `reference/671.png`) |
-| `npm run art:footer`                                          | Regenerate the footer sky (needs the private `reference/674561874.png`)       |
+| Command                                                       | What it does                                                                            |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `npm run dev`                                                 | Start the dev server (http://localhost:5173)                                            |
+| `npm run build`                                               | Type-check and build to `dist/`                                                         |
+| `npm run preview`                                             | Serve the production build (http://localhost:4173)                                      |
+| `npm test`                                                    | Run Vitest (pure logic only)                                                            |
+| `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                                           |
+| `npm run art:hero`                                            | Regenerate the hero layers, cloud box and share image (needs `reference/647386481.png`) |
+| `npm run art:about`                                           | Regenerate the About painting and its pond pieces (needs `reference/671.png`)           |
+| `npm run art:footer`                                          | Regenerate the footer sky (needs the private `reference/674561874.png`)                 |
 
 **The gate before every commit:** `npm test && npm run typecheck && npm run lint && npm run format:check && npm run build`
 
@@ -51,12 +51,12 @@ src/index.css           Tailwind import + footer-palette tokens in @theme (pinne
 src/content/            Typed site content (profile, links, experience, projects, SECTIONS)
 src/components/         Nav (fixed, hide/show, phone menu), navState (pure + tests), Section + SectionHeading (eyebrow + h2), Reveal, SkipLink
 src/hooks/              useNavState, useInitialHashScroll
-src/sections/Hero.tsx   Hero copy and layout
+src/sections/Hero.tsx   Hero copy and layout; hero/ holds cloudLogic.ts (pure, tested: placement, shy target, spring), useCloudPlacement, useShyCloud, heroArt.ts
 src/sections/about/     PondLayer (loads the pond lazily over the painting); pond/swim.ts (pure, tested), pond/renderer.ts (WebGL1), pond/LivePond.tsx
 src/sections/projects/  projectLogic.ts (pure, tested), ProjectCard (a .window), ProjectPanel (native <dialog>; CSS in index.css), art.ts
 src/sections/experience/ experienceLogic.ts (pure, tested; newest first), ExperienceCard (a card on the timeline)
 src/sections/footer/    footerLogic.ts (pure, tested), CopyEmailButton; Footer.tsx is the contact section over the hilltop-computer sky (geometry: .sky-footer in index.css)
-src/assets/hero/        Committed WebP master and portrait crop of the hero picture (made by scripts/prepare-hero-art.mjs)
+src/assets/hero/        Committed sky background (+ portrait crop), the cloud layer and its box (made by scripts/prepare-hero-art.mjs)
 public/                 Résumé PDF (published as is, phone number included, by Kerem's choice), og-image.jpg, favicon, robots.txt
 docs/superpowers/       Specs (decisions) and plans (how each piece was built)
 ```
@@ -70,9 +70,9 @@ docs/superpowers/       Specs (decisions) and plans (how each piece was built)
 - **Windows:** `.gitattributes` forces LF, so Prettier stays happy with `core.autocrlf=true`.
 - **The About pond's motion is agreed with Kerem** (stiff head, swinging tail, glide and kick, bend limits; constants in `pond/swim.ts`). Changes need his say-so. Its scripted checks expose `window.__pond` in development only.
 - **The hero rules are agreed with Kerem.** These need his say-so to change:
-  - the picture is still: no swaying,
-  - the portrait crop.
-- **Text over the hero:** the cream mist (`.hero-mist`, `.hero-lead::before` in index.css) is what makes it pass AA. Re-measure on real pixels if the copy or the picture changes.
+  - the picture is still, except the cloud's shy reaction to a nearby mouse (radius 1.3× its half-width, up to 28px at 1440px wide, 2° tilt, a soft critically damped spring; only with a hovering mouse, motion allowed and the wide layout), agreed 2026-11-24,
+  - the cloud's place: about 64% across on wide screens, clear of the copy; centred under the copy on narrow ones.
+- **Text over the hero:** the copy is cream; `npm run art:hero` deepens the sky behind it (step 6 of the script) and the secondary button has a deep-blue fill, which is what makes it pass AA. Re-measure on real pixels if the copy or the picture changes.
 - **Browser testing in the Claude desktop app:** when the Browser pane is hidden, animation frames are throttled or frozen, and IntersectionObserver may not fire (so `Reveal` content stays hidden). Use headless Chrome over CDP against `npm run preview` for screenshots and scripted checks.
 - **Subagents on Claude Fable 5.2 failed** because the account needs usage credits. Use Opus for reviewer subagents unless Kerem says otherwise.
 

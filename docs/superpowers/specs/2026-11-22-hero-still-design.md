@@ -1,5 +1,7 @@
 # Still Hero Background: Design
 
+> **2026-11-24:** the picture and the "still" rule are replaced by `2026-11-24-sky-hero-design.md` (the computer on a shy cloud).
+
 **Date:** 2026-11-22
 **Status:** Kerem chose the picture and "no swaying". The layout details are Claude's calls, approved by Kerem from the built preview (he skipped the review).
 **Replaces:** §1's motion, §3–5 and §7's source in `2026-11-21-hero-design.md`. The copy, buttons, left alignment, nav and quality bar still apply.
