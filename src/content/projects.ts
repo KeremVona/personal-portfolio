@@ -17,7 +17,6 @@ export const PROJECTS: ProjectItem[] = [
     // Not listed on the résumé; Kerem supplies it later.
     stack: [],
     media: [],
-    tone: 'parchment',
   },
   {
     slug: 'agritech',
@@ -43,6 +42,5 @@ export const PROJECTS: ProjectItem[] = [
     ],
     repoUrl: 'https://github.com/KeremVona/agritech',
     media: [],
-    tone: 'meadow',
   },
 ]

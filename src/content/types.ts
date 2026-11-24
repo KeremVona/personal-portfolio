@@ -42,9 +42,6 @@ export interface ExperienceItem {
   stats?: { value: string; label: string }[]
 }
 
-/** Placeholder colour for a project without screenshots. */
-export type ProjectTone = 'parchment' | 'meadow' | 'sky'
-
 export type ProjectMedia =
   | { kind: 'image'; variants: ImagetoolsMetadata[]; alt: string }
   | { kind: 'video'; src: string; poster: string; alt: string }
@@ -63,5 +60,4 @@ export interface ProjectItem {
   liveUrl?: string
   /** Empty until screenshots exist; the first image is the card cover. */
   media: ProjectMedia[]
-  tone: ProjectTone
 }

@@ -31,6 +31,8 @@
   --color-sky-gap: #7c9dcb;
   --color-sky-experience-top: #4a72b4;
 
+  --font-mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
   --radius-card: 14px;
   --shadow-card: 0 6px 24px rgb(30 50 30 / 0.12);
 }
@@ -90,8 +92,9 @@
     max-height: 92dvh;
     padding: 0;
     border: 0;
-    border-radius: 18px 18px 0 0;
-    background: var(--color-cream);
+    border-top: 2px solid var(--color-ink);
+    border-radius: 0;
+    background: var(--color-paper);
     color: var(--color-ink);
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -113,7 +116,7 @@
   }
 
   .project-panel::backdrop {
-    background: rgb(28 42 30 / 0.3);
+    background: rgb(21 38 74 / 0.3);
     opacity: 0;
     transition:
       opacity 0.35s ease-out,
@@ -137,8 +140,9 @@
       width: min(520px, 92vw);
       height: 100dvh;
       max-height: 100dvh;
-      border-radius: 0;
-      box-shadow: -14px 0 44px rgb(30 50 30 / 0.2);
+      border-top: 0;
+      border-left: 2px solid var(--color-ink);
+      box-shadow: -14px 0 44px rgb(21 38 74 / 0.2);
       translate: 100% 0;
     }
 
@@ -170,6 +174,72 @@
       }
     }
   }
+}
+
+/*
+ * Projects as classic '80s computer windows: hard ink outline, square corners, a flat
+ * offset shadow, and a pinstriped title bar. The look stays in Projects only.
+ * See docs/superpowers/specs/2026-11-24-sky-redesign-design.md §6.
+ */
+.window {
+  border: 2px solid var(--color-ink);
+  border-radius: 0;
+  background: var(--color-paper);
+  box-shadow: 5px 5px 0 var(--color-ink);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .window {
+    transition:
+      translate 150ms ease-out,
+      box-shadow 150ms ease-out;
+  }
+
+  .window:hover,
+  .window:has(:focus-visible) {
+    translate: -2px -2px;
+    box-shadow: 7px 7px 0 var(--color-ink);
+  }
+}
+
+.window-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 6px;
+  border-bottom: 2px solid var(--color-ink);
+  background:
+    repeating-linear-gradient(
+        var(--color-paper) 0 2px,
+        var(--color-ink) 2px 3px
+      )
+      0 5px / 100% calc(100% - 10px) no-repeat,
+    var(--color-paper);
+}
+
+.window-close {
+  position: relative;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--color-ink);
+  background: var(--color-paper);
+  /* The paper gap around the box, as on the real thing. */
+  box-shadow: 0 0 0 3px var(--color-paper);
+}
+
+.window-title {
+  position: absolute;
+  left: 50%;
+  max-width: calc(100% - 64px);
+  overflow: hidden;
+  padding: 0 8px;
+  background: var(--color-paper);
+  font: 700 12px/1 var(--font-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  translate: -50%;
 }
 
 /* Keep the page still behind an open panel, without a sideways jump. */
