@@ -20,7 +20,7 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
   const { shown, extra } = visibleTags(project.stack)
 
   return (
-    <article className="relative flex h-full flex-col overflow-hidden rounded-card bg-white shadow-card transition-[translate,box-shadow] duration-300 ease-out hover:shadow-[0_14px_34px_rgb(30_50_30/0.17)] has-focus-visible:outline-2 has-focus-visible:outline-offset-4 has-focus-visible:outline-cornflower motion-safe:hover:-translate-y-1">
+    <article className="relative flex h-full flex-col overflow-hidden rounded-card bg-white shadow-card transition-[translate,box-shadow] duration-300 ease-out hover:shadow-[0_14px_34px_rgb(30_50_30/0.17)] has-focus-visible:outline-2 has-focus-visible:outline-offset-4 has-focus-visible:outline-sky-deep motion-safe:hover:-translate-y-1">
       {cover?.kind === 'image' ? (
         <img
           src={largest(cover.variants).src}
@@ -56,13 +56,13 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
             {shown.map((tag) => (
               <li
                 key={tag}
-                className="rounded-full bg-meadow-tint px-2.5 py-1 text-xs text-meadow-deep"
+                className="rounded-full bg-haze px-2.5 py-1 text-xs text-sky-deep"
               >
                 {tag}
               </li>
             ))}
             {extra > 0 && (
-              <li className="rounded-full bg-meadow-tint px-2.5 py-1 text-xs text-meadow-deep">
+              <li className="rounded-full bg-haze px-2.5 py-1 text-xs text-sky-deep">
                 +{extra}
               </li>
             )}
@@ -70,7 +70,7 @@ export function ProjectCard({ project, onOpen }: ProjectCardProps) {
         )}
         <p className="mt-auto flex justify-between pt-4 text-xs text-ink/65">
           <span>{sourceLabel(project)}</span>
-          <span aria-hidden="true" className="font-medium text-meadow-deep">
+          <span aria-hidden="true" className="font-medium text-sky-deep">
             Read more →
           </span>
         </p>

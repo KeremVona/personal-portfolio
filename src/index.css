@@ -2,7 +2,6 @@
 @import '@fontsource-variable/inter';
 @import '@fontsource-variable/inter-tight';
 
-/* Meadow design tokens: see docs/superpowers/specs/2026-11-20-portfolio-foundation-design.md §4.1 */
 /* Phones and portrait tablets: the hero's copy spans the screen. */
 @custom-variant narrow (@media (max-aspect-ratio: 6/5));
 
@@ -12,16 +11,25 @@
     'Inter Tight Variable', 'Inter Variable', ui-sans-serif, system-ui,
     sans-serif;
 
-  --color-ink: #1c2a1e;
-  --color-ink-soft: #2f3d30;
+  /* Taken from the footer picture: see docs/superpowers/specs/2026-11-24-sky-redesign-design.md §3 */
+  --color-ink: #15264a; /* night ink */
+  --color-ink-soft: #2b3c5f;
   --color-cream: #fbf7ee;
-  --color-meadow: #9fbf73;
-  --color-meadow-deep: #3d5a2a;
-  --color-meadow-tint: #eef3e6;
-  --color-sky: #a9c6dc;
-  --color-poppy: #e0603a; /* decoration only, never text */
-  --color-cornflower: #4a6fa5;
+  --color-paper: #fffdf8;
+  --color-computer: #ece2cc; /* the computer's cream */
+  --color-haze: #e3edf7;
+  --color-haze-deep: #c9dbeb;
+  --color-sky-light: #82a7cd;
+  --color-sky: #5d85c0;
+  --color-sky-deep: #3a64ac;
   --color-footer-sky: #3a64ac; /* the top row of the footer art */
+  --color-grass: #3d5a1a;
+  --color-dandelion: #daac17;
+
+  /* The page's sky (see .sky-* below). No text sits between about #6a8fc6 and #4c76b7. */
+  --color-sky-projects-end: #b9cfe6;
+  --color-sky-gap: #7c9dcb;
+  --color-sky-experience-top: #4a72b4;
 
   --radius-card: 14px;
   --shadow-card: 0 6px 24px rgb(30 50 30 / 0.12);
@@ -45,11 +53,11 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-cornflower);
+    outline: 2px solid var(--color-sky-deep);
     outline-offset: 3px;
   }
 
-  /* Cornflower disappears on the footer. */
+  /* Sky blue disappears on the footer. */
   footer :focus-visible {
     outline-color: var(--color-cream);
   }

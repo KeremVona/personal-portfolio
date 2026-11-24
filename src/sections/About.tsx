@@ -59,7 +59,7 @@ export function About() {
             {aboutFacts(PROFILE).map((fact) => (
               <li
                 key={fact}
-                className="rounded-full bg-meadow-tint px-3 py-1.5 text-[13px] text-meadow-deep"
+                className="rounded-full bg-haze px-3 py-1.5 text-[13px] text-sky-deep"
               >
                 {fact}
               </li>

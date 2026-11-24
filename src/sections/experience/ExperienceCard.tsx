@@ -39,7 +39,7 @@ export function ExperienceCard({ item }: { item: ExperienceItem }) {
                 href={item.companyUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-meadow-deep hover:underline"
+                className="hover:text-sky-deep hover:underline"
               >
                 {item.company}
               </a>
@@ -55,18 +55,14 @@ export function ExperienceCard({ item }: { item: ExperienceItem }) {
 
         <ul className="mt-2.5 flex flex-wrap gap-1.5">
           {item.end === null && (
-            <li
-              className={`${PILL} bg-meadow-tint font-medium text-meadow-deep`}
-            >
-              Now
-            </li>
+            <li className={`${PILL} bg-haze font-medium text-sky-deep`}>Now</li>
           )}
           <li className={`${PILL} border border-ink/14 text-ink/70`}>
             {placeLabel(item)}
           </li>
         </ul>
 
-        <ul className="mt-3 list-disc space-y-1.5 pl-[18px] text-[0.875rem] leading-relaxed text-ink-soft marker:text-meadow">
+        <ul className="mt-3 list-disc space-y-1.5 pl-[18px] text-[0.875rem] leading-relaxed text-ink-soft marker:text-sky">
           {shown.map((highlight) => (
             <li key={highlight}>{highlight}</li>
           ))}
@@ -76,7 +72,7 @@ export function ExperienceCard({ item }: { item: ExperienceItem }) {
             <ul
               id={moreId}
               hidden={!expanded}
-              className="mt-1.5 list-disc space-y-1.5 pl-[18px] text-[0.875rem] leading-relaxed text-ink-soft marker:text-meadow"
+              className="mt-1.5 list-disc space-y-1.5 pl-[18px] text-[0.875rem] leading-relaxed text-ink-soft marker:text-sky"
             >
               {hidden.map((highlight, index) => (
                 <li
@@ -93,7 +89,7 @@ export function ExperienceCard({ item }: { item: ExperienceItem }) {
               aria-expanded={expanded}
               aria-controls={moreId}
               onClick={toggle}
-              className="mt-1.5 cursor-pointer text-[13px] font-medium text-meadow-deep hover:underline"
+              className="mt-1.5 cursor-pointer text-[13px] font-medium text-sky-deep hover:underline"
             >
               {expanded ? 'Show less' : `Show ${hidden.length} more`}
             </button>
@@ -105,7 +101,7 @@ export function ExperienceCard({ item }: { item: ExperienceItem }) {
             {item.stack.map((tag) => (
               <li
                 key={tag}
-                className="rounded-full bg-meadow-tint px-2.5 py-1 text-xs text-meadow-deep"
+                className="rounded-full bg-haze px-2.5 py-1 text-xs text-sky-deep"
               >
                 {tag}
               </li>
@@ -119,7 +115,7 @@ export function ExperienceCard({ item }: { item: ExperienceItem }) {
           {stats.map((stat) => (
             <div key={stat.label} className="flex flex-col-reverse">
               <dt className="mt-1 text-xs text-ink-soft">{stat.label}</dt>
-              <dd className="font-display text-3xl font-bold tracking-[-0.03em] text-meadow-deep">
+              <dd className="font-display text-3xl font-bold tracking-[-0.03em] text-sky-deep">
                 {stat.value}
               </dd>
             </div>

@@ -11,7 +11,7 @@ export interface ProjectPanelHandle {
 }
 
 const LABEL =
-  'font-display text-xs font-semibold tracking-[0.08em] text-meadow-deep uppercase'
+  'font-display text-xs font-semibold tracking-[0.08em] text-sky-deep uppercase'
 const MEDIA_SIZES = '(min-width: 768px) 460px, 100vw'
 
 /**
@@ -102,7 +102,7 @@ function PanelContent({
       <Gallery project={project} />
 
       <h3 className={`mt-7 ${LABEL}`}>What I built</h3>
-      <ul className="mt-2.5 list-disc space-y-2 pl-5 text-[0.9rem] leading-relaxed text-ink-soft marker:text-meadow">
+      <ul className="mt-2.5 list-disc space-y-2 pl-5 text-[0.9rem] leading-relaxed text-ink-soft marker:text-sky">
         {project.highlights.map((highlight) => (
           <li key={highlight}>{highlight}</li>
         ))}
@@ -115,7 +115,7 @@ function PanelContent({
             {project.stack.map((tag) => (
               <li
                 key={tag}
-                className="rounded-full bg-meadow-tint px-2.5 py-1 text-xs text-meadow-deep"
+                className="rounded-full bg-haze px-2.5 py-1 text-xs text-sky-deep"
               >
                 {tag}
               </li>
@@ -185,7 +185,7 @@ function Gallery({ project }: { project: ProjectItem }) {
               aria-label={`Show ${item.alt}`}
               aria-pressed={i === index}
               onClick={() => setIndex(i)}
-              className="cursor-pointer overflow-hidden rounded-md ring-meadow-deep aria-pressed:ring-2"
+              className="cursor-pointer overflow-hidden rounded-md ring-sky-deep aria-pressed:ring-2"
             >
               <img
                 src={item.kind === 'image' ? item.variants[0].src : item.poster}

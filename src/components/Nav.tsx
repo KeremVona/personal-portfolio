@@ -103,7 +103,7 @@ export function Nav() {
               <a
                 href={`#${section.id}`}
                 onClick={() => setMenuOpen(false)}
-                className="block rounded-[10px] px-4 py-3 text-base font-medium hover:bg-meadow-tint"
+                className="block rounded-[10px] px-4 py-3 text-base font-medium hover:bg-haze"
               >
                 {section.label}
               </a>
