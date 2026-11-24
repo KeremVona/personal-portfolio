@@ -36,9 +36,7 @@ export interface ExperienceItem {
   workMode: WorkMode
   stack: string[]
   highlights: string[]
-  /** The wide card with a numbers column. At most one role should be featured. */
-  featured?: boolean
-  /** The featured card's headline numbers. */
+  /** Headline numbers, shown in the role's card. */
   stats?: { value: string; label: string }[]
 }
 

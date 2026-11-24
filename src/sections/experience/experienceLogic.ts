@@ -19,10 +19,14 @@ export function splitHighlights(
   }
 }
 
-/** The featured role first (it gets the wide card); the rest keep content order. */
+/**
+ * Newest first: the current role (no end date), then by end date, then by start.
+ * Dates are "YYYY-MM", so they compare as strings. The sort is stable, so ties keep
+ * content order.
+ */
 export function orderRoles(items: ExperienceItem[]): ExperienceItem[] {
-  return [
-    ...items.filter((item) => item.featured),
-    ...items.filter((item) => !item.featured),
-  ]
+  const end = (item: ExperienceItem) => item.end ?? '9999-99'
+  return items.toSorted(
+    (a, b) => end(b).localeCompare(end(a)) || b.start.localeCompare(a.start),
+  )
 }

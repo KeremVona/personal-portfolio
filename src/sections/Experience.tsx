@@ -2,14 +2,16 @@ import { Reveal } from '../components/Reveal'
 import { Section } from '../components/Section'
 import { SectionHeading } from '../components/SectionHeading'
 import { EXPERIENCE } from '../content/experience'
+import { formatDateRange } from '../content/format'
 import { sectionLabel } from '../content/sections'
 import { ExperienceCard } from './experience/ExperienceCard'
 import { orderRoles } from './experience/experienceLogic'
 
 /**
- * Experience, layout C: the featured role in a wide card with its numbers, then
- * the other roles in a two-column grid.
- * See docs/superpowers/specs/2026-11-21-experience-design.md.
+ * Experience: one straight timeline, newest first. Dates on the left (above each card
+ * on phones), a line with a dot per role, and same-width cards that grow downward.
+ * Geometry: .timeline in index.css.
+ * See docs/superpowers/specs/2026-11-24-sky-redesign-design.md §7.
  */
 export function Experience() {
   return (
@@ -25,20 +27,23 @@ export function Experience() {
         />
       }
     >
-      <ul className="grid items-start gap-5 md:grid-cols-2">
+      <ol className="timeline">
         {orderRoles(EXPERIENCE).map((item, index) => (
-          <li
-            key={`${item.company}-${item.start}`}
-            className={
-              item.featured && item.stats?.length ? 'md:col-span-2' : ''
-            }
-          >
-            <Reveal delay={index * 0.08}>
+          <li key={`${item.company}-${item.start}`}>
+            <span
+              aria-hidden="true"
+              className="timeline-dot"
+              data-now={item.end === null || undefined}
+            />
+            <p className="timeline-date">
+              {formatDateRange(item.start, item.end)}
+            </p>
+            <Reveal delay={index * 0.06}>
               <ExperienceCard item={item} />
             </Reveal>
           </li>
         ))}
-      </ul>
+      </ol>
     </Section>
   )
 }

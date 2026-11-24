@@ -339,6 +339,84 @@ html:has(.project-panel[open]) {
   );
 }
 
+/*
+ * Experience's timeline. Each role draws the line from its own dot down to the next
+ * role's dot, so the line follows the cards whatever their height. --dot-y is the
+ * centre of a card's first heading line: the date (20px + 8px) above the card on
+ * phones, plus the card's top padding and half the heading's 28px line.
+ */
+.timeline {
+  --rail-x: 9px;
+  --gap: 1.5rem;
+  --dot-y: calc(28px + 20px + 14px);
+  display: grid;
+  gap: var(--gap);
+}
+
+.timeline > li {
+  position: relative;
+  padding-left: 32px;
+}
+
+.timeline > li:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: var(--dot-y);
+  bottom: calc(-1 * (var(--gap) + var(--dot-y)));
+  left: calc(var(--rail-x) - 1px);
+  width: 2px;
+  background: rgb(251 247 238 / 0.5);
+}
+
+.timeline-dot {
+  position: absolute;
+  z-index: 1;
+  top: calc(var(--dot-y) - 7px);
+  left: calc(var(--rail-x) - 7px);
+  width: 14px;
+  height: 14px;
+  border: 3px solid var(--color-sky-deep);
+  border-radius: 50%;
+  background: var(--color-cream);
+}
+
+.timeline-dot[data-now] {
+  background: var(--color-dandelion);
+}
+
+.timeline-date {
+  height: 20px;
+  margin-bottom: 8px;
+  font: 13px/20px var(--font-mono);
+}
+
+@media (min-width: 40rem) {
+  .timeline {
+    --dot-y: calc(28px + 24px + 14px);
+  }
+}
+
+/* From md: dates in a left column, level with each card's heading. */
+@media (min-width: 48rem) {
+  .timeline {
+    --rail-x: 134px;
+    --dot-y: calc(24px + 14px);
+  }
+
+  .timeline > li {
+    padding-left: 162px;
+  }
+
+  .timeline-date {
+    position: absolute;
+    top: calc(var(--dot-y) - 10px);
+    left: 0;
+    width: 116px;
+    margin: 0;
+    text-align: right;
+  }
+}
+
 /* Sky blue disappears on deep blue. */
 #experience :focus-visible {
   outline-color: var(--color-cream);
