@@ -40,7 +40,6 @@ The stack: Vite 8 · React 19 · TypeScript 7 (strict) · **Tailwind CSS v4 via 
 | `npm run typecheck` · `npm run lint` · `npm run format:check` | Static checks                                                                 |
 | `npm run art:hero`                                            | Regenerate the hero and share image (needs `reference/hero-background.png`)   |
 | `npm run art:about`                                           | Regenerate the About painting and its pond pieces (needs `reference/671.png`) |
-| `npm run art:projects`                                        | Regenerate the Projects corner bouquets (needs `reference/hero/*.png`)        |
 | `npm run art:footer`                                          | Regenerate the footer sky (needs the private `reference/674561874.png`)       |
 
 **The gate before every commit:** `npm test && npm run typecheck && npm run lint && npm run format:check && npm run build`

@@ -2,7 +2,7 @@ import { X } from 'lucide-react'
 import { useImperativeHandle, useRef, useState, type Ref } from 'react'
 import { flushSync } from 'react-dom'
 import type { ProjectItem, ProjectMedia } from '../../content/types'
-import { BOUQUET_RIGHT, largest, srcSet } from './art'
+import { largest, srcSet } from './art'
 import { MediaPlaceholder } from './MediaPlaceholder'
 import { projectLinks } from './projectLogic'
 
@@ -76,7 +76,7 @@ function PanelContent({
   const links = projectLinks(project)
 
   return (
-    <div className="relative flex min-h-full flex-col px-6 pt-6 sm:px-8 sm:pt-8">
+    <div className="relative flex min-h-full flex-col px-6 pt-6 pb-8 sm:px-8 sm:pt-8 sm:pb-10">
       {/* Sticky, so the × stays in reach after scrolling a long phone sheet. */}
       <div className="sticky top-3 z-10 -mt-2 -mr-2 -mb-10 flex justify-end">
         <button
@@ -144,19 +144,6 @@ function PanelContent({
           <span className="text-sm text-ink-soft">Closed source</span>
         )}
       </div>
-
-      <img
-        src={largest(BOUQUET_RIGHT).src}
-        srcSet={srcSet(BOUQUET_RIGHT)}
-        sizes="240px"
-        width={largest(BOUQUET_RIGHT).width}
-        height={largest(BOUQUET_RIGHT).height}
-        alt=""
-        aria-hidden="true"
-        loading="lazy"
-        decoding="async"
-        className="pointer-events-none mt-auto -mr-6 ml-auto block h-auto w-[46%] pt-8 select-none sm:-mr-8"
-      />
     </div>
   )
 }
