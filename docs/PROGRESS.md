@@ -1,6 +1,6 @@
 # Progress
 
-_Last updated: 2026-11-23_
+_Last updated: 2026-11-24_
 
 ## Done
 
@@ -11,6 +11,7 @@ _Last updated: 2026-11-23_
 | About | `specs/2026-11-21-about-design.md`, pond: `specs/2026-11-23-about-pond-design.md` | `plans/2026-11-21-about.md`, `plans/2026-11-23-about-pond.md` | Notes below |
 | Projects | `specs/2026-11-21-projects-design.md` | `plans/2026-11-21-projects.md` | Notes below |
 | Experience | `specs/2026-11-21-experience-design.md` | `plans/2026-11-21-experience.md` | Notes below |
+| Sky redesign | `specs/2026-11-24-sky-redesign-design.md` | `plans/2026-11-24-sky-redesign.md` | Footer palette everywhere, one sky, Projects windows, Experience timeline |
 | Footer (Contact) | `specs/2026-11-21-footer-design.md`, look replaced by `specs/2026-11-22-footer-sky-design.md` | `plans/2026-11-21-footer.md`, `plans/2026-11-22-footer-sky.md` | Notes below |
 
 **Hero and nav notes:**
@@ -32,14 +33,14 @@ _Last updated: 2026-11-23_
 
 **Projects notes:**
 - A card grid (up to three columns, never more columns than projects). Each card opens a native `<dialog>`: a side panel on desktop, a bottom sheet on phones.
-- Painted bouquets from the hero clusters (`npm run art:projects`). Since 2026-11-23 they are pinned to the screen's bottom corners while Projects is on screen: they rise once the section is 160px into the screen and sink below the screen edge just before it ends (`sinkBy` in projectLogic.ts), because their stems end in a straight cut that only looks right on the screen edge. With reduced motion they stay still and fade in and out instead.
+- **Since 2026-11-24 (sky redesign):** each project is a classic '80s computer window (pinstriped title bar, hard ink outline, flat offset shadow), and the panel matches. The painted corner bouquets were removed at Kerem's request.
 - Placeholder media ("Screenshots coming soon") until Kerem adds screenshots. The panel supports images and one self-hosted video.
 - The hero's meadow now fades softly into the cream page at its bottom edge.
 
 **Experience notes:**
-- Layout C: Dijital Varlıklar in a wide featured card with its numbers (~2.5M monthly visits, 13+ news portals), then the other roles newest first in a two-column grid.
+- **Since 2026-11-24 (sky redesign):** one straight timeline, newest first, on the deep blue: dates on the left (above each card on phones), a line with a dot per role (dandelion for the current one), computer-cream cards. Dijital Varlıklar keeps its numbers (~2.5M, 13+) inside its card. This replaced layout C (a featured card and a two-column grid).
 - Two highlights per role, with "Show N more" for the rest. A "Now" pill marks the current role.
-- The featured role and its numbers are set in `src/content/experience.ts` (`featured`, `stats`).
+- Numbers are set per role in `src/content/experience.ts` (`stats`).
 
 **Footer notes:**
 - Kerem's hilltop-computer image is the background (`specs/2026-11-22-footer-sky-design.md`). It replaced the first "Night meadow" footer and its flower band on 2026-11-22.
@@ -51,6 +52,11 @@ _Last updated: 2026-11-23_
 **Lighthouse on mobile, whole page:** 100 in Performance, Accessibility, Best Practices and SEO; CLS 0; about 636 KB with the pond. The LCP (0.8s) is the headline: Chrome doesn't count a full-screen background picture, so watch the hero picture's weight (235 KB on phones) by eye as well.
 
 All spec and plan paths are under `docs/superpowers/`.
+
+## Open after the sky redesign
+
+- **Kerem judges the About painting and pond on the new sky.** They are watercolour; if they look out of place, he may ask for them to be removed.
+- **A sky hero:** Kerem likes the idea of a hero picture in the footer's 3D style (a sky with illustrations) so both ends match. It needs new art from him.
 
 ## Next: copy pass and launch
 

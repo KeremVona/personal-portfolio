@@ -67,6 +67,8 @@ Chosen from three mockups (Meadow / Herbarium / Night Garden). The mockup is at 
 
 ### 4.1 Design tokens (starting values, tuned during section work)
 
+> **2026-11-24:** these colours are replaced by the footer palette in `2026-11-24-sky-redesign-design.md` §3.
+
 Defined CSS-first in Tailwind v4's `@theme` block in `src/index.css`. There is no `tailwind.config.js`.
 
 | Token | Value | Use |
