@@ -47,7 +47,8 @@ export function Nav() {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null))
           setFocusWithin(false)
       }}
-      className={`fixed inset-x-0 top-0 z-50 h-16 transition-[translate,background-color,box-shadow] duration-300 ease-out motion-reduce:transition-none ${hidden ? '-translate-y-full' : 'translate-y-0'} ${look}`}
+      data-on-sky={onSky || undefined}
+      className={`fixed inset-x-0 top-0 z-50 h-16 transition-[translate,background-color,box-shadow,color] duration-300 ease-out motion-reduce:transition-none ${hidden ? '-translate-y-full' : 'translate-y-0'} ${look}`}
     >
       <nav
         aria-label="Primary"

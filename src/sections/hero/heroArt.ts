@@ -11,6 +11,5 @@ export const CLOUD_BOX = {
   height: box.height,
 }
 
-/** The portrait crop's left edge in the picture (1152×1536, centred on the cloud). */
-export const PORTRAIT_LEFT = box.portraitLeft
-export const PORTRAIT = { width: 1152, height: 1536 }
+/** The portrait crop's size (centred on the cloud by the art script). */ export const PORTRAIT =
+  { width: 1152, height: 1536 }

@@ -1,9 +1,9 @@
 import { type RefObject, useLayoutEffect } from 'react'
+import { NAV_HEIGHT } from '../../components/navState'
 import { placeCloud, placeCloudNarrow } from './cloudLogic'
 
 /** The hero's narrow (portrait) layout: keep in step with `narrow` in index.css. */
 export const NARROW_QUERY = '(max-aspect-ratio: 6/5)'
-const NAV_BOTTOM = 64 // the fixed nav's height (h-16)
 
 /**
  * Places the cloud layer for the hero's current size (see placeCloud): right of the
@@ -29,7 +29,7 @@ export function useCloudPlacement(
         ? placeCloudNarrow(size, { copyBottom: c.bottom - h.top })
         : placeCloud(size, {
             copyRight: c.right - h.left,
-            navBottom: NAV_BOTTOM,
+            navBottom: NAV_HEIGHT,
           })
       cloudEl.style.left = `${rect.left}px`
       cloudEl.style.top = `${rect.top}px`

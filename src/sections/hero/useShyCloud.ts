@@ -7,14 +7,15 @@ import {
   shyTarget,
   springStep,
 } from './cloudLogic'
+import { NAV_HEIGHT } from '../../components/navState'
 
 /** Only with a hovering mouse, motion allowed, and the wide layout. */
+// 121/100, not 6/5: both ends are inclusive, and at exactly 6:5 the hero is narrow.
 const SHY_QUERY =
-  '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) and (min-aspect-ratio: 6/5)'
+  '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) and (min-aspect-ratio: 121/100)'
 const RADIUS = 1.3 // × the cloud's half-width
 const MAX_AT_1440 = 28 // px of push on a 1440px-wide hero
-const COPY_GAP = 8 // px the pushed cloud keeps from the copy
-const NAV_BOTTOM = 64
+const PUSHED_COPY_GAP = 8 // px the pushed cloud keeps from the copy
 
 /**
  * The shy cloud: it drifts away from a nearby cursor and floats back when the cursor
@@ -70,18 +71,19 @@ export function useShyCloud(
           (MAX_AT_1440 * h.width) / 1440,
         ),
         {
-          left: Math.max(0, left - copyRight - COPY_GAP),
+          left: Math.max(0, left - copyRight - PUSHED_COPY_GAP),
           right: Math.max(0, h.width - left - width),
-          up: Math.max(0, top - NAV_BOTTOM),
+          up: Math.max(0, top - NAV_HEIGHT),
           down: Math.max(0, h.height - top - height),
         },
       )
       spring = springStep(spring, target, dt)
       cloudEl.style.translate = `${spring.x.toFixed(2)}px ${spring.y.toFixed(2)}px`
       cloudEl.style.rotate = `${spring.tilt.toFixed(3)}deg`
-      if (isAtRest(spring, target) && target.x === 0 && target.y === 0) {
+      // Settled: stop the loop until the next pointer move (or for good at rest).
+      if (isAtRest(spring, target)) {
         frame = 0
-        reset()
+        if (target.x === 0 && target.y === 0) reset()
         return
       }
       frame = requestAnimationFrame(tick)

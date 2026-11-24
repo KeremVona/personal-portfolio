@@ -70,6 +70,7 @@ export function Hero() {
         alt=""
         aria-hidden="true"
         draggable={false}
+        fetchPriority="high"
         className="pointer-events-none invisible absolute h-auto max-w-none select-none"
       />
       <div

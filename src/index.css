@@ -59,9 +59,22 @@
     outline-offset: 3px;
   }
 
+  /* Sky blue disappears on the hero's deep sky and the nav over it. */
+  #top :focus-visible,
+  header[data-on-sky] :focus-visible {
+    outline-color: var(--color-cream);
+  }
+
   /* Sky blue disappears on the footer. */
   footer :focus-visible {
     outline-color: var(--color-cream);
+  }
+
+  /* The fixed nav would print cream on white at the top of the page. */
+  @media print {
+    header {
+      display: none;
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
