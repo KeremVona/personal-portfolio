@@ -1,8 +1,10 @@
+/// <reference types="node" />
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { contrastRatio } from './contrast'
 
 const css = readFileSync('src/index.css', 'utf8')
+
 const theme = css.slice(
   css.indexOf('@theme'),
   css.indexOf('}', css.indexOf('@theme')),
@@ -40,7 +42,13 @@ describe('palette', () => {
       })
 
   it('has none of the retired meadow colours', () => {
-    for (const name of ['meadow', 'sky-deep', 'haze', 'poppy', 'sky-deep'])
+    for (const name of [
+      'meadow',
+      'meadow-deep',
+      'meadow-tint',
+      'poppy',
+      'cornflower',
+    ])
       expect(colours.has(name)).toBe(false)
   })
 })
