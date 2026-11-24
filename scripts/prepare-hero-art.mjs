@@ -207,10 +207,10 @@ for (let y = Math.max(0, DY0); y < Math.min(H, DY0 + DH); y++)
       sky[o + c] = Math.round(sky[o + c] * (1 - weight) + fill[c] * weight)
   }
 
-// 6. Deepen the middle of the sky so cream copy passes AA: mostly by height, like a
-// naturally deeper sky, a little less towards the right. The top is already deep
-// and the horizon glow stays.
-const DEEP = [42, 79, 147] // #2a4f93
+// 6. Deepen the sky wherever copy can sit, so cream text passes AA: from the top
+// down to just above the horizon glow, a little less at the far right. The picture
+// is lighter on the left, which is where the copy is.
+const DEEP = [34, 66, 124] // #22427c
 const smooth = (a, b, v) => {
   const t = Math.min(1, Math.max(0, (v - a) / (b - a)))
   return t * t * (3 - 2 * t)
@@ -219,8 +219,10 @@ for (let y = 0; y < H; y++)
   for (let x = 0; x < W; x++) {
     const u = x / W
     const v = y / H
-    const band = smooth(0.02, 0.45, v) * (1 - smooth(0.56, 0.7, v))
-    const weight = 0.6 * band * (1 - 0.35 * smooth(0.4, 0.95, u))
+    const height = 1 - smooth(0.64, 0.77, v)
+    const side =
+      1 - 0.3 * smooth(0.72, 0.98, u) + 0.12 * (1 - smooth(0, 0.35, u))
+    const weight = Math.min(0.82, 0.72 * height * side)
     if (weight <= 0) continue
     const o = at(x, y)
     for (let c = 0; c < 3; c++)

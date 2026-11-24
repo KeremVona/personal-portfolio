@@ -1,4 +1,4 @@
-import { ART, CLOUD_BOX } from './heroArt'
+import { ART, CLOUD_BOX, PORTRAIT } from './heroArt'
 
 export interface Size {
   width: number
@@ -69,6 +69,39 @@ export function placeCloud(
   return {
     left: centreX - width / 2,
     top: centreY - height / 2,
+    width,
+    height,
+  }
+}
+
+const NARROW_MAX_WIDTH = 0.9
+const NARROW_BOTTOM_GAP = 24
+
+/**
+ * Where the cloud goes in the narrow (portrait) layout: centred across, below the
+ * copy, at most 90% of the width and at its natural size for the portrait crop,
+ * smaller if it would run past the bottom.
+ */
+export function placeCloudNarrow(
+  hero: Size,
+  opts: { copyBottom: number },
+): Rect {
+  const aspect = CLOUD_BOX.width / CLOUD_BOX.height
+  const top = opts.copyBottom + EDGE_GAP
+  const room = hero.height - NARROW_BOTTOM_GAP - top
+  const width = Math.max(
+    0,
+    Math.min(
+      CLOUD_BOX.width * coverScale(hero, PORTRAIT),
+      hero.width * NARROW_MAX_WIDTH,
+      room * aspect,
+    ),
+  )
+  const height = width / aspect
+  // Sit low in the room left under the copy, like the picture's floating cloud.
+  return {
+    left: (hero.width - width) / 2,
+    top: top + Math.max(0, room - height) * 0.6,
     width,
     height,
   }

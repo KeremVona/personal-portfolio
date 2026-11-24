@@ -33,10 +33,11 @@ export function Nav() {
     }
   }, [menuOpen])
 
-  const look =
-    solid || menuOpen
-      ? 'bg-haze/88 shadow-[0_1px_0_rgb(21_38_74/0.1)] backdrop-blur-[10px]'
-      : 'bg-transparent'
+  // Transparent at the very top, over the hero's deep sky: cream there.
+  const onSky = !solid && !menuOpen
+  const look = onSky
+    ? 'bg-transparent text-cream'
+    : 'bg-haze/88 shadow-[0_1px_0_rgb(21_38_74/0.1)] backdrop-blur-[10px]'
 
   return (
     <header
@@ -58,10 +59,15 @@ export function Nav() {
         >
           {PROFILE.name}
         </a>
-        <ul className="hidden gap-8 text-sm font-medium text-ink-soft sm:flex">
+        <ul
+          className={`hidden gap-8 text-sm font-medium sm:flex ${onSky ? 'text-cream' : 'text-ink-soft'}`}
+        >
           {SECTIONS.map((section) => (
             <li key={section.id}>
-              <a href={`#${section.id}`} className="hover:text-ink">
+              <a
+                href={`#${section.id}`}
+                className={onSky ? 'hover:underline' : 'hover:text-ink'}
+              >
                 {section.label}
               </a>
             </li>
@@ -71,7 +77,7 @@ export function Nav() {
           <a
             href={LINKS.resume.href}
             download="Kerem-Can-Bas-Resume.pdf"
-            className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream hover:bg-ink-soft"
+            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ${onSky ? 'bg-cream text-ink hover:bg-white' : 'bg-ink text-cream hover:bg-ink-soft'}`}
           >
             {LINKS.resume.label}
             <Download aria-hidden="true" className="size-4" />
@@ -82,7 +88,7 @@ export function Nav() {
             aria-controls="nav-menu"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             onClick={() => setMenuOpen((open) => !open)}
-            className="inline-flex size-9 items-center justify-center rounded-full border border-ink/20 bg-white/55 sm:hidden"
+            className={`inline-flex size-9 items-center justify-center rounded-full border sm:hidden ${onSky ? 'border-cream/70' : 'border-ink/20 bg-white/55'}`}
           >
             {menuOpen ? (
               <X aria-hidden="true" className="size-4" />

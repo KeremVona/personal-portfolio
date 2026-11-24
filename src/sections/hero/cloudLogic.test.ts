@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   clampToRoom,
   isAtRest,
+  placeCloudNarrow,
   placeCloud,
   shyTarget,
   springStep,
@@ -120,5 +121,23 @@ describe('springStep', () => {
     expect(springStep(rest, target, 1)).toEqual(
       springStep(rest, target, 1 / 30),
     )
+  })
+})
+
+describe('placeCloudNarrow', () => {
+  it('centres the cloud under the copy on a phone, inside the screen', () => {
+    const r = placeCloudNarrow({ width: 390, height: 844 }, { copyBottom: 500 })
+    expect(Math.abs(r.left + r.width / 2 - 195)).toBeLessThanOrEqual(1)
+    expect(r.width).toBeLessThanOrEqual(0.9 * 390)
+    expect(r.top).toBeGreaterThanOrEqual(516)
+    expect(r.top + r.height).toBeLessThanOrEqual(844 - 24)
+    expect(r.width / r.height).toBeCloseTo(ASPECT, 2)
+  })
+
+  it('shrinks, never overlapping the copy, when there is little room', () => {
+    const r = placeCloudNarrow({ width: 390, height: 640 }, { copyBottom: 560 })
+    expect(r.top).toBeGreaterThanOrEqual(576)
+    expect(r.top + r.height).toBeLessThanOrEqual(640 - 24)
+    expect(r.width).toBeGreaterThanOrEqual(0)
   })
 })
