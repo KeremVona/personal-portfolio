@@ -15,7 +15,7 @@ _Last updated: 2026-11-24_
 | Footer (Contact) | `specs/2026-11-21-footer-design.md`, look replaced by `specs/2026-11-22-footer-sky-design.md` | `plans/2026-11-21-footer.md`, `plans/2026-11-22-footer-sky.md` | Notes below |
 
 **Hero and nav notes:**
-- A still picture (`specs/2026-11-22-hero-still-design.md`), with a portrait crop for phones. It replaced the five-layer WebGL meadow and its sway on 2026-11-22. On 2026-11-23 Kerem swapped the picture to `reference/hero-background.png` (a path through meadows to the sea, with a tree; the phone crop takes the bend in the path and the tree) and the bottom fade was made shorter, as it looked too white. Re-measured on real pixels afterwards: the copy passes AA at all 26 checked sizes (worst h1 4.13 at 320×568, large text).
+- **Since 2026-11-24 (`specs/2026-11-24-sky-hero-design.md`):** Kerem's computer on a floating cloud (`reference/647386481.png`). `npm run art:hero` cuts the cloud out into its own layer, refills the sky behind it and deepens the sky so the cream copy passes AA (26 sizes measured). The cloud sits about 64% across, clear of the copy (under it on narrow screens), and shies away from a nearby mouse. Before this: a watercolour meadow still (`specs/2026-11-22-hero-still-design.md`).
 - A fixed nav that hides and shows, with a phone menu.
 - An Open Graph image.
 
@@ -56,7 +56,6 @@ All spec and plan paths are under `docs/superpowers/`.
 ## Open after the sky redesign
 
 - **Kerem judges the About painting and pond on the new sky.** They are watercolour; if they look out of place, he may ask for them to be removed.
-- **A sky hero:** Kerem likes the idea of a hero picture in the footer's 3D style (a sky with illustrations) so both ends match. It needs new art from him.
 
 ## Next: copy pass and launch
 
@@ -84,7 +83,7 @@ All five sections are built. What's left:
 - **Headline size:** the hero headline is `clamp(2.25rem, 5.6vw, 5.75rem)` in a 62% column, to match the approved mockup. The spec said about 88–92px in a 58% column. He needs to confirm.
 - **Footer image rights:** confirm where `674561874.png` came from and that it may be published.
 - **Pond on real phones:** try the About pond on an iPhone and an Android phone (taps, scrolling over it, the pause button).
-- **Hero image rights:** confirm where `hero-background.png` came from and that it may be published.
+- **Hero image rights:** confirm where `647386481.png` came from and that it may be published.
 - **All copy is placeholder.** Kerem rewrites it at the end, including the headline "Rooted in the back end. Blooming on the front."
 
 ## Known small issues (deferred from reviews)
