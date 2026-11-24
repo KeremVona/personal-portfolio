@@ -232,6 +232,48 @@ html:has(.project-panel[open]) {
   }
 }
 
+/*
+ * The page's sky: each section owns one stretch of one gradient, and the stretches
+ * meet edge to edge, from cream under the hero to the footer's first row. The steep
+ * part sits only in the empty padding between Projects and Experience, because no
+ * text colour passes AA on the middle blues.
+ * See docs/superpowers/specs/2026-11-24-sky-redesign-design.md §4.
+ */
+:root {
+  --section-pad: 4rem; /* Section's py-16 */
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --section-pad: 6rem; /* sm:py-24 */
+  }
+}
+
+.sky-about {
+  background: linear-gradient(var(--color-cream), var(--color-haze));
+}
+
+.sky-projects {
+  background: linear-gradient(
+    var(--color-haze),
+    var(--color-sky-projects-end) calc(100% - var(--section-pad)),
+    var(--color-sky-gap)
+  );
+}
+
+.sky-experience {
+  background: linear-gradient(
+    var(--color-sky-gap),
+    var(--color-sky-experience-top) var(--section-pad),
+    var(--color-sky-deep)
+  );
+}
+
+/* Sky blue disappears on deep blue. */
+#experience :focus-visible {
+  outline-color: var(--color-cream);
+}
+
 /* Sunrise mist behind the hero's copy, so ink passes AA where it crosses the trees. */
 .hero-mist {
   pointer-events: none;

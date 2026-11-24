@@ -27,7 +27,7 @@ export function ExperienceCard({ item }: { item: ExperienceItem }) {
 
   return (
     <article
-      className={`rounded-card bg-white p-5 shadow-card sm:p-6 ${
+      className={`rounded-card bg-white p-5 text-ink shadow-card sm:p-6 ${
         stats.length > 0 ? 'md:grid md:grid-cols-[1fr_190px] md:gap-7' : ''
       }`}
     >

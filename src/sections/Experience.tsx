@@ -15,11 +15,13 @@ export function Experience() {
   return (
     <Section
       id="experience"
+      className="sky-experience text-cream"
       heading={
         <SectionHeading
           id="experience"
           eyebrow={sectionLabel('experience')}
           title="Where I've worked"
+          tone="dark"
         />
       }
     >

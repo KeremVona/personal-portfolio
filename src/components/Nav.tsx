@@ -35,7 +35,7 @@ export function Nav() {
 
   const look =
     solid || menuOpen
-      ? 'bg-cream/82 shadow-[0_1px_0_rgb(28_42_30/0.08)] backdrop-blur-[10px]'
+      ? 'bg-haze/88 shadow-[0_1px_0_rgb(21_38_74/0.1)] backdrop-blur-[10px]'
       : 'bg-transparent'
 
   return (

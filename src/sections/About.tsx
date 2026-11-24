@@ -23,7 +23,7 @@ const KOI_SIZES =
  */
 export function About() {
   return (
-    <Section id="about">
+    <Section id="about" className="sky-about">
       <div className="grid items-center gap-7 md:grid-cols-[38%_1fr] md:gap-[6%]">
         <Reveal className="w-[68%] max-w-[320px] md:w-full md:max-w-none">
           <div className="relative -rotate-[1.6deg] bg-[#f2ead8] shadow-[0_14px_30px_-12px_rgb(30_50_30/0.35),0_2px_6px_rgb(30_50_30/0.08)]">

@@ -135,7 +135,7 @@ export function Projects() {
     <Section
       id="projects"
       ref={sectionRef}
-      className="relative overflow-x-clip pb-40 sm:pb-48"
+      className="sky-projects relative overflow-x-clip pb-40 sm:pb-48"
       decoration={<Bouquets imagesRef={bouquetsRef} />}
       heading={
         <SectionHeading
