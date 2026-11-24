@@ -34,7 +34,7 @@
   --font-mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
 
   --radius-card: 14px;
-  --shadow-card: 0 6px 24px rgb(30 50 30 / 0.12);
+  --shadow-card: 0 6px 24px rgb(21 38 74 / 0.15);
 }
 
 @layer base {
@@ -399,27 +399,32 @@ html:has(.project-panel[open]) {
 /* From md: dates in a left column, level with each card's heading. */
 @media (min-width: 48rem) {
   .timeline {
-    --rail-x: 134px;
+    --rail-x: 162px;
     --dot-y: calc(24px + 14px);
   }
 
   .timeline > li {
-    padding-left: 162px;
+    padding-left: 190px;
   }
 
   .timeline-date {
     position: absolute;
     top: calc(var(--dot-y) - 10px);
     left: 0;
-    width: 116px;
+    width: 144px;
     margin: 0;
     text-align: right;
+    white-space: nowrap;
   }
 }
 
-/* Sky blue disappears on deep blue. */
+/* Sky blue disappears on deep blue; inside the cream cards it's sky blue again. */
 #experience :focus-visible {
   outline-color: var(--color-cream);
+}
+
+#experience article :focus-visible {
+  outline-color: var(--color-sky-deep);
 }
 
 /* Sunrise mist behind the hero's copy, so ink passes AA where it crosses the trees. */

@@ -78,12 +78,12 @@ function PanelContent({
   return (
     <div className="flex min-h-full flex-col">
       {/* Sticky, so the close box stays in reach after scrolling a long phone sheet. */}
-      <div className="window-bar sticky top-0 z-10 h-9!">
+      <div className="window-bar sticky top-0 z-10 h-10!">
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="-ml-1.5 grid size-10 cursor-pointer place-items-center"
+          className="-ml-1.5 grid size-10 cursor-pointer place-items-center focus-visible:outline-offset-[-6px]"
         >
           <span className="window-close" />
         </button>
