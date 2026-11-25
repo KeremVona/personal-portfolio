@@ -81,5 +81,5 @@ docs/superpowers/       Specs (decisions) and plans (how each piece was built)
 ## Hosting
 
 - GitHub Pages on keremvona.com (bought 2026-11-25; www redirects to the apex).
-- The deploy workflow (`.github/workflows/deploy.yml`) runs **only when started by hand** until launch.
+- The deploy workflow (`.github/workflows/deploy.yml`) runs on every push to `main` (live since 2026-11-25).
 - The launch checklist is in `README.md`. The site URL comes from `VITE_SITE_URL` (in `.env` locally, and from the repo variable `SITE_URL` in CI).

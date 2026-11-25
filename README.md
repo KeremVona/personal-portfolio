@@ -33,7 +33,7 @@ To update a job, project or link, edit the matching file in `src/content/`. The 
 
 ## Launch checklist
 
-Deploys run only when started by hand until launch.
+Every push to `main` deploys; Actions → Deploy → Run workflow also works by hand.
 
 The site goes on **GitHub Pages** at **keremvona.com** (www.keremvona.com redirects to it). The repo is public, so Pages is free.
 
@@ -51,7 +51,7 @@ The site goes on **GitHub Pages** at **keremvona.com** (www.keremvona.com redire
 
 7. Repo Settings → Pages → **Custom domain**: enter `keremvona.com` and Save. Deploys from a workflow ignore a `CNAME` file, so this setting is the one that counts. Without it the site would publish under `keremvona.github.io/personal-portfolio/`, where the root-relative asset paths break.
 8. Add screenshots for the HOI4 project in `src/content/projects.ts` (AgriTech has its own).
-9. Actions → Deploy → **Run workflow**.
+9. ~~Actions → Deploy → **Run workflow**.~~ Done: live at keremvona.com.
 10. Repo Settings → Pages: enable **Enforce HTTPS** once the certificate is issued (DNS can take up to a day).
-11. In `.github/workflows/deploy.yml`, add `push: branches: [main]` under `on:`, so every push to main deploys.
+11. ~~Add the `push` trigger to `.github/workflows/deploy.yml`.~~ Done.
 12. Update the portfolio link on the résumé.
