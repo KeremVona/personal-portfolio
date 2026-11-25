@@ -3,8 +3,9 @@ import type { ProjectItem } from '../../content/types'
 import { largest, srcSet } from './art'
 import { MediaPlaceholder } from './MediaPlaceholder'
 import { sourceLabel, visibleTags } from './projectLogic'
+import { Slideshow } from './Slideshow'
 
-const COVER_SIZES = '(min-width: 1024px) 360px, (min-width: 768px) 45vw, 100vw'
+const COVER_SIZES = '(min-width: 768px) 45vw, 100vw'
 
 interface ProjectCardProps {
   project: ProjectItem
@@ -18,15 +19,23 @@ interface ProjectCardProps {
  */
 export function ProjectCard({ project, onOpen }: ProjectCardProps) {
   const cover = project.media[0]
+  const images = project.media.filter((item) => item.kind === 'image')
   const { shown, extra } = visibleTags(project.stack)
 
   return (
-    <article className="window relative flex h-full flex-col has-focus-visible:outline-2 has-focus-visible:outline-offset-4 has-focus-visible:outline-sky-deep">
+    <article className="window relative flex h-full flex-col has-[h3_button:focus-visible]:outline-2 has-[h3_button:focus-visible]:outline-offset-4 has-[h3_button:focus-visible]:outline-sky-deep">
       <div className="window-bar" aria-hidden="true">
         <span className="window-close" />
         <span className="window-title">{project.slug}</span>
       </div>
-      {cover?.kind === 'image' ? (
+      {images.length > 1 ? (
+        <Slideshow
+          slides={images}
+          label={`${project.name} screenshots`}
+          sizes={COVER_SIZES}
+          className="aspect-[16/10]"
+        />
+      ) : cover?.kind === 'image' ? (
         <img
           src={largest(cover.variants).src}
           srcSet={srcSet(cover.variants)}

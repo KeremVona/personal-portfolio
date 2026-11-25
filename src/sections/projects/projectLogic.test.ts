@@ -4,6 +4,7 @@ import {
   gridClass,
   projectLinks,
   sourceLabel,
+  stepSlide,
   visibleTags,
 } from './projectLogic'
 
@@ -86,5 +87,21 @@ describe('PROJECTS content', () => {
       expect(project.description).not.toBe('')
       expect(project.highlights.length).toBeGreaterThan(0)
     }
+  })
+})
+
+describe('stepSlide', () => {
+  it('moves forward and back by one', () => {
+    expect(stepSlide(0, 1, 3)).toBe(1)
+    expect(stepSlide(2, -1, 3)).toBe(1)
+  })
+
+  it('wraps around at both ends', () => {
+    expect(stepSlide(2, 1, 3)).toBe(0)
+    expect(stepSlide(0, -1, 3)).toBe(2)
+  })
+
+  it('stays at 0 with no slides', () => {
+    expect(stepSlide(0, 1, 0)).toBe(0)
   })
 })

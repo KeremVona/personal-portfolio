@@ -50,3 +50,9 @@ export function sourceLabel(
 ): 'Open source' | 'Closed source' {
   return project.repoUrl ? 'Open source' : 'Closed source'
 }
+
+/** The slideshow's next index, wrapping around at both ends. */
+export function stepSlide(index: number, delta: number, count: number): number {
+  if (count <= 0) return 0
+  return (((index + delta) % count) + count) % count
+}

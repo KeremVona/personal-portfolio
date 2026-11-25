@@ -5,6 +5,7 @@ import type { ProjectItem, ProjectMedia } from '../../content/types'
 import { largest, srcSet } from './art'
 import { MediaPlaceholder } from './MediaPlaceholder'
 import { projectLinks } from './projectLogic'
+import { Slideshow } from './Slideshow'
 
 export interface ProjectPanelHandle {
   open: (project: ProjectItem) => void
@@ -102,7 +103,8 @@ function PanelContent({
           {project.description}
         </p>
 
-        <Gallery project={project} />
+        {/* Keyed so the next project starts at its first screenshot. */}
+        <Gallery key={project.slug} project={project} />
 
         <h3 className={`mt-7 ${LABEL}`}>What I built</h3>
         <ul className="mt-2.5 list-disc space-y-2 pl-5 text-[0.9rem] leading-relaxed text-ink-soft marker:text-sky">
@@ -153,6 +155,18 @@ function Gallery({ project }: { project: ProjectItem }) {
   const [index, setIndex] = useState(0)
   const { media } = project
   const current = media[index]
+  const images = media.filter((item) => item.kind === 'image')
+
+  // Only screenshots cycle; a video would be cut off mid-play.
+  if (images.length > 1 && images.length === media.length)
+    return (
+      <Slideshow
+        slides={images}
+        label={`${project.name} screenshots`}
+        sizes={MEDIA_SIZES}
+        className="mt-6 aspect-[2/1] border-2 border-ink"
+      />
+    )
 
   return (
     <div className="mt-6">

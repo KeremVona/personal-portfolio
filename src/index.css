@@ -652,3 +652,10 @@ html[data-theme='night'].at-footer {
     color: #15264a;
   }
 }
+
+/* Project screenshots crossfade in the slideshow (Slideshow.tsx). */
+@media (prefers-reduced-motion: no-preference) {
+  .slide {
+    transition: opacity 600ms ease;
+  }
+}

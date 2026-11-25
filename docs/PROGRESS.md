@@ -52,6 +52,12 @@ _Last updated: 2026-11-25_
 
 **Lighthouse on mobile, whole page:** 100 in Performance, Accessibility, Best Practices and SEO; CLS 0; about 636 KB with the pond. The LCP (0.8s) is the headline: Chrome doesn't count a full-screen background picture, so watch the hero picture's weight (235 KB on phones) by eye as well.
 
+**Project screenshots (2026-11-25):**
+- A project with two or more screenshots shows them as a slideshow (`projects/Slideshow.tsx`), on the card cover and in the panel.
+- It crossfades every 5s and has back, pause and forward buttons with a "1 / 3" counter.
+- It waits while a mouse hovers and while off screen, and starts paused with reduced motion.
+- AgriTech's three screenshots live in `src/assets/projects/` as WebP. The original PNGs are in `reference/projects/`.
+
 All spec and plan paths are under `docs/superpowers/`.
 
 ## Open after the sky redesign
