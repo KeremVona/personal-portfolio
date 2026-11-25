@@ -33,6 +33,19 @@
   --color-sky-gap: #7c9dcb;
   --color-sky-experience-top: #4a72b4;
 
+  /* Night (option C), sampled from the night art: see 2026-11-25-night-mode-design.md §6. */
+  --color-night-top: #081224; /* the night hero's top row */
+  --color-night-1: #1a2c46;
+  --color-night-2: #142540;
+  --color-night-3: #0c1a33;
+  --color-night-footer: #041022; /* the night footer's top row (art:footer, night.json) */
+  --color-night-card: #16284a;
+  --color-night-window: #0f1d36;
+  --color-night-chip: #1c3354;
+  --color-night-line: #c9dbeb;
+  --color-night-link: #9cc2f0;
+  --color-night-soft: #d5dfeb;
+
   --font-mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
 
   --radius-card: 14px;
@@ -107,7 +120,7 @@
     max-height: 92dvh;
     padding: 0;
     border: 0;
-    border-top: 2px solid var(--color-ink);
+    border-top: 2px solid var(--window-line);
     border-radius: 0;
     background: var(--color-paper);
     color: var(--color-ink);
@@ -156,7 +169,7 @@
       height: 100dvh;
       max-height: 100dvh;
       border-top: 0;
-      border-left: 2px solid var(--color-ink);
+      border-left: 2px solid var(--window-line);
       box-shadow: -14px 0 44px rgb(21 38 74 / 0.2);
       translate: 100% 0;
     }
@@ -197,7 +210,7 @@
  * See docs/superpowers/specs/2026-11-24-sky-redesign-design.md §6.
  */
 .window {
-  border: 2px solid var(--color-ink);
+  border: 2px solid var(--window-line);
   border-radius: 0;
   background: var(--color-paper);
   box-shadow: 5px 5px 0 var(--color-ink);
@@ -223,11 +236,11 @@
   align-items: center;
   height: 26px;
   padding: 0 6px;
-  border-bottom: 2px solid var(--color-ink);
+  border-bottom: 2px solid var(--window-line);
   background:
     repeating-linear-gradient(
         var(--color-paper) 0 2px,
-        var(--color-ink) 2px 3px
+        var(--window-line) 2px 3px
       )
       0 5px / 100% calc(100% - 10px) no-repeat,
     var(--color-paper);
@@ -238,7 +251,7 @@
   z-index: 1;
   width: 14px;
   height: 14px;
-  border: 2px solid var(--color-ink);
+  border: 2px solid var(--window-line);
   background: var(--color-paper);
   /* The paper gap around the box, as on the real thing. */
   box-shadow: 0 0 0 3px var(--color-paper);
@@ -440,4 +453,104 @@ html:has(.project-panel[open]) {
 
 #experience article :focus-visible {
   outline-color: var(--color-sky-deep);
+}
+
+/*
+ * Night mode. Inside the sections the day tokens are re-pointed at night colours, so
+ * the same classes read as option C ("night windows that glow"). The nav, hero and
+ * footer handle night themselves.
+ * See docs/superpowers/specs/2026-11-25-night-mode-design.md §6.
+ */
+:root {
+  --window-line: var(--color-ink);
+  --hero-fade-rgb: 251 247 238; /* cream */
+}
+
+[data-theme='night'] {
+  --window-line: var(--color-night-line);
+  --hero-fade-rgb: 26 44 70; /* night-1 */
+  --color-footer-sky: var(--color-night-footer);
+  background-color: var(--color-night-top);
+  color: var(--color-cream);
+  color-scheme: dark;
+}
+
+[data-theme='night'] body {
+  background-color: var(--color-night-2);
+}
+
+html[data-theme='night'].at-footer {
+  background-color: var(--color-night-footer);
+}
+
+[data-theme='night'] :is(#about, #projects, #experience) {
+  --color-ink: var(--color-cream);
+  --color-ink-soft: var(--color-night-soft);
+  --color-sky-deep: var(--color-night-link);
+  --color-sky: var(--color-night-link);
+  --color-haze: var(--color-night-chip);
+  --color-sky-light: #22427c;
+  --color-computer: var(--color-night-card);
+  --color-paper: var(--color-night-window);
+}
+
+[data-theme='night'] .sky-about {
+  background: linear-gradient(var(--color-night-1), var(--color-night-2));
+}
+
+[data-theme='night'] .sky-projects {
+  background: linear-gradient(var(--color-night-2), var(--color-night-3));
+}
+
+[data-theme='night'] .sky-experience {
+  background: linear-gradient(var(--color-night-3), var(--color-night-footer));
+}
+
+/* Each window glows faintly in one of the TV's colours instead of its hard shadow. */
+[data-theme='night'] .window {
+  --glow: rgb(124 237 249 / 0.32);
+  box-shadow:
+    0 0 18px var(--glow),
+    0 0 4px rgb(201 219 235 / 0.35);
+}
+
+[data-theme='night'] li:nth-child(4n + 2) .window {
+  --glow: rgb(235 113 246 / 0.3);
+}
+
+[data-theme='night'] li:nth-child(4n + 3) .window {
+  --glow: rgb(251 242 110 / 0.26);
+}
+
+[data-theme='night'] li:nth-child(4n) .window {
+  --glow: rgb(127 237 116 / 0.28);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme='night'] .window:hover,
+  [data-theme='night'] .window:has(:focus-visible) {
+    box-shadow:
+      0 0 26px var(--glow),
+      0 0 6px rgb(201 219 235 / 0.45);
+  }
+}
+
+[data-theme='night'] .timeline-dot[data-now] {
+  box-shadow: 0 0 10px var(--color-dandelion);
+}
+
+/* Sky blue is too dark on the night nav bar. */
+[data-theme='night'] header :focus-visible {
+  outline-color: var(--color-cream);
+}
+
+.hero-fade {
+  background: linear-gradient(
+    rgb(var(--hero-fade-rgb) / 0),
+    rgb(var(--hero-fade-rgb) / 0.04) 30%,
+    rgb(var(--hero-fade-rgb) / 0.16) 52%,
+    rgb(var(--hero-fade-rgb) / 0.45) 74%,
+    rgb(var(--hero-fade-rgb) / 0.84) 91%,
+    rgb(var(--hero-fade-rgb))
+  );
 }

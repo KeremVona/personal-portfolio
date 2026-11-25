@@ -38,7 +38,7 @@ export function Nav() {
   const onSky = !solid && !menuOpen
   const look = onSky
     ? 'bg-transparent text-cream'
-    : 'bg-haze/88 shadow-[0_1px_0_rgb(21_38_74/0.1)] backdrop-blur-[10px]'
+    : 'bg-haze/88 shadow-[0_1px_0_rgb(21_38_74/0.1)] backdrop-blur-[10px] night:bg-night-1/88 night:shadow-[0_1px_0_rgb(201_219_235/0.12)]'
 
   return (
     <header
@@ -62,13 +62,17 @@ export function Nav() {
           {PROFILE.name}
         </a>
         <ul
-          className={`hidden gap-8 text-sm font-medium sm:flex ${onSky ? 'text-cream' : 'text-ink-soft'}`}
+          className={`hidden gap-8 text-sm font-medium sm:flex ${onSky ? 'text-cream' : 'text-ink-soft night:text-night-soft'}`}
         >
           {SECTIONS.map((section) => (
             <li key={section.id}>
               <a
                 href={`#${section.id}`}
-                className={onSky ? 'hover:underline' : 'hover:text-ink'}
+                className={
+                  onSky
+                    ? 'hover:underline'
+                    : 'hover:text-ink night:hover:text-cream'
+                }
               >
                 {section.label}
               </a>
@@ -80,7 +84,7 @@ export function Nav() {
           <a
             href={LINKS.resume.href}
             download="Kerem-Can-Bas-Resume.pdf"
-            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ${onSky ? 'bg-cream text-ink hover:bg-white' : 'bg-ink text-cream hover:bg-ink-soft'}`}
+            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ${onSky ? 'bg-cream text-ink hover:bg-white' : 'bg-ink text-cream hover:bg-ink-soft night:bg-cream night:text-night-window night:hover:bg-white'}`}
           >
             {LINKS.resume.label}
             <Download aria-hidden="true" className="size-4" />
@@ -91,7 +95,7 @@ export function Nav() {
             aria-controls="nav-menu"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             onClick={() => setMenuOpen((open) => !open)}
-            className={`inline-flex size-9 items-center justify-center rounded-full border sm:hidden ${onSky ? 'border-cream/70' : 'border-ink/20 bg-white/55'}`}
+            className={`inline-flex size-9 items-center justify-center rounded-full border sm:hidden ${onSky ? 'border-cream/70' : 'border-ink/20 bg-white/55 night:border-night-line/50 night:bg-transparent'}`}
           >
             {menuOpen ? (
               <X aria-hidden="true" className="size-4" />
@@ -104,7 +108,7 @@ export function Nav() {
       <div
         id="nav-menu"
         hidden={!menuOpen}
-        className="absolute inset-x-3 top-full rounded-card bg-cream p-2 shadow-card sm:hidden"
+        className="absolute inset-x-3 top-full rounded-card bg-cream p-2 shadow-card sm:hidden night:bg-night-card"
       >
         <ul>
           {SECTIONS.map((section) => (
@@ -112,7 +116,7 @@ export function Nav() {
               <a
                 href={`#${section.id}`}
                 onClick={() => setMenuOpen(false)}
-                className="block rounded-[10px] px-4 py-3 text-base font-medium hover:bg-haze"
+                className="block rounded-[10px] px-4 py-3 text-base font-medium hover:bg-haze night:hover:bg-night-1"
               >
                 {section.label}
               </a>

@@ -30,6 +30,20 @@ const PAIRS: [string, string[]][] = [
   ['ink-soft', ['sky-projects-end', 'computer', 'paper']],
   ['sky-deep', ['cream', 'haze', 'computer', 'paper']],
   ['cream', ['sky-experience-top', 'sky-deep']],
+  // Night (option C): cream on every night background, light links and pale lines.
+  [
+    'cream',
+    [
+      'night-1',
+      'night-2',
+      'night-3',
+      'night-footer',
+      'night-card',
+      'night-window',
+    ],
+  ],
+  ['night-link', ['night-1', 'night-card', 'night-window']],
+  ['night-line', ['night-window', 'night-card']],
 ]
 
 describe('palette', () => {

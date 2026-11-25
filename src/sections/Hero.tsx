@@ -1,4 +1,4 @@
-import { type CSSProperties, useRef } from 'react'
+import { useRef } from 'react'
 import cloudMeta from '../assets/hero/cloud.webp?w=420;700;1047&format=webp&quality=78&as=metadata'
 import portraitMeta from '../assets/hero/sky-portrait.webp?w=640;900;1152&format=webp&quality=62&as=metadata'
 import wideMeta from '../assets/hero/sky.webp?w=1280;1920;2730&format=webp&quality=65&as=metadata'
@@ -14,13 +14,6 @@ const WIDE = byWidth(wideMeta)
 const WIDE_FULL = WIDE[WIDE.length - 1]
 const PORTRAIT = byWidth(portraitMeta)
 const CLOUD = byWidth(cloudMeta)
-
-// The cloud bank dissolves into the cream page instead of ending in a hard line.
-// Short and mostly clear; eased stops so it has no visible starting edge.
-const BOTTOM_FADE: CSSProperties = {
-  background:
-    'linear-gradient(rgb(251 247 238 / 0), rgb(251 247 238 / 0.04) 30%, rgb(251 247 238 / 0.16) 52%, rgb(251 247 238 / 0.45) 74%, rgb(251 247 238 / 0.84) 91%, rgb(251 247 238))',
-}
 
 /**
  * The hero: Kerem's computer on a cloud, in a deep sky. The cloud is its own layer,
@@ -75,8 +68,7 @@ export function Hero() {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[clamp(44px,7%,96px)]"
-        style={BOTTOM_FADE}
+        className="hero-fade pointer-events-none absolute inset-x-0 bottom-0 h-[clamp(44px,7%,96px)]"
       />
       <div
         ref={copyRef}
