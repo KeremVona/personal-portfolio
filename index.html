@@ -3,17 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kerem Can Bas — Full-stack engineer</title>
+    <title>Kerem Can Bas</title>
     <meta
       name="description"
       content="Kerem Can Bas is a full-stack engineer and final-year Software Engineering student in Istanbul, building web apps with .NET, React and TypeScript."
     />
     <meta name="theme-color" content="#FBF7EE" />
+    <script>
+      // Set the theme before first paint (no flash): a saved choice, else the device.
+      // Keep in step with src/theme/themeLogic.ts.
+      ;(function () {
+        var saved = null
+        try {
+          saved = localStorage.getItem('theme')
+        } catch (e) {}
+        var dark = matchMedia('(prefers-color-scheme: dark)').matches
+        var theme =
+          saved === 'day' || saved === 'night' ? saved : dark ? 'night' : 'day'
+        document.documentElement.dataset.theme = theme
+        if (theme === 'night')
+          document
+            .querySelector('meta[name="theme-color"]')
+            .setAttribute('content', '#081224')
+      })()
+    </script>
     <link rel="canonical" href="%VITE_SITE_URL%/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Kerem Can Bas — Full-stack engineer" />
+    <meta property="og:title" content="Kerem Can Bas" />
     <meta
       property="og:description"
       content="Kerem Can Bas is a full-stack engineer and final-year Software Engineering student in Istanbul, building web apps with .NET, React and TypeScript."

@@ -4,6 +4,8 @@
 
 /* Phones and portrait tablets: the hero's copy spans the screen. */
 @custom-variant narrow (@media (max-aspect-ratio: 6/5));
+/* Night mode: data-theme="night" on <html> (set before first paint by index.html). */
+@custom-variant night (&:where([data-theme=night], [data-theme=night] *));
 
 @theme {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;

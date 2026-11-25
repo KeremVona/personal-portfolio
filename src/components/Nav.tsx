@@ -4,6 +4,7 @@ import { LINKS } from '../content/links'
 import { PROFILE } from '../content/profile'
 import { SECTIONS } from '../content/sections'
 import { useNavState } from '../hooks/useNavState'
+import { ThemeToggle } from './ThemeToggle'
 
 /**
  * Fixed nav: transparent at the very top, solid once scrolled, hides on the way
@@ -75,6 +76,7 @@ export function Nav() {
           ))}
         </ul>
         <div className="flex items-center gap-2">
+          <ThemeToggle onSky={onSky} />
           <a
             href={LINKS.resume.href}
             download="Kerem-Can-Bas-Resume.pdf"
