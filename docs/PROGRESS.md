@@ -1,6 +1,6 @@
 # Progress
 
-_Last updated: 2026-11-24_
+_Last updated: 2026-11-25_
 
 ## Done
 
@@ -12,6 +12,7 @@ _Last updated: 2026-11-24_
 | Projects | `specs/2026-11-21-projects-design.md` | `plans/2026-11-21-projects.md` | Notes below |
 | Experience | `specs/2026-11-21-experience-design.md` | `plans/2026-11-21-experience.md` | Notes below |
 | Sky redesign | `specs/2026-11-24-sky-redesign-design.md` | `plans/2026-11-24-sky-redesign.md` | Footer palette everywhere, one sky, Projects windows, Experience timeline |
+| Night mode | `specs/2026-11-25-night-mode-design.md` | `plans/2026-11-25-night-mode.md` | Night art for hero and footer, option C in between, TV glow; follows the device, sun/moon button |
 | Footer (Contact) | `specs/2026-11-21-footer-design.md`, look replaced by `specs/2026-11-22-footer-sky-design.md` | `plans/2026-11-21-footer.md`, `plans/2026-11-22-footer-sky.md` | Notes below |
 
 **Hero and nav notes:**
@@ -54,6 +55,8 @@ _Last updated: 2026-11-24_
 All spec and plan paths are under `docs/superpowers/`.
 
 ## Open after the sky redesign
+
+- **Kerem judges the night mode by eye:** the starfield refilled behind the night cloud (a very faint edge in the Milky Way left of the computer's old spot), how strong the TV glow should be, and the koi painting at night.
 
 - **Kerem judges the About painting and pond on the new sky.** They are watercolour; if they look out of place, he may ask for them to be removed.
 
