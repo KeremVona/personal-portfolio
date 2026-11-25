@@ -17,7 +17,9 @@
         try {
           saved = localStorage.getItem('theme')
         } catch (e) {}
-        var dark = matchMedia('(prefers-color-scheme: dark)').matches
+        var dark =
+          typeof matchMedia === 'function' &&
+          matchMedia('(prefers-color-scheme: dark)').matches
         var theme =
           saved === 'day' || saved === 'night' ? saved : dark ? 'night' : 'day'
         document.documentElement.dataset.theme = theme

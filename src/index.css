@@ -625,3 +625,30 @@ html[data-theme='night'].at-footer {
     opacity: 0.95;
   }
 }
+
+/* At night, focus rings are cream outside the sections too (skip link, hero, footer). */
+[data-theme='night'] :focus-visible {
+  outline-color: var(--color-cream);
+}
+
+/* Printing drops the dark backgrounds, so print in day colours whatever the theme. */
+@media print {
+  [data-theme='night'],
+  [data-theme='night'] :is(#about, #projects, #experience) {
+    --color-ink: #15264a;
+    --color-ink-soft: #2b3c5f;
+    --color-sky-deep: #3a64ac;
+    --color-sky: #5d85c0;
+    --color-haze: #e3edf7;
+    --color-sky-light: #82a7cd;
+    --color-computer: #ece2cc;
+    --color-paper: #fffdf8;
+    --window-line: #15264a;
+    color-scheme: light;
+  }
+
+  :root,
+  #experience {
+    color: #15264a;
+  }
+}

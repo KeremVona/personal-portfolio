@@ -43,6 +43,7 @@ export function useTheme(): { theme: Theme; toggle: () => void } {
   const theme = useSyncExternalStore(subscribe, current, () => 'day' as Theme)
 
   useEffect(() => {
+    if (typeof matchMedia !== 'function') return
     const query = matchMedia(DARK_QUERY)
     const follow = () => {
       if (readSaved(storage()) === null)

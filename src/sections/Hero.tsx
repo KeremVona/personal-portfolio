@@ -53,7 +53,7 @@ export function Hero() {
     >
       {/* Only the current theme's pictures load; a switch crossfades (ThemedLayers). */}
       <ThemedLayers theme={theme}>
-        {(layer, { onLoad, className }) => (
+        {(layer, { onLoad, onError, className }) => (
           <picture aria-hidden="true">
             {/* The picture covers the hero, so on tall screens it is drawn wider than
                 the screen: hence the heights in `sizes`. */}
@@ -70,6 +70,7 @@ export function Hero() {
               alt=""
               draggable={false}
               onLoad={onLoad}
+              onError={onError}
               className={`pointer-events-none absolute inset-0 size-full object-cover select-none ${className}`}
             />
           </picture>
@@ -84,7 +85,7 @@ export function Hero() {
         className="pointer-events-none invisible absolute select-none"
       >
         <ThemedLayers theme={theme}>
-          {(layer, { onLoad, className }) => (
+          {(layer, { onLoad, onError, className }) => (
             <img
               src={largest(ART[layer].cloud).src}
               srcSet={srcSet(ART[layer].cloud)}
@@ -95,6 +96,7 @@ export function Hero() {
               draggable={false}
               fetchPriority={layer === theme ? 'high' : 'auto'}
               onLoad={onLoad}
+              onError={onError}
               className={`absolute inset-0 size-full max-w-none ${className}`}
             />
           )}

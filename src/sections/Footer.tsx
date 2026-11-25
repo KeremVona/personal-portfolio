@@ -109,7 +109,7 @@ export function Footer() {
         {/* Reserves the part of the image that must stay clear of text. */}
         <div aria-hidden="true" className="sky-footer-space" />
         <ThemedLayers theme={theme}>
-          {(layer, { onLoad, className }) => (
+          {(layer, { onLoad, onError, loading, className }) => (
             <picture aria-hidden="true">
               {/* Keep the media query in step with the one in index.css. */}
               <source
@@ -126,9 +126,10 @@ export function Footer() {
                 width={largest(ART[layer].wide).width}
                 height={largest(ART[layer].wide).height}
                 alt=""
-                loading="lazy"
+                loading={loading ?? 'lazy'}
                 decoding="async"
                 onLoad={onLoad}
+                onError={onError}
                 className={`sky-footer-art ${className}`}
               />
             </picture>

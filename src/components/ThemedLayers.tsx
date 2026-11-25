@@ -25,7 +25,12 @@ export function ThemedLayers({
   theme: Theme
   children: (
     theme: Theme,
-    props: { onLoad: () => void; className: string },
+    props: {
+      onLoad: () => void
+      onError: () => void
+      loading: 'eager' | undefined
+      className: string
+    },
   ) => ReactNode
 }) {
   // Bottom to top: the newest layer is first, so older ones paint over it until it loads.
@@ -65,6 +70,10 @@ export function ThemedLayers({
     <Fragment key={layer.id}>
       {children(layer.theme, {
         onLoad: () => loaded(layer.id),
+        // A picture that fails still replaces the old one, rather than leaving it on top.
+        onError: () => loaded(layer.id),
+        // A layer added by a switch loads now, even if it is a lazy, off-screen picture.
+        loading: layer.id > 0 ? 'eager' : undefined,
         className: `transition-opacity duration-[400ms] ease-out motion-reduce:transition-none ${layer.leaving ? 'opacity-0' : ''}`,
       })}
     </Fragment>
