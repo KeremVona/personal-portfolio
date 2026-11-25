@@ -269,6 +269,9 @@ await sharp(SRC)
 // See docs/superpowers/specs/2026-11-25-night-mode-design.md §4.
 const NIGHT_SRC = 'reference/hero-dark.png'
 const STAR_SHIFT = -1250
+// Rows over which the borrowed star detail fades out towards the horizon.
+const STARS_FADE_START = 1080
+const STARS_FADE_END = 1170
 if (existsSync(NIGHT_SRC)) {
   const night = await sharp(NIGHT_SRC).removeAlpha().raw().toBuffer()
   const blur = await sharp(night, raw3).blur(14).raw().toBuffer()
@@ -282,6 +285,14 @@ if (existsSync(NIGHT_SRC)) {
   for (let y = Math.max(0, DY0); y < Math.min(H, DY0 + DH); y++) {
     const L = blurAt(XL, y)
     const R = blurAt(XR, y)
+    // Near the horizon the star source (far left) is the big foreground cloud, so its
+    // texture would paste smeared clouds into the sky: fade the detail out there,
+    // leaving smooth, hazy sky down to the real cloud bank.
+    const u = Math.min(
+      1,
+      Math.max(0, (y - STARS_FADE_START) / (STARS_FADE_END - STARS_FADE_START)),
+    )
+    const detail = 1 - u * u * (3 - 2 * u)
     for (let x = Math.max(0, DX0); x < Math.min(W, DX0 + DW); x++) {
       const weight = refillWeight(x, y)
       if (weight <= 0) continue
@@ -293,7 +304,7 @@ if (existsSync(NIGHT_SRC)) {
         const base = L[c] * (1 - t) + R[c] * t
         const fill = Math.min(
           255,
-          Math.max(0, base + night[so + c] - blur[so + c]),
+          Math.max(0, base + detail * (night[so + c] - blur[so + c])),
         )
         nightSky[o + c] = Math.round(
           night[o + c] * (1 - weight) + fill * weight,
