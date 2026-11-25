@@ -1,7 +1,7 @@
 name: Deploy
 
 on:
-  # Cutover: add "push: branches: [main]"
+  # Started by hand until launch. Cutover: add "push: branches: [main]" (README step 11).
   workflow_dispatch:
 
 permissions:
