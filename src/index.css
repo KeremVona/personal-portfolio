@@ -554,3 +554,74 @@ html[data-theme='night'].at-footer {
     rgb(var(--hero-fade-rgb))
   );
 }
+
+/*
+ * The TV's light at night: a soft glow in the screen's colours, centred on the screen
+ * (47% across, 22% down the cloud layer), moving with the cloud. It flickers very
+ * gently, like an old CRT: opacity between 0.9 and 1, about one change a second.
+ */
+.tv-glow {
+  position: absolute;
+  top: 22%;
+  left: 47%;
+  width: 78%;
+  height: 62%;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: radial-gradient(
+    closest-side,
+    rgb(255 255 255 / 0.2),
+    rgb(124 237 249 / 0.13) 34%,
+    rgb(235 113 246 / 0.09) 55%,
+    rgb(83 105 238 / 0.05) 76%,
+    transparent
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms ease-out;
+}
+
+[data-theme='night'] .tv-glow {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme='night'] .tv-glow {
+    animation: tv-flicker 6s linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tv-glow {
+    transition: none;
+  }
+}
+
+@keyframes tv-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  13% {
+    opacity: 0.93;
+  }
+  21% {
+    opacity: 0.98;
+  }
+  37% {
+    opacity: 0.9;
+  }
+  52% {
+    opacity: 0.97;
+  }
+  68% {
+    opacity: 0.92;
+  }
+  81% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 0.95;
+  }
+}

@@ -26,7 +26,7 @@ const PUSHED_COPY_GAP = 8 // px the pushed cloud keeps from the copy
 export function useShyCloud(
   hero: RefObject<HTMLElement | null>,
   copy: RefObject<HTMLElement | null>,
-  cloud: RefObject<HTMLImageElement | null>,
+  cloud: RefObject<HTMLElement | null>,
 ) {
   useEffect(() => {
     const heroEl = hero.current

@@ -1,7 +1,12 @@
 import { useRef } from 'react'
+import cloudNightMeta from '../assets/hero/cloud-night.webp?w=420;700;1047&format=webp&quality=78&as=metadata'
 import cloudMeta from '../assets/hero/cloud.webp?w=420;700;1047&format=webp&quality=78&as=metadata'
+import portraitNightMeta from '../assets/hero/sky-night-portrait.webp?w=640;900;1152&format=webp&quality=62&as=metadata'
 import portraitMeta from '../assets/hero/sky-portrait.webp?w=640;900;1152&format=webp&quality=62&as=metadata'
+import wideNightMeta from '../assets/hero/sky-night.webp?w=1280;1920;2730&format=webp&quality=65&as=metadata'
 import wideMeta from '../assets/hero/sky.webp?w=1280;1920;2730&format=webp&quality=65&as=metadata'
+import { ThemedLayers } from '../components/ThemedLayers'
+import { useTheme } from '../theme/useTheme'
 import { CLOUD_BOX } from './hero/heroArt'
 import { useCloudPlacement } from './hero/useCloudPlacement'
 import { useShyCloud } from './hero/useShyCloud'
@@ -10,10 +15,21 @@ const byWidth = (meta: ImagetoolsMetadata | ImagetoolsMetadata[]) =>
   (Array.isArray(meta) ? meta : [meta]).toSorted((a, b) => a.width - b.width)
 const srcSet = (variants: ImagetoolsMetadata[]) =>
   variants.map((v) => `${v.src} ${v.width}w`).join(', ')
-const WIDE = byWidth(wideMeta)
-const WIDE_FULL = WIDE[WIDE.length - 1]
-const PORTRAIT = byWidth(portraitMeta)
-const CLOUD = byWidth(cloudMeta)
+// Day and night versions of each layer (see docs/superpowers/specs/2026-11-25-night-mode-design.md).
+const ART = {
+  day: {
+    wide: byWidth(wideMeta),
+    portrait: byWidth(portraitMeta),
+    cloud: byWidth(cloudMeta),
+  },
+  night: {
+    wide: byWidth(wideNightMeta),
+    portrait: byWidth(portraitNightMeta),
+    cloud: byWidth(cloudNightMeta),
+  },
+}
+const largest = (variants: ImagetoolsMetadata[]) =>
+  variants[variants.length - 1]
 
 /**
  * The hero: Kerem's computer on a cloud, in a deep sky. The cloud is its own layer,
@@ -23,7 +39,8 @@ const CLOUD = byWidth(cloudMeta)
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null)
   const copyRef = useRef<HTMLDivElement>(null)
-  const cloudRef = useRef<HTMLImageElement>(null)
+  const cloudRef = useRef<HTMLDivElement>(null)
+  const { theme } = useTheme()
   useCloudPlacement(heroRef, copyRef, cloudRef)
   useShyCloud(heroRef, copyRef, cloudRef)
 
@@ -34,38 +51,56 @@ export function Hero() {
       aria-labelledby="hero-title"
       className="relative min-h-[max(100svh,600px)] scroll-mt-24 overflow-clip"
     >
-      <picture aria-hidden="true">
-        {/* The picture covers the hero, so on tall screens it is drawn wider than
-            the screen: hence the heights in `sizes`. */}
-        <source
-          media="(max-aspect-ratio: 3/4)"
-          srcSet={srcSet(PORTRAIT)}
-          sizes="max(100vw, 75vh, 450px)"
-        />
-        <img
-          fetchPriority="high"
-          sizes="max(100vw, 178vh, 1067px)"
-          srcSet={srcSet(WIDE)}
-          src={WIDE_FULL.src}
-          alt=""
-          draggable={false}
-          className="pointer-events-none absolute inset-0 size-full object-cover select-none"
-        />
-      </picture>
-      {/* Placed by useCloudPlacement; hidden until then so it never shows in the wrong spot. */}
-      <img
+      {/* Only the current theme's pictures load; a switch crossfades (ThemedLayers). */}
+      <ThemedLayers theme={theme}>
+        {(layer, { onLoad, className }) => (
+          <picture aria-hidden="true">
+            {/* The picture covers the hero, so on tall screens it is drawn wider than
+                the screen: hence the heights in `sizes`. */}
+            <source
+              media="(max-aspect-ratio: 3/4)"
+              srcSet={srcSet(ART[layer].portrait)}
+              sizes="max(100vw, 75vh, 450px)"
+            />
+            <img
+              fetchPriority={layer === theme ? 'high' : 'auto'}
+              sizes="max(100vw, 178vh, 1067px)"
+              srcSet={srcSet(ART[layer].wide)}
+              src={largest(ART[layer].wide).src}
+              alt=""
+              draggable={false}
+              onLoad={onLoad}
+              className={`pointer-events-none absolute inset-0 size-full object-cover select-none ${className}`}
+            />
+          </picture>
+        )}
+      </ThemedLayers>
+      {/* The cloud and the TV's night glow move together. Placed by useCloudPlacement;
+          hidden until then so it never shows in the wrong spot. */}
+      <div
         ref={cloudRef}
-        src={CLOUD[CLOUD.length - 1].src}
-        srcSet={srcSet(CLOUD)}
-        sizes="(max-aspect-ratio: 6/5) 90vw, 45vw"
-        width={CLOUD_BOX.width}
-        height={CLOUD_BOX.height}
-        alt=""
         aria-hidden="true"
-        draggable={false}
-        fetchPriority="high"
-        className="pointer-events-none invisible absolute h-auto max-w-none select-none"
-      />
+        style={{ aspectRatio: `${CLOUD_BOX.width} / ${CLOUD_BOX.height}` }}
+        className="pointer-events-none invisible absolute select-none"
+      >
+        <ThemedLayers theme={theme}>
+          {(layer, { onLoad, className }) => (
+            <img
+              src={largest(ART[layer].cloud).src}
+              srcSet={srcSet(ART[layer].cloud)}
+              sizes="(max-aspect-ratio: 6/5) 90vw, 45vw"
+              width={CLOUD_BOX.width}
+              height={CLOUD_BOX.height}
+              alt=""
+              draggable={false}
+              fetchPriority={layer === theme ? 'high' : 'auto'}
+              onLoad={onLoad}
+              className={`absolute inset-0 size-full max-w-none ${className}`}
+            />
+          )}
+        </ThemedLayers>
+        <span className="tv-glow" />
+      </div>
       <div
         aria-hidden="true"
         className="hero-fade pointer-events-none absolute inset-x-0 bottom-0 h-[clamp(44px,7%,96px)]"

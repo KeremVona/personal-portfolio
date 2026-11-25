@@ -13,7 +13,7 @@ export const NARROW_QUERY = '(max-aspect-ratio: 6/5)'
 export function useCloudPlacement(
   hero: RefObject<HTMLElement | null>,
   copy: RefObject<HTMLElement | null>,
-  cloud: RefObject<HTMLImageElement | null>,
+  cloud: RefObject<HTMLElement | null>,
 ) {
   useLayoutEffect(() => {
     const heroEl = hero.current

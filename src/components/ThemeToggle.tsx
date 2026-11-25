@@ -14,7 +14,7 @@ export function ThemeToggle({ onSky }: { onSky: boolean }) {
       className={`inline-flex size-9 cursor-pointer items-center justify-center rounded-full border ${
         onSky
           ? 'border-cream/70 hover:bg-cream/15'
-          : 'night:border-night-line/50 border-ink/20 bg-white/55 hover:bg-white night:bg-transparent night:hover:bg-cream/10'
+          : 'border-ink/20 bg-white/55 hover:bg-white night:border-night-line/50 night:bg-transparent night:hover:bg-cream/10'
       }`}
     >
       <Icon aria-hidden="true" className="size-4" />
