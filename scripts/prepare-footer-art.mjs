@@ -64,7 +64,8 @@ await sharp(art)
 
 // The night version from reference/footer-dark.png, the same hilltop under the
 // Milky Way. Cream passes on its sky as it is, so it only fades to its own top colour
-// over its upper third (softly, so the stars come in gradually) from the top, where the footer continues as a solid colour above the image
+// over its upper 45% (eased, so the stars come in gradually) from the top, where the
+// footer continues as a solid colour above the image
 // (--color-night-footer, written to night.json).
 // See docs/superpowers/specs/2026-11-25-night-mode-design.md §5.
 const NIGHT_SRC = 'reference/footer-dark.png'
@@ -76,15 +77,18 @@ if (existsSync(NIGHT_SRC)) {
     .raw()
     .toBuffer({ resolveWithObject: true })
   const top = `#${[...data].map((v) => v.toString(16).padStart(2, '0')).join('')}`
+  // The sky shows through as a smoothstep over the upper 45%: it starts with zero
+  // slope, so there's no line where the solid colour above ends.
+  const FADE = 0.45
+  const STEPS = 16
+  const nightStops = Array.from({ length: STEPS + 1 }, (_, i) => {
+    const t = i / STEPS
+    const shown = t * t * (3 - 2 * t)
+    return `<stop offset="${(t * FADE).toFixed(4)}" stop-color="${top}" stop-opacity="${(1 - shown).toFixed(4)}"/>`
+  }).join('')
   const nightOverlay = Buffer.from(
     `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
-      <linearGradient id="top" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="${top}" stop-opacity="1"/>
-        <stop offset="0.06" stop-color="${top}" stop-opacity="0.72"/>
-        <stop offset="0.14" stop-color="${top}" stop-opacity="0.4"/>
-        <stop offset="0.24" stop-color="${top}" stop-opacity="0.14"/>
-        <stop offset="0.34" stop-color="${top}" stop-opacity="0"/>
-      </linearGradient>
+      <linearGradient id="top" x1="0" y1="0" x2="0" y2="1">${nightStops}</linearGradient>
       <rect width="${W}" height="${H}" fill="url(#top)"/>
     </svg>`,
   )

@@ -80,6 +80,6 @@ docs/superpowers/       Specs (decisions) and plans (how each piece was built)
 
 ## Hosting
 
-- GitHub Pages on a custom domain. The domain isn't bought yet.
+- GitHub Pages on keremvona.com (bought 2026-11-25; www redirects to the apex).
 - The deploy workflow (`.github/workflows/deploy.yml`) runs **only when started by hand** until launch.
 - The launch checklist is in `README.md`. The site URL comes from `VITE_SITE_URL` (in `.env` locally, and from the repo variable `SITE_URL` in CI).
