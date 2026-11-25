@@ -252,6 +252,71 @@ await sharp(SRC)
   .jpeg({ quality: 85 })
   .toFile('public/og-image.jpg')
 
+// 8. The night version from reference/hero-dark.png, which lines up with the day
+// picture pixel for pixel: the same cut-out (the day alpha), and a refill that keeps
+// the stars: a smooth per-row base from the blurred sky either side of the hole, plus
+// the star detail (picture minus its blur) from STAR_SHIFT px to the left.
+// See docs/superpowers/specs/2026-11-25-night-mode-design.md §4.
+const NIGHT_SRC = 'reference/hero-dark.png'
+const STAR_SHIFT = -1250
+if (existsSync(NIGHT_SRC)) {
+  const night = await sharp(NIGHT_SRC).removeAlpha().raw().toBuffer()
+  const blur = await sharp(night, raw3).blur(14).raw().toBuffer()
+  const nightSky = Buffer.from(night)
+  const blurAt = (x, y) => {
+    const o = (y * W + Math.min(W - 1, Math.max(0, x))) * 3
+    return [blur[o], blur[o + 1], blur[o + 2]]
+  }
+  const XL = DX0 - 10
+  const XR = DX0 + DW + 10
+  for (let y = Math.max(0, DY0); y < Math.min(H, DY0 + DH); y++) {
+    const L = blurAt(XL, y)
+    const R = blurAt(XR, y)
+    for (let x = Math.max(0, DX0); x < Math.min(W, DX0 + DW); x++) {
+      const weight = refillWeight(x, y)
+      if (weight <= 0) continue
+      const t = (x - XL) / (XR - XL)
+      const sx = Math.abs(x + STAR_SHIFT)
+      const o = at(x, y)
+      const so = at(sx, y)
+      for (let c = 0; c < 3; c++) {
+        const base = L[c] * (1 - t) + R[c] * t
+        const fill = Math.min(
+          255,
+          Math.max(0, base + night[so + c] - blur[so + c]),
+        )
+        nightSky[o + c] = Math.round(
+          night[o + c] * (1 - weight) + fill * weight,
+        )
+      }
+    }
+  }
+  const nightCloud = Buffer.alloc(box.width * box.height * 4)
+  for (let y = 0; y < box.height; y++)
+    for (let x = 0; x < box.width; x++) {
+      const sx = box.left + x
+      const sy = box.top + y
+      const o = at(sx, sy)
+      const t = (y * box.width + x) * 4
+      nightCloud[t] = night[o]
+      nightCloud[t + 1] = night[o + 1]
+      nightCloud[t + 2] = night[o + 2]
+      nightCloud[t + 3] = Math.round(alpha[sy * W + sx] * 255)
+    }
+  await sharp(nightSky, raw3)
+    .webp({ quality: 90 })
+    .toFile(`${OUT}/sky-night.webp`)
+  await sharp(nightSky, raw3)
+    .extract({ left: portraitLeft, top: 0, width: 1152, height: 1536 })
+    .webp({ quality: 90 })
+    .toFile(`${OUT}/sky-night-portrait.webp`)
+  await sharp(nightCloud, {
+    raw: { width: box.width, height: box.height, channels: 4 },
+  })
+    .webp({ quality: 90, alphaQuality: 90 })
+    .toFile(`${OUT}/cloud-night.webp`)
+} else console.warn(`${NIGHT_SRC} not found: skipped the night layers`)
+
 console.log(`Wrote the sky hero in ${OUT} and public/og-image.jpg`, box, {
   portraitLeft,
 })

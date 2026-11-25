@@ -133,8 +133,8 @@ function PanelContent({
               rel="noreferrer"
               className={
                 link.primary
-                  ? 'bg-ink px-5 py-2.5 text-sm font-medium text-cream hover:bg-ink-soft'
-                  : 'border-2 border-ink px-5 py-2.5 text-sm font-medium text-ink hover:bg-white/70'
+                  ? 'bg-ink px-5 py-2.5 text-sm font-medium text-cream hover:bg-ink-soft night:text-night-window'
+                  : 'border-2 border-ink px-5 py-2.5 text-sm font-medium text-ink hover:bg-white/70 night:hover:bg-cream/10'
               }
             >
               {link.label}

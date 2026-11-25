@@ -1,24 +1,31 @@
 import { Mail } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import phoneMeta from '../assets/footer/sky-phone.webp?w=640;1024;1536&format=webp&quality=78&as=metadata'
+import phoneNightMeta from '../assets/footer/sky-night-phone.webp?w=640;1024;1536&format=webp&quality=78&as=metadata'
+import wideNightMeta from '../assets/footer/sky-night.webp?w=1280;1920;2730&format=webp&quality=78&as=metadata'
 import wideMeta from '../assets/footer/sky.webp?w=1280;1920;2730&format=webp&quality=78&as=metadata'
 import { Reveal } from '../components/Reveal'
+import { ThemedLayers } from '../components/ThemedLayers'
 import { Section } from '../components/Section'
 import { SectionHeading } from '../components/SectionHeading'
 import { CONTACT } from '../content/contact'
 import { LINKS } from '../content/links'
 import { PROFILE } from '../content/profile'
 import { sectionLabel } from '../content/sections'
+import { useTheme } from '../theme/useTheme'
 import { CopyEmailButton } from './footer/CopyEmailButton'
 
 const byWidth = (meta: ImagetoolsMetadata | ImagetoolsMetadata[]) =>
   (Array.isArray(meta) ? meta : [meta]).toSorted((a, b) => a.width - b.width)
 const srcSet = (variants: ImagetoolsMetadata[]) =>
   variants.map((v) => `${v.src} ${v.width}w`).join(', ')
-const WIDE = byWidth(wideMeta)
-const WIDE_FULL = WIDE[WIDE.length - 1]
-const PHONE = byWidth(phoneMeta)
-const PHONE_FULL = PHONE[PHONE.length - 1]
+// Day and night skies (see docs/superpowers/specs/2026-11-25-night-mode-design.md §5).
+const ART = {
+  day: { wide: byWidth(wideMeta), phone: byWidth(phoneMeta) },
+  night: { wide: byWidth(wideNightMeta), phone: byWidth(phoneNightMeta) },
+}
+const largest = (variants: ImagetoolsMetadata[]) =>
+  variants[variants.length - 1]
 const LINK_ROW = [LINKS.linkedin, LINKS.github, LINKS.resume]
 
 /**
@@ -28,6 +35,7 @@ const LINK_ROW = [LINKS.linkedin, LINKS.github, LINKS.resume]
  */
 export function Footer() {
   const ref = useRef<HTMLElement>(null)
+  const { theme } = useTheme()
   // While the footer is on screen, the overscroll bounce under it is sky, not cream.
   useEffect(() => {
     const footer = ref.current
@@ -100,27 +108,33 @@ export function Footer() {
 
         {/* Reserves the part of the image that must stay clear of text. */}
         <div aria-hidden="true" className="sky-footer-space" />
-        <picture aria-hidden="true">
-          {/* Keep the media query in step with the one in index.css. */}
-          <source
-            media="(max-width: 500px)"
-            srcSet={srcSet(PHONE)}
-            sizes="507px"
-            width={PHONE_FULL.width}
-            height={PHONE_FULL.height}
-          />
-          <img
-            src={WIDE_FULL.src}
-            srcSet={srcSet(WIDE)}
-            sizes="max(100vw, 900px)"
-            width={WIDE_FULL.width}
-            height={WIDE_FULL.height}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="sky-footer-art"
-          />
-        </picture>
+        <ThemedLayers theme={theme}>
+          {(layer, { onLoad, onError, loading, className }) => (
+            <picture aria-hidden="true">
+              {/* Keep the media query in step with the one in index.css. */}
+              <source
+                media="(max-width: 500px)"
+                srcSet={srcSet(ART[layer].phone)}
+                sizes="507px"
+                width={largest(ART[layer].phone).width}
+                height={largest(ART[layer].phone).height}
+              />
+              <img
+                src={largest(ART[layer].wide).src}
+                srcSet={srcSet(ART[layer].wide)}
+                sizes="max(100vw, 900px)"
+                width={largest(ART[layer].wide).width}
+                height={largest(ART[layer].wide).height}
+                alt=""
+                loading={loading ?? 'lazy'}
+                decoding="async"
+                onLoad={onLoad}
+                onError={onError}
+                className={`sky-footer-art ${className}`}
+              />
+            </picture>
+          )}
+        </ThemedLayers>
       </div>
     </footer>
   )

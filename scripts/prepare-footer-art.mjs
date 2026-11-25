@@ -2,7 +2,7 @@
 // plus a square centre crop for phones.
 // Run once with `npm run art:footer` when the art changes.
 // See docs/superpowers/specs/2026-11-22-footer-sky-design.md.
-import { existsSync, mkdirSync } from 'node:fs'
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import sharp from 'sharp'
 
 const SRC = 'reference/674561874.png'
@@ -61,5 +61,43 @@ await sharp(art)
   .extract({ left: (W - H) / 2, top: 0, width: H, height: H })
   .webp({ quality: 90 })
   .toFile(`${OUT}/sky-phone.webp`)
+
+// The night version from reference/footer-dark.png, the same hilltop under the
+// Milky Way. Cream passes on its sky as it is, so it only fades to its own top colour
+// in the first few rows, where the footer continues as a solid colour above the image
+// (--color-night-footer, written to night.json).
+// See docs/superpowers/specs/2026-11-25-night-mode-design.md §5.
+const NIGHT_SRC = 'reference/footer-dark.png'
+if (existsSync(NIGHT_SRC)) {
+  const { data } = await sharp(NIGHT_SRC)
+    .removeAlpha()
+    .extract({ left: 0, top: 0, width: W, height: 24 })
+    .resize(1, 1)
+    .raw()
+    .toBuffer({ resolveWithObject: true })
+  const top = `#${[...data].map((v) => v.toString(16).padStart(2, '0')).join('')}`
+  const nightOverlay = Buffer.from(
+    `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+      <linearGradient id="top" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${top}" stop-opacity="1"/>
+        <stop offset="0.03" stop-color="${top}" stop-opacity="0.45"/>
+        <stop offset="0.08" stop-color="${top}" stop-opacity="0"/>
+      </linearGradient>
+      <rect width="${W}" height="${H}" fill="url(#top)"/>
+    </svg>`,
+  )
+  const nightArt = await sharp(NIGHT_SRC)
+    .composite([{ input: nightOverlay }])
+    .removeAlpha()
+    .png()
+    .toBuffer()
+  await sharp(nightArt).webp({ quality: 90 }).toFile(`${OUT}/sky-night.webp`)
+  await sharp(nightArt)
+    .extract({ left: (W - H) / 2, top: 0, width: H, height: H })
+    .webp({ quality: 90 })
+    .toFile(`${OUT}/sky-night-phone.webp`)
+  writeFileSync(`${OUT}/night.json`, `${JSON.stringify({ top }, null, 2)}\n`)
+  console.log(`Wrote the night footer (top ${top})`)
+} else console.warn(`${NIGHT_SRC} not found: skipped the night footer`)
 
 console.log(`Wrote ${OUT}/sky.webp and ${OUT}/sky-phone.webp`)
