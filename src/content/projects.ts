@@ -1,9 +1,15 @@
+import agritech1 from '../assets/projects/agritech-1.webp?w=480;960;1440&format=webp&quality=80&as=metadata'
+import agritech2 from '../assets/projects/agritech-2.webp?w=480;960;1440&format=webp&quality=80&as=metadata'
+import agritech3 from '../assets/projects/agritech-3.webp?w=480;960;1440&format=webp&quality=80&as=metadata'
 import type { ProjectItem } from './types'
+
+const variants = (meta: ImagetoolsMetadata | ImagetoolsMetadata[]) =>
+  (Array.isArray(meta) ? meta : [meta]).toSorted((a, b) => a.width - b.width)
 
 /** Lead project first. Highlights transcribed verbatim from the résumé. */
 export const PROJECTS: ProjectItem[] = [
   {
-    slug: 'hoi4-multiplayer',
+    slug: 'encircled',
     name: 'HOI4 Multiplayer Platform',
     summary:
       'Ranked matches, save-file parsing and anti-cheat for Hearts of Iron IV.',
@@ -15,7 +21,7 @@ export const PROJECTS: ProjectItem[] = [
       'After each verified match, the users get rankings and a post-game summary section to view statistics such as in-game casualties, equipment loss and much more.',
     ],
     // Not listed on the résumé; Kerem supplies it later.
-    stack: [],
+    stack: ['React', 'TypeScript', 'Express', 'Rust', 'PostgreSQL', 'SocketIO'],
     media: [],
   },
   {
@@ -41,6 +47,22 @@ export const PROJECTS: ProjectItem[] = [
       'GLSL',
     ],
     repoUrl: 'https://github.com/KeremVona/agritech',
-    media: [],
+    media: [
+      {
+        kind: 'image',
+        variants: variants(agritech1),
+        alt: 'The AgriTech landing page: “Cultivate your crops with AgriTech” over a leaf canopy',
+      },
+      {
+        kind: 'image',
+        variants: variants(agritech2),
+        alt: 'The leaf scanner diagnosing a tomato leaf with late blight at 96.4% confidence',
+      },
+      {
+        kind: 'image',
+        variants: variants(agritech3),
+        alt: 'A field parcel’s soil moisture chart, water budget gauge and valve control',
+      },
+    ],
   },
 ]

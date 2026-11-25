@@ -78,7 +78,7 @@ describe('PROJECTS content', () => {
   it('has unique slugs and leads with HOI4', () => {
     const slugs = PROJECTS.map((project) => project.slug)
     expect(new Set(slugs).size).toBe(slugs.length)
-    expect(slugs[0]).toBe('hoi4-multiplayer')
+    expect(slugs[0]).toBe('encircled')
   })
 
   it('gives every project its card and panel text', () => {
