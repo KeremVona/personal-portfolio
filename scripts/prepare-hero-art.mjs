@@ -185,14 +185,24 @@ for (let y = DH - 1; y >= 0; y--)
     if (x < DW - 1 && y < DH - 1) relax(i, i + DW + 1, Math.SQRT2)
     if (x > 0 && y < DH - 1) relax(i, i + DW - 1, Math.SQRT2)
   }
+// Below the cloud the refill stops quickly: the horizon's cloud bank starts just
+// under it and must stay the picture's own, not a blurred stand-in.
+const BOTTOM = box.top + box.height
+const BELOW_START = BOTTOM + 2
+const BELOW_END = BOTTOM + 26
 const refillWeight = (x, y) => {
   const dx = x - DX0
   const dy = y - DY0
   if (dx < 0 || dy < 0 || dx >= DW || dy >= DH) return 0
+  const below = Math.min(
+    1,
+    Math.max(0, (y - BELOW_START) / (BELOW_END - BELOW_START)),
+  )
+  const keep = 1 - below * below * (3 - 2 * below)
   const d = dist[dy * DW + dx]
-  if (d <= FILL_GROW) return 1
+  if (d <= FILL_GROW) return keep
   const t = Math.min(1, (d - FILL_GROW) / FEATHER)
-  return 1 - t * t * (3 - 2 * t)
+  return keep * (1 - t * t * (3 - 2 * t))
 }
 // Rows outside the sampled band reuse the nearest sampled row.
 const fillAt = (x, y) =>

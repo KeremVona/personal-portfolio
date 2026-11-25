@@ -64,7 +64,7 @@ await sharp(art)
 
 // The night version from reference/footer-dark.png, the same hilltop under the
 // Milky Way. Cream passes on its sky as it is, so it only fades to its own top colour
-// in the first few rows, where the footer continues as a solid colour above the image
+// over its upper third (softly, so the stars come in gradually) from the top, where the footer continues as a solid colour above the image
 // (--color-night-footer, written to night.json).
 // See docs/superpowers/specs/2026-11-25-night-mode-design.md §5.
 const NIGHT_SRC = 'reference/footer-dark.png'
@@ -80,8 +80,10 @@ if (existsSync(NIGHT_SRC)) {
     `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
       <linearGradient id="top" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stop-color="${top}" stop-opacity="1"/>
-        <stop offset="0.03" stop-color="${top}" stop-opacity="0.45"/>
-        <stop offset="0.08" stop-color="${top}" stop-opacity="0"/>
+        <stop offset="0.06" stop-color="${top}" stop-opacity="0.72"/>
+        <stop offset="0.14" stop-color="${top}" stop-opacity="0.4"/>
+        <stop offset="0.24" stop-color="${top}" stop-opacity="0.14"/>
+        <stop offset="0.34" stop-color="${top}" stop-opacity="0"/>
       </linearGradient>
       <rect width="${W}" height="${H}" fill="url(#top)"/>
     </svg>`,
