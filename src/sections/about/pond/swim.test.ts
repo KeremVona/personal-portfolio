@@ -2,12 +2,14 @@ import { describe, expect, it } from 'vitest'
 import {
   FISH_START,
   POND_BOX,
+  WAKE_GAP,
   bendAngle,
   createFish,
   frameDelta,
   hitFish,
   poke,
   stepFish,
+  stepWake,
   toPond,
   type Fish,
 } from './swim'
@@ -200,5 +202,37 @@ describe('clicks only land on fish that are simply swimming', () => {
     poke(fishes, fleeing.line[10], false, random)
     expect(fleeing.mode).toBe('leave')
     expect(hitFish(fishes, fleeing.line[10])).not.toBe(fleeing)
+  })
+})
+
+describe('stepWake', () => {
+  const fish = (speed: number, mode: Fish['mode'] = 'swim') => ({
+    ...createFish(FISH_START[0], seeded()),
+    speed,
+    mode,
+  })
+
+  it('leaves no wake behind a cruising fish', () => {
+    expect(stepWake(fish(85), 0, DT).size).toBe(0)
+  })
+
+  it('waits for the gap between rings', () => {
+    const next = stepWake(fish(200), 0.1, 0.04)
+    expect(next.size).toBe(0)
+    expect(next.due).toBeCloseTo(0.06)
+  })
+
+  it('leaves a ring sized by speed once the gap has passed', () => {
+    const next = stepWake(fish(155), 0.01, DT)
+    expect(next.size).toBeCloseTo(0.18 + 60 / 600)
+    expect(next.due).toBe(WAKE_GAP)
+  })
+
+  it('caps the ring size', () => {
+    expect(stepWake(fish(900), 0, DT).size).toBe(0.4)
+  })
+
+  it('leaves no wake while out of sight', () => {
+    expect(stepWake(fish(300, 'away'), 0, DT).size).toBe(0)
   })
 })

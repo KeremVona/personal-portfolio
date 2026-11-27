@@ -462,3 +462,28 @@ export function toPond(
     y: view.y + view.h / 2 + (ly * view.h) / size.h,
   }
 }
+
+/** A fish faster than this (pond units/s) leaves a wake; cruising is 60–85. */
+export const WAKE_SPEED = 95
+/** Seconds between a fast fish's wake rings. */
+export const WAKE_GAP = 0.14
+
+/**
+ * A fast fish's wake: counts `due` down to its next ring. `size` is that ring's size
+ * as a share of a click ripple, or 0 for no ring this frame.
+ * See docs/superpowers/specs/2026-11-27-pond-water-design.md §3.
+ */
+export function stepWake(
+  fish: Fish,
+  due: number,
+  dt: number,
+): { due: number; size: number } {
+  const left = due - dt
+  if (fish.mode === 'away' || fish.speed <= WAKE_SPEED)
+    return { due: left, size: 0 }
+  if (left > 0) return { due: left, size: 0 }
+  return {
+    due: WAKE_GAP,
+    size: Math.min(0.4, 0.18 + (fish.speed - WAKE_SPEED) / 600),
+  }
+}

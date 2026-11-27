@@ -10,8 +10,9 @@ import padsMeta from '../../../assets/about/pads.webp?w=480;720;960&format=webp&
 import pondMeta from '../../../assets/about/pond.webp?w=480;720;960&format=webp&quality=76&as=metadata'
 import { ABOUT } from '../../../content/about'
 import {
-  RIPPLE_LIFE,
+  addRipple,
   createPondRenderer,
+  rippleDone,
   type PondRenderer,
   type Ripple,
 } from './renderer'
@@ -24,6 +25,7 @@ import {
   hitFish,
   poke,
   stepFish,
+  stepWake,
   toPond,
   type Fish,
 } from './swim'
@@ -39,6 +41,10 @@ export interface LivePondProps {
 const TILT_DEG = -1.6
 /** The largest koi is about a third of the painting's width. */
 const FISH_SHARE = 385 / 1200
+/** A wake ring spreads and fades this much faster than a click ripple. */
+const WAKE_PACE = 2.2
+/** The water's clock wraps every hour, so it keeps its precision on any GPU. */
+const WATER_CLOCK = 3600
 
 const variants = (meta: ImagetoolsMetadata | ImagetoolsMetadata[]) =>
   (Array.isArray(meta) ? meta : [meta]).toSorted((a, b) => a.width - b.width)
@@ -104,6 +110,7 @@ export default function LivePond({
     let frames = 0
     const fishes = FISH_START.map((start) => createFish(start))
     const ripples: Ripple[] = []
+    const wakeDue = fishes.map(() => 0)
     pond.current = { fishes, ripples }
     if (import.meta.env.DEV) {
       window.__pond = {
@@ -122,8 +129,20 @@ export default function LivePond({
       time += dt
       for (const fish of fishes) stepFish(fish, dt, time, POND_BOX, fishes)
       for (const ripple of ripples) ripple.age += dt
-      while (ripples.length && ripples[0].age > RIPPLE_LIFE) ripples.shift()
-      renderer.draw(fishes, ripples)
+      fishes.forEach((fish, i) => {
+        const { due, size } = stepWake(fish, wakeDue[i], dt)
+        wakeDue[i] = due
+        if (size)
+          addRipple(ripples, {
+            at: { ...fish.line[1] },
+            age: 0,
+            size,
+            pace: WAKE_PACE,
+          })
+      })
+      for (let i = ripples.length - 1; i >= 0; i--)
+        if (rippleDone(ripples[i])) ripples.splice(i, 1)
+      renderer.draw(fishes, ripples, time % WATER_CLOCK)
       frames++
       schedule()
     }
@@ -143,7 +162,7 @@ export default function LivePond({
     const size = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       renderer?.resize(canvas.offsetWidth, canvas.offsetHeight, dpr)
-      renderer?.draw(fishes, ripples)
+      renderer?.draw(fishes, ripples, time % WATER_CLOCK)
     }
     const resizer = new ResizeObserver(size)
     const watcher = new IntersectionObserver(([entry]) => {
@@ -215,7 +234,7 @@ export default function LivePond({
     const current = pond.current
     if (!current || pausedRef.current || !runningRef.current) return
     poke(current.fishes, at, everyone)
-    current.ripples.push({ at, age: 0 })
+    addRipple(current.ripples, { at, age: 0 })
   }
 
   return (
