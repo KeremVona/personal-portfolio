@@ -10,6 +10,7 @@ import padsMeta from '../../../assets/about/pads.webp?w=480;720;960&format=webp&
 import pondMeta from '../../../assets/about/pond.webp?w=480;720;960&format=webp&quality=76&as=metadata'
 import { ABOUT } from '../../../content/about'
 import {
+  MAX_RIPPLES,
   addRipple,
   createPondRenderer,
   rippleDone,
@@ -90,7 +91,11 @@ export default function LivePond({
   const pausedRef = useRef(paused)
   const runningRef = useRef(running)
   const wake = useRef<() => void>(() => {})
-  const pond = useRef<{ fishes: Fish[]; ripples: Ripple[] } | null>(null)
+  const pond = useRef<{
+    fishes: Fish[]
+    ripples: Ripple[]
+    slots: number
+  } | null>(null)
 
   useEffect(() => {
     pausedRef.current = paused
@@ -111,7 +116,7 @@ export default function LivePond({
     const fishes = FISH_START.map((start) => createFish(start))
     const ripples: Ripple[] = []
     const wakeDue = fishes.map(() => 0)
-    pond.current = { fishes, ripples }
+    pond.current = { fishes, ripples, slots: MAX_RIPPLES }
     if (import.meta.env.DEV) {
       window.__pond = {
         fishes,
@@ -129,16 +134,16 @@ export default function LivePond({
       time += dt
       for (const fish of fishes) stepFish(fish, dt, time, POND_BOX, fishes)
       for (const ripple of ripples) ripple.age += dt
+      const { slots } = renderer
       fishes.forEach((fish, i) => {
         const { due, size } = stepWake(fish, wakeDue[i], dt)
         wakeDue[i] = due
         if (size)
-          addRipple(ripples, {
-            at: { ...fish.line[1] },
-            age: 0,
-            size,
-            pace: WAKE_PACE,
-          })
+          addRipple(
+            ripples,
+            { at: { ...fish.line[1] }, age: 0, size, pace: WAKE_PACE },
+            slots,
+          )
       })
       for (let i = ripples.length - 1; i >= 0; i--)
         if (rippleDone(ripples[i])) ripples.splice(i, 1)
@@ -197,6 +202,7 @@ export default function LivePond({
           onFail()
           return
         }
+        if (pond.current) pond.current.slots = renderer.slots
         size()
         resizer.observe(canvas)
         watcher.observe(canvas)
@@ -234,7 +240,7 @@ export default function LivePond({
     const current = pond.current
     if (!current || pausedRef.current || !runningRef.current) return
     poke(current.fishes, at, everyone)
-    addRipple(current.ripples, { at, age: 0 })
+    addRipple(current.ripples, { at, age: 0 }, current.slots)
   }
 
   return (

@@ -1,6 +1,6 @@
 # Progress
 
-_Last updated: 2026-11-25_
+_Last updated: 2026-11-27_
 
 ## Done
 
@@ -28,6 +28,7 @@ _Last updated: 2026-11-25_
   - **Cost:** about 85 KB extra on a phone, loaded after the page.
   - **Code:** `src/sections/about/` (swimming in `pond/swim.ts`, tested; drawing in `pond/renderer.ts`); art from `npm run art:about`.
   - **Changed from the prototype:** fish now brake and turn harder near the edge, because the approved prototype let them drift out of the pond.
+  - **Water (2026-11-27, `specs/2026-11-27-pond-water-design.md`):** Kerem said the fish sometimes didn't look underwater. The floor and fish are now drawn into a texture and shown through moving water: a slow shimmer, drifting light lines, click ripples that bend what's under them, and small wakes behind fast fish (`stepWake` in `swim.ts`, tested). Pads stay crisp on top. It costs about 0.2 ms more per frame on a phone-sized pond (software rendering).
 - Section headings now have an eyebrow (`SectionHeading`).
 - A native scroll `Reveal` component (no animation library).
 - Deep links like `/#projects` now scroll to their section.

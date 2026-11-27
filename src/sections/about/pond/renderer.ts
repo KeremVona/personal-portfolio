@@ -27,21 +27,33 @@ export interface PondRenderer {
   resize(cssWidth: number, cssHeight: number, dpr: number): void
   draw(fishes: readonly Fish[], ripples: readonly Ripple[], time: number): void
   destroy(): void
+  /** How many ripples this device can draw at once (see rippleSlots). */
+  slots: number
 }
 
 const SHADOW_ALPHA = 0.55
-/** Clicks and wakes together; the newest are kept. */
+/** Clicks and wakes together, at most; the newest are kept. */
 export const MAX_RIPPLES = 24
+/**
+ * Ripple slots that fit the device's fragment uniforms (each ripple is one vec4; the
+ * water shader needs a few more). WebGL1 guarantees only 16, which gives 8.
+ */
+export const rippleSlots = (maxFragmentVectors: number) =>
+  Math.max(4, Math.min(MAX_RIPPLES, maxFragmentVectors - 8))
 export const RIPPLE_LIFE = 1.8
 export const rippleDone = (r: Ripple) => r.age * (r.pace ?? 1) > RIPPLE_LIFE
 const isWake = (r: Ripple) => (r.size ?? 1) < 1
 
 /**
- * Adds a ripple, oldest first, keeping at most MAX_RIPPLES. A full pond skips a new
- * wake; a click makes room by dropping the oldest wake (or the oldest ripple).
+ * Adds a ripple, oldest first, keeping at most `max`. A full pond skips a new wake;
+ * a click makes room by dropping the oldest wake (or the oldest ripple).
  */
-export function addRipple(ripples: Ripple[], ripple: Ripple) {
-  if (ripples.length >= MAX_RIPPLES) {
+export function addRipple(
+  ripples: Ripple[],
+  ripple: Ripple,
+  max = MAX_RIPPLES,
+) {
+  if (ripples.length >= max) {
     if (isWake(ripple)) return
     const oldest = ripples.findIndex(isWake)
     ripples.splice(Math.max(0, oldest), 1)
@@ -57,7 +69,7 @@ const WATER = {
 }
 
 // The pond and fish, drawn into a texture first, shown through moving water.
-const WATER_SHADER = `
+const waterShader = (slots: number) => `
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
 #else
@@ -65,11 +77,11 @@ precision mediump float;
 #endif
 uniform sampler2D u_scene;
 uniform vec2 u_res;
-uniform vec4 u_view;
+uniform vec2 u_size;
 uniform vec4 u_box;
 uniform float u_time;
 uniform vec3 u_water;
-uniform vec4 u_ripples[${MAX_RIPPLES}];
+uniform vec4 u_ripples[${slots}];
 varying vec2 v_pos;
 
 vec2 swell(vec2 p, float t) {
@@ -94,7 +106,7 @@ void main() {
                    min(p.y - u_box.y, u_box.y + u_box.w - p.y));
   float inside = smoothstep(0.0, 40.0, edge);
   vec2 d = swell(p, u_time) * u_water.x;
-  for (int i = 0; i < ${MAX_RIPPLES}; i++) {
+  for (int i = 0; i < ${slots}; i++) {
     vec4 r = u_ripples[i];
     if (r.z < 0.0) continue;
     vec2 off = p - r.xy;
@@ -104,14 +116,14 @@ void main() {
     float wave = sin(band * 2.5) * exp(-band * band);
     d += off / dist * wave * u_water.z * r.w * max(0.0, 1.0 - r.z / 1.4);
   }
-  vec2 uv = gl_FragCoord.xy / u_res + vec2(d.x / u_view.z, -d.y / u_view.w) * inside;
+  vec2 uv = gl_FragCoord.xy / u_res + vec2(d.x / u_size.x, -d.y / u_size.y) * inside;
   vec3 colour = texture2D(u_scene, uv).rgb;
   colour += vec3(1.0, 0.98, 0.9) * light(p + d * 3.0, u_time) * u_water.y * inside;
   gl_FragColor = vec4(colour, 1.0);
 }`
 
 // Pond units → clip space; y points down in the pond and up in clip space.
-const VERTEX = `
+export const VERTEX = `
 attribute vec2 a_pos;
 attribute vec2 a_uv;
 uniform vec4 u_view;
@@ -145,15 +157,15 @@ void main() {
   gl_FragColor = vec4(colour * a, a);
 }`
 
-// Up to MAX_RIPPLES rings, each three soft circles spreading out, slightly squashed.
-const RIPPLES = `
+// Up to `slots` rings, each three soft circles spreading out, slightly squashed.
+const ripplesShader = (slots: number) => `
 precision mediump float;
-uniform vec4 u_ripples[${MAX_RIPPLES}];
+uniform vec4 u_ripples[${slots}];
 uniform float u_px;
 varying vec2 v_pos;
 void main() {
   float a = 0.0;
-  for (int i = 0; i < ${MAX_RIPPLES}; i++) {
+  for (int i = 0; i < ${slots}; i++) {
     vec4 r = u_ripples[i];
     if (r.z < 0.0) continue;
     vec2 d = v_pos - r.xy;
@@ -169,6 +181,14 @@ void main() {
   }
   gl_FragColor = vec4(vec3(0.94, 0.99, 0.96) * a, a);
 }`
+
+/** The fragment shaders, with room for `slots` ripples. */
+export const fragmentShaders = (slots: number) => ({
+  textured: TEXTURED,
+  fin: FIN,
+  rings: ripplesShader(slots),
+  water: waterShader(slots),
+})
 
 const STRIP_FLOATS = 4 // x, y, u, v
 
@@ -306,10 +326,12 @@ export function createPondRenderer(
     premultipliedAlpha: true,
   })
   if (!gl) return null
-  const textured = compile(gl, TEXTURED)
-  const fins = compile(gl, FIN)
-  const rings = compile(gl, RIPPLES)
-  const water = compile(gl, WATER_SHADER)
+  const slots = rippleSlots(gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS))
+  const shaders = fragmentShaders(slots)
+  const textured = compile(gl, shaders.textured)
+  const fins = compile(gl, shaders.fin)
+  const rings = compile(gl, shaders.rings)
+  const water = compile(gl, shaders.water)
   if (!textured || !fins || !rings || !water) return null
   const sceneTexture = gl.createTexture()
   const sceneBuffer = gl.createFramebuffer()
@@ -364,8 +386,9 @@ export function createPondRenderer(
   ])
   let strip = new Float32Array(0)
   const finData = new Float32Array(8 * STRIP_FLOATS)
-  const rippleData = new Float32Array(MAX_RIPPLES * 4)
+  const rippleData = new Float32Array(slots * 4)
   let width = canvas.width
+  let broken = false
   let height = canvas.height
 
   const select = (program: WebGLProgram) => {
@@ -402,6 +425,7 @@ export function createPondRenderer(
   }
 
   return {
+    slots,
     resize(cssWidth, cssHeight, dpr) {
       width = Math.max(1, Math.round(cssWidth * dpr))
       height = Math.max(1, Math.round(cssHeight * dpr))
@@ -432,11 +456,15 @@ export function createPondRenderer(
         sceneTexture,
         0,
       )
+      // Out of memory or too big a canvas: the still painting instead of a black pond.
+      broken =
+        gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+      if (broken && !gl.isContextLost()) onLost()
     },
     draw(fishes, ripples, time) {
-      if (gl.isContextLost()) return
-      const live = ripples.filter((r) => !rippleDone(r)).slice(-MAX_RIPPLES)
+      if (gl.isContextLost() || broken) return
+      const live = ripples.filter((r) => !rippleDone(r)).slice(-slots)
       rippleData.fill(-1)
       live.forEach((r, i) =>
         rippleData.set(
@@ -488,6 +516,7 @@ export function createPondRenderer(
       select(water)
       gl.bindTexture(gl.TEXTURE_2D, sceneTexture)
       gl.uniform2f(uniform(water, 'u_res'), width, height)
+      gl.uniform2f(uniform(water, 'u_size'), vw, vh)
       gl.uniform4f(
         uniform(water, 'u_box'),
         POND_BOX.x,
